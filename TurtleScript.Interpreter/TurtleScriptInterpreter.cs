@@ -1,5 +1,10 @@
+#region Namespaces
+
 using System;
+using System.Collections.Generic;
 using Antlr4.Runtime;
+
+#endregion Namespaces
 
 namespace TurtleScript.Interpreter
 {
@@ -12,6 +17,7 @@ namespace TurtleScript.Interpreter
 		{
 			m_Script = script;
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
+			m_Variables = new Dictionary<string, TurtleScriptValue>();
 		}
 
 		#endregion Constructor
@@ -20,18 +26,43 @@ namespace TurtleScript.Interpreter
 
 		public string ErrorMessage
 		{
-			get { return m_TurtleScriptErrorListener.Message; }
+			get
+			{
+				if (!string.IsNullOrEmpty(m_ErrorMessage))
+				{
+					return m_ErrorMessage;
+				}
+
+				return m_TurtleScriptErrorListener.Message;
+			}
 		}
 
 		public bool IsError
 		{
-			get { return !string.IsNullOrEmpty(m_TurtleScriptErrorListener.Message); }
+			get
+			{
+				return
+				(
+					(!string.IsNullOrEmpty(m_TurtleScriptErrorListener.Message)) ||
+					(!string.IsNullOrEmpty(m_ErrorMessage))
+				);
+			}
 		}
+
+		public Dictionary<string, TurtleScriptValue> Variables
+		{
+			get { return m_Variables; }
+		}
+
 		#endregion Public Properties
 
-		#region Public Properties
+		#region Public Methods
 
-		public void Execute()
+		/// <summary>
+		/// Executes the script
+		/// </summary>
+		/// <returns><c>true</c> if execution is successful, otherwise <c>false</c></returns>
+		public bool Execute()
 		{
 			AntlrInputStream input = new AntlrInputStream(m_Script);
 
@@ -47,7 +78,18 @@ namespace TurtleScript.Interpreter
 
 			parser.BuildParseTree = true;
 
-			Visit(parser.script());
+			m_Variables = new Dictionary<string, TurtleScriptValue>();
+
+			try
+			{
+				TurtleScriptValue turtleScriptValue = Visit(parser.script());
+			}
+			catch (InvalidOperationException exception)
+			{
+				m_ErrorMessage = exception.Message;
+			}
+
+			return !IsError;
 		}
 
 		public override TurtleScriptValue VisitAdditiveExpression(TurtleScriptParser.AdditiveExpressionContext context)
@@ -56,7 +98,7 @@ namespace TurtleScript.Interpreter
 			TurtleScriptValue rightValue = Visit(context.expression(1));
 
 			TurtleScriptValue result;
-			if (context.op.TokenIndex == TurtleScriptParser.ADD)
+			if (context.op.Type == TurtleScriptParser.ADD)
 			{
 				result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
 			}
@@ -73,19 +115,34 @@ namespace TurtleScript.Interpreter
 			TurtleScriptValue leftValue = Visit(context.expression(0));
 			TurtleScriptValue rightValue = Visit(context.expression(1));
 
-			TurtleScriptValue result = new TurtleScriptValue(leftValue.BoolValue && rightValue.BoolValue);
+			TurtleScriptValue result = new TurtleScriptValue(leftValue.BooleanValue && rightValue.BooleanValue);
 
 			return result;
 		}
 
 		public override TurtleScriptValue VisitAssignment(TurtleScriptParser.AssignmentContext context)
 		{
-			return base.VisitAssignment(context);
+			TurtleScriptValue value = Visit(context.expression());
+
+			m_Variables[context.Identifier().GetText()] = value;
+
+			return TurtleScriptValue.VOID;
 		}
 
 		public override TurtleScriptValue VisitBlock(TurtleScriptParser.BlockContext context)
 		{
-			return base.VisitBlock(context);
+			foreach (TurtleScriptParser.StatementContext statementContext in context.statement())
+			{
+				Visit(statementContext);
+			}
+
+			if (context.Return() != null)
+			{
+				TurtleScriptValue turtleScriptValue = Visit(context.expression());
+				return turtleScriptValue;
+			}
+
+			return TurtleScriptValue.NULL;
 		}
 
 		public override TurtleScriptValue VisitCompareExpression(TurtleScriptParser.CompareExpressionContext context)
@@ -145,7 +202,14 @@ namespace TurtleScript.Interpreter
 
 		public override TurtleScriptValue VisitFloatExpression(TurtleScriptParser.FloatExpressionContext context)
 		{
-			return base.VisitFloatExpression(context);
+			float value;
+
+			if (float.TryParse(context.GetText(), out value))
+			{
+				return new TurtleScriptValue(value);
+			}
+
+			throw new InvalidOperationException("");
 		}
 
 		public override TurtleScriptValue VisitFormalParameter(TurtleScriptParser.FormalParameterContext context)
@@ -191,6 +255,7 @@ namespace TurtleScript.Interpreter
 		public override TurtleScriptValue VisitIntExpression(TurtleScriptParser.IntExpressionContext context)
 		{
 			int value;
+
 			if (Int32.TryParse(context.GetText(), out value))
 			{
 				return new TurtleScriptValue(value);
@@ -205,7 +270,7 @@ namespace TurtleScript.Interpreter
 			TurtleScriptValue rightValue = Visit(context.expression(1));
 
 			TurtleScriptValue result;
-			if (context.op.TokenIndex == TurtleScriptParser.MUL)
+			if (context.op.Type == TurtleScriptParser.MUL)
 			{
 				result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
 			}
@@ -229,19 +294,21 @@ namespace TurtleScript.Interpreter
 			TurtleScriptValue leftValue = Visit(context.expression(0));
 			TurtleScriptValue rightValue = Visit(context.expression(1));
 
-			TurtleScriptValue result = new TurtleScriptValue(leftValue.BoolValue || rightValue.BoolValue);
+			TurtleScriptValue result = new TurtleScriptValue(leftValue.BooleanValue || rightValue.BooleanValue);
 
 			return result;
 		}
 
 		public override TurtleScriptValue VisitParenExpression(TurtleScriptParser.ParenExpressionContext context)
 		{
-			return base.VisitParenExpression(context);
+			TurtleScriptValue value = Visit(context.expression());
+
+			return value;
 		}
 
 		public override TurtleScriptValue VisitScript(TurtleScriptParser.ScriptContext context)
 		{
-			return base.VisitScript(context);
+			return Visit(context.block());
 		}
 
 		public override TurtleScriptValue VisitStatement(TurtleScriptParser.StatementContext context)
@@ -251,24 +318,39 @@ namespace TurtleScript.Interpreter
 
 		public override TurtleScriptValue VisitUnaryNegationExpression(TurtleScriptParser.UnaryNegationExpressionContext context)
 		{
-			return base.VisitUnaryNegationExpression(context);
+			TurtleScriptValue value = Visit(context.expression());
+
+			return -value;
 		}
 
 		public override TurtleScriptValue VisitUnaryNotExpression(TurtleScriptParser.UnaryNotExpressionContext context)
 		{
-			return base.VisitUnaryNotExpression(context);
+			TurtleScriptValue value = Visit(context.expression());
+
+			return !value;
 		}
 
 		public override TurtleScriptValue VisitVariableReferenceExpression(TurtleScriptParser.VariableReferenceExpressionContext context)
 		{
-			return base.VisitVariableReferenceExpression(context);
+			TurtleScriptValue variableValue;
+			if (m_Variables.TryGetValue(
+				context.Identifier().GetText(),
+				out variableValue))
+			{
+				return variableValue;
+			}
+
+			throw new InvalidOperationException(string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", context.Identifier().GetText(), context.Start.Line, context.Start.Column));
 		}
-		#endregion Public Properties
+		
+		#endregion Public Methods
 
 		#region Private Fields
 
 		private readonly string m_Script;
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
+		private string m_ErrorMessage;
+		private Dictionary<string, TurtleScriptValue> m_Variables;
 
 		#endregion Private Fields
 	}

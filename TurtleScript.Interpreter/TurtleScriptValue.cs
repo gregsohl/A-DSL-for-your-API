@@ -11,9 +11,9 @@ namespace TurtleScript.Interpreter
 	{
 		#region Public Constructors
 
-		public TurtleScriptValue(bool boolValue)
+		public TurtleScriptValue(bool booleanValue)
 		{
-			m_BoolValue = boolValue;
+			m_BooleanValue = booleanValue;
 			m_IsBoolean = true;
 		}
 
@@ -23,15 +23,26 @@ namespace TurtleScript.Interpreter
 			m_IsNumeric = true;
 		}
 
+		public TurtleScriptValue()
+		{
+			m_IsNull = true;
+		}
+
 		#endregion Public Constructors
 
-		#region Public Properties
+		public static readonly TurtleScriptValue NULL = new TurtleScriptValue();
+		public static readonly TurtleScriptValue VOID = new TurtleScriptValue();
 
-		public static Comparer<TurtleScriptValue> ValueComparer { get; } = new ValueRelationalComparer();
+		#region Public Properties
 
 		public bool IsBoolean
 		{
 			get { return m_IsBoolean; }
+		}
+
+		public bool IsNull
+		{
+			get { return m_IsNull; }
 		}
 
 		public bool IsNumeric
@@ -44,82 +55,198 @@ namespace TurtleScript.Interpreter
 			get { return m_NumericValue; }
 		}
 
-		public bool BoolValue
+		public bool BooleanValue
 		{
-			get { return m_BoolValue; }
+			get { return m_BooleanValue; }
 		}
 
 		#endregion Public Properties
 
-		#region Public Methods
+		#region Equality and Comparison Methods
 
-		public int CompareTo(TurtleScriptValue other)
+		protected bool Equals(TurtleScriptValue other)
 		{
-			if (ReferenceEquals(this,
-				other)) return 0;
-			if (ReferenceEquals(null,
-				other)) return 1;
-			return m_NumericValue.CompareTo(other.m_NumericValue);
+			return 
+				m_BooleanValue == other.m_BooleanValue && 
+				m_IsBoolean == other.m_IsBoolean && 
+				m_NumericValue.Equals(other.m_NumericValue) && 
+				m_IsNumeric == other.m_IsNumeric && 
+				m_IsNull == other.m_IsNull;
 		}
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(null,
-				obj)) return false;
-			if (ReferenceEquals(this,
-				obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
-			return Equals((TurtleScriptValue)obj);
+			if (ReferenceEquals(null, obj)) 
+				return false;
+
+			if (ReferenceEquals(this, obj)) 
+				return true;
+
+			if (obj.GetType() != this.GetType()) 
+				return false;
+
+			return Equals((TurtleScriptValue) obj);
 		}
 
 		public override int GetHashCode()
 		{
-			return m_NumericValue.GetHashCode();
+			unchecked
+			{
+				var hashCode = m_BooleanValue.GetHashCode();
+				hashCode = (hashCode * 397) ^ m_IsBoolean.GetHashCode();
+				hashCode = (hashCode * 397) ^ m_NumericValue.GetHashCode();
+				hashCode = (hashCode * 397) ^ m_IsNumeric.GetHashCode();
+				hashCode = (hashCode * 397) ^ m_IsNull.GetHashCode();
+				return hashCode;
+			}
 		}
 
-		#endregion Public Methods
-
-		#region Protected Methods
-
-		protected bool Equals(TurtleScriptValue other)
+		public int CompareTo(TurtleScriptValue other)
 		{
-			return m_NumericValue.Equals(other.m_NumericValue);
+			if ((m_IsNumeric != other.IsNumeric) ||
+			    (m_IsBoolean != other.IsBoolean))
+			{
+				throw new InvalidOperationException("Cannot compare mismatched data types.");
+			}
+
+			if (m_IsNull || other.IsNull)
+			{
+				throw new InvalidOperationException("Cannot compare null values");
+			}
+
+			if (ReferenceEquals(this,other)) 
+				return 0;
+
+			if (ReferenceEquals(null, other)) 
+				return 1;
+
+			return m_IsNumeric.CompareTo(other.m_IsNumeric);
+		}
+		
+		#endregion Equality and Comparison Methods
+
+		#region Operator Implementations
+
+		public static TurtleScriptValue operator +(
+			TurtleScriptValue result1,
+			TurtleScriptValue result2)
+		{
+			if ((result1.IsNumeric != result2.IsNumeric) ||
+			    (result1.IsBoolean != result2.IsBoolean))
+			{
+				throw new InvalidOperationException("Cannot add mismatched data types.");
+			}
+
+			if ((result1.IsBoolean) ||
+			    (result2.IsBoolean) ||
+			    (result1.IsNull) ||
+			    (result2.IsNull))
+			{
+				throw new InvalidOperationException("Invalid data types for addition operation");
+			}
+
+			return new TurtleScriptValue(result1.NumericValue + result2.NumericValue);
 		}
 
-		#endregion Protected Methods
+		public static TurtleScriptValue operator -(
+			TurtleScriptValue result1,
+			TurtleScriptValue result2)
+		{
+			if ((result1.IsNumeric != result2.IsNumeric) ||
+			    (result1.IsBoolean != result2.IsBoolean))
+			{
+				throw new InvalidOperationException("Cannot add mismatched data types.");
+			}
 
+			if ((result1.IsBoolean) ||
+			    (result2.IsBoolean) ||
+			    (result1.IsNull) ||
+			    (result2.IsNull))
+			{
+				throw new InvalidOperationException("Invalid data types for subtraction operation");
+			}
+
+			return new TurtleScriptValue(result1.NumericValue - result2.NumericValue);
+		}
+
+		public static TurtleScriptValue operator *(
+			TurtleScriptValue result1,
+			TurtleScriptValue result2)
+		{
+			if ((result1.IsNumeric != result2.IsNumeric) ||
+			    (result1.IsBoolean != result2.IsBoolean))
+			{
+				throw new InvalidOperationException("Cannot add mismatched data types.");
+			}
+
+			if ((result1.IsBoolean) ||
+			    (result2.IsBoolean) ||
+			    (result1.IsNull) ||
+			    (result2.IsNull))
+			{
+				throw new InvalidOperationException("Invalid data types for multiplication operation");
+			}
+
+			return new TurtleScriptValue(result1.NumericValue * result2.NumericValue);
+		}
+
+		public static TurtleScriptValue operator /(
+			TurtleScriptValue result1,
+			TurtleScriptValue result2)
+		{
+			if ((result1.IsNumeric != result2.IsNumeric) ||
+			    (result1.IsBoolean != result2.IsBoolean))
+			{
+				throw new InvalidOperationException("Cannot add mismatched data types.");
+			}
+
+			if ((result1.IsBoolean) ||
+			    (result2.IsBoolean) ||
+			    (result1.IsNull) ||
+			    (result2.IsNull))
+			{
+				throw new InvalidOperationException("Invalid data types for division operation");
+			}
+
+			if (result2.NumericValue == 0)
+			{
+				return new TurtleScriptValue(0);
+			}
+
+			return new TurtleScriptValue(result1.NumericValue / result2.NumericValue);
+		}
+
+		public static TurtleScriptValue operator !(TurtleScriptValue result)
+		{
+			if (!result.IsBoolean)
+			{
+				throw new InvalidOperationException("Invalid data type for Not operation");
+			}
+
+			return new TurtleScriptValue(!result.BooleanValue);
+		}
+
+		public static TurtleScriptValue operator -(TurtleScriptValue result)
+		{
+			if (!result.IsNumeric)
+			{
+				throw new InvalidOperationException("Invalid data type for Negation operation");
+			}
+
+			return new TurtleScriptValue(result.NumericValue * -1);
+		}
+
+
+		#endregion Operator Implementations
 
 		#region Private Fields
 
-		private readonly bool m_BoolValue;
+		private readonly bool m_BooleanValue;
 		private readonly bool m_IsBoolean;
 		private readonly float m_NumericValue;
 		private readonly bool m_IsNumeric;
+		private readonly bool m_IsNull;
 
 		#endregion Private Fields
-
-		#region Private Classes
-
-		private sealed class ValueRelationalComparer : Comparer<TurtleScriptValue>
-		{
-
-			#region Public Methods
-
-			public override int Compare(TurtleScriptValue x,
-										TurtleScriptValue y)
-			{
-				if (ReferenceEquals(x,
-					y)) return 0;
-				if (ReferenceEquals(null,
-					y)) return 1;
-				if (ReferenceEquals(null,
-					x)) return -1;
-				return x.m_NumericValue.CompareTo(y.m_NumericValue);
-			}
-
-			#endregion Public Methods
-		}
-
-		#endregion Private Classes
 	}
 }
