@@ -11,7 +11,7 @@ namespace TurtleScript.Interpreter.UnitTest
 	public class UserDefiniedFunctionTests
 	{
 		[Test]
-		public void FunctionDeclaration()
+		public void FunctionDeclarationAndCallNoParameters()
 		{
 			// Arrange
 			StringBuilder scriptBuilder = new StringBuilder();
@@ -32,5 +32,49 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.AreEqual(15.0, variableValue.NumericValue);
 		}
 
+		[Test]
+		public void FunctionDeclarationAndCallOneParameter()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("def MyFunc(myparameter)");
+			scriptBuilder.AppendLine("	b = myparameter");
+			scriptBuilder.AppendLine("	myparameter = b * 2");
+			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine("MyFunc(10)");
+
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Execute();
+
+			// Assert
+			Assert.IsTrue(success);
+
+			TurtleScriptValue variableValue = interpreter.Variables["myparameter"];
+			Assert.AreEqual(20, variableValue.NumericValue);
+		}
+
+		[Test]
+		public void FunctionDeclarationAndCallThreeParameters()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("def MyFunc(value1, value2, value3)");
+			scriptBuilder.AppendLine("	b = value1 + value2 - value3");
+			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine("MyFunc(100, 200, 50)");
+
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Execute();
+
+			// Assert
+			Assert.IsTrue(success);
+
+			TurtleScriptValue variableValue = interpreter.Variables["b"];
+			Assert.AreEqual(250, variableValue.NumericValue);
+		}
 	}
 }
