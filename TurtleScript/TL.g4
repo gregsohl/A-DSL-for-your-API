@@ -1,5 +1,7 @@
 grammar TL;
 
+// https://github.com/bkiers/tiny-language-antlr4
+
 parse
  : block EOF
  ;
