@@ -33,5 +33,28 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 
+		[Test]
+		public void Reverse()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("b = 0");
+			scriptBuilder.AppendLine("for a = 5 to 1 do");
+			scriptBuilder.AppendLine("b = b + a");
+			scriptBuilder.AppendLine("end");
+
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Execute();
+
+			// Assert
+			Assert.IsTrue(success);
+
+			TurtleScriptValue variableValue = interpreter.Variables["b"];
+			Assert.AreEqual(15, variableValue.NumericValue);
+		}
+
+
 	}
 }

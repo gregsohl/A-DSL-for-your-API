@@ -223,11 +223,27 @@ namespace TurtleScript.Interpreter
 				throw new InvalidOperationException(string.Format("For loop starting value must be numeric. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
 			}
 
-			for (float index = startValue.NumericValue; index <= endValue.NumericValue; index++)
-			{
-				SetVariableValue(loopVariableName, index);
+			float increment = startValue.NumericValue <= endValue.NumericValue ? 1.0f : -1.0f;
 
-				Visit(context.block());
+			if (increment == 1)
+			{
+				for (float index = startValue.NumericValue; index <= endValue.NumericValue; index += increment)
+				{
+					SetVariableValue(loopVariableName,
+						index);
+
+					Visit(context.block());
+				}
+			}
+			else
+			{
+				for (float index = startValue.NumericValue; index >= endValue.NumericValue; index += increment)
+				{
+					SetVariableValue(loopVariableName,
+						index);
+
+					Visit(context.block());
+				}
 			}
 
 			return TurtleScriptValue.VOID;
