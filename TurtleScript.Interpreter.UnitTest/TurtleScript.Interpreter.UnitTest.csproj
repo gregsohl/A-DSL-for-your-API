@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserDefiniedFunctionTests.cs" />
+    <Compile Include="VariableReferenceTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ArithmeticTests.cs" />

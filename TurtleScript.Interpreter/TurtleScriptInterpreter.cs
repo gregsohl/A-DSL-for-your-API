@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
 #endregion Namespaces
 
@@ -18,6 +20,7 @@ namespace TurtleScript.Interpreter
 			m_Script = script;
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
 			m_Variables = new Dictionary<string, TurtleScriptValue>();
+			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 		}
 
 		#endregion Constructor
@@ -79,6 +82,7 @@ namespace TurtleScript.Interpreter
 			parser.BuildParseTree = true;
 
 			m_Variables = new Dictionary<string, TurtleScriptValue>();
+			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 
 			try
 			{
@@ -124,7 +128,7 @@ namespace TurtleScript.Interpreter
 		{
 			TurtleScriptValue value = Visit(context.expression());
 
-			m_Variables[context.Identifier().GetText()] = value;
+			SetVariableValue(context.Identifier().GetText(), value);
 
 			return TurtleScriptValue.VOID;
 		}
@@ -229,17 +233,57 @@ namespace TurtleScript.Interpreter
 
 		public override TurtleScriptValue VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
 		{
-			return base.VisitFunctionCall(context);
+			TurtleScriptFunction function;
+			if (m_ScriptFunctions.TryGetValue(context.Identifier().GetText(), out function))
+			{
+				if (context.expressionList().expression().Length != function.Parameters.Count)
+				{
+					throw new InvalidOperationException(string.Format("Invalid number of parameters specified for function call at Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+				}
+
+				for(int parameterIndex = 0; parameterIndex <= function.Parameters.Count; parameterIndex++)
+				{
+					string parameterName = function.Parameters[parameterIndex].GetText();
+					List<TurtleScriptParser.ExpressionContext> parameterContexts = context.expressionList().expression().ToList();
+					TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
+
+					SetVariableValue(parameterName, parameterValue);
+				}
+
+				TurtleScriptValue returnValue = Visit(function.Body);
+
+				return returnValue;
+			}
+
+			throw new InvalidOperationException(string.Format("Invalid identifier. Function name not previously defined. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
 		}
 
 		public override TurtleScriptValue VisitFunctionCallExpression(TurtleScriptParser.FunctionCallExpressionContext context)
 		{
-			return base.VisitFunctionCallExpression(context);
+			TurtleScriptValue returnValue = Visit(context.functionCall());
+
+			return returnValue;
 		}
 
 		public override TurtleScriptValue VisitFunctionDecl(TurtleScriptParser.FunctionDeclContext context)
 		{
-			return base.VisitFunctionDecl(context);
+			TurtleScriptParser.FormalParametersContext formalParametersContext = context.formalParameters();
+			IParseTree[] formalParameterContexts = formalParametersContext.formalParameter();
+
+			IParseTree block = context.block();
+
+			string functionName = context.Identifier().GetText();
+
+			// Check for function that exists by the same name
+			TurtleScriptFunction existingFunction;
+			if (m_ScriptFunctions.TryGetValue(context.Identifier().GetText(), out existingFunction))
+			{
+				throw new InvalidOperationException(string.Format("A function with the name '{0}' already exists. Line {1}, Column {2}", context.Identifier().GetText(), context.Start.Line, context.Start.Column));
+			}
+
+			m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, block));
+
+			return TurtleScriptValue.VOID;
 		}
 
 		public override TurtleScriptValue VisitIfStat(TurtleScriptParser.IfStatContext context)
@@ -351,7 +395,14 @@ namespace TurtleScript.Interpreter
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
 		private string m_ErrorMessage;
 		private Dictionary<string, TurtleScriptValue> m_Variables;
+		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
 
 		#endregion Private Fields
+
+		private void SetVariableValue(string variableName, TurtleScriptValue variableValue)
+		{
+			m_Variables[variableName] = variableValue;
+		}
+
 	}
 }

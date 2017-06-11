@@ -67,6 +67,7 @@
       <Link>Generated\TurtleScriptVisitor.cs</Link>
     </Compile>
     <Compile Include="TurtleScriptErrorListener.cs" />
+    <Compile Include="TurtleScriptFunction.cs" />
     <Compile Include="TurtleScriptInterpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TurtleScriptValue.cs" />
