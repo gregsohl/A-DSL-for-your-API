@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UserDefiniedFunctionTests.cs" />
+    <Compile Include="ForLoopTests.cs" />
     <Compile Include="VariableReferenceTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -199,16 +199,6 @@ namespace TurtleScript.Interpreter
 			return base.VisitElseStat(context);
 		}
 
-		public override TurtleScriptValue VisitExpression(TurtleScriptParser.ExpressionContext context)
-		{
-			return base.VisitExpression(context);
-		}
-
-		public override TurtleScriptValue VisitExpressionList(TurtleScriptParser.ExpressionListContext context)
-		{
-			return base.VisitExpressionList(context);
-		}
-
 		public override TurtleScriptValue VisitFloatExpression(TurtleScriptParser.FloatExpressionContext context)
 		{
 			float value;
@@ -221,19 +211,26 @@ namespace TurtleScript.Interpreter
 			throw new InvalidOperationException("");
 		}
 
-		public override TurtleScriptValue VisitFormalParameter(TurtleScriptParser.FormalParameterContext context)
-		{
-			return base.VisitFormalParameter(context);
-		}
-
-		public override TurtleScriptValue VisitFormalParameters(TurtleScriptParser.FormalParametersContext context)
-		{
-			return base.VisitFormalParameters(context);
-		}
-
 		public override TurtleScriptValue VisitForStatement(TurtleScriptParser.ForStatementContext context)
 		{
-			return base.VisitForStatement(context);
+			string loopVariableName = context.Identifier().GetText();
+
+			TurtleScriptValue startValue = Visit(context.expression(0));
+			TurtleScriptValue endValue = Visit(context.expression(1));
+
+			if (!startValue.IsNumeric)
+			{
+				throw new InvalidOperationException(string.Format("For loop starting value must be numeric. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+			}
+
+			for (float index = startValue.NumericValue; index <= endValue.NumericValue; index++)
+			{
+				SetVariableValue(loopVariableName, index);
+
+				Visit(context.block());
+			}
+
+			return TurtleScriptValue.VOID;
 		}
 
 		public override TurtleScriptValue VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
@@ -376,11 +373,6 @@ namespace TurtleScript.Interpreter
 			return Visit(context.block());
 		}
 
-		public override TurtleScriptValue VisitStatement(TurtleScriptParser.StatementContext context)
-		{
-			return base.VisitStatement(context);
-		}
-
 		public override TurtleScriptValue VisitUnaryNegationExpression(TurtleScriptParser.UnaryNegationExpressionContext context)
 		{
 			TurtleScriptValue value = Visit(context.expression());
@@ -423,6 +415,11 @@ namespace TurtleScript.Interpreter
 		private void SetVariableValue(string variableName, TurtleScriptValue variableValue)
 		{
 			m_Variables[variableName] = variableValue;
+		}
+
+		private void SetVariableValue(string variableName, float variableValue)
+		{
+			m_Variables[variableName] = new TurtleScriptValue(variableValue);
 		}
 
 	}
