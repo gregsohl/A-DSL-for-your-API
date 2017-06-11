@@ -135,6 +135,11 @@ namespace TurtleScript.Interpreter
 
 		public override TurtleScriptValue VisitBlock(TurtleScriptParser.BlockContext context)
 		{
+			foreach (TurtleScriptParser.FunctionDeclContext functionDeclContext in context.functionDecl())
+			{
+				Visit(functionDeclContext);
+			}
+
 			foreach (TurtleScriptParser.StatementContext statementContext in context.statement())
 			{
 				Visit(statementContext);
@@ -236,15 +241,22 @@ namespace TurtleScript.Interpreter
 			TurtleScriptFunction function;
 			if (m_ScriptFunctions.TryGetValue(context.Identifier().GetText(), out function))
 			{
-				if (context.expressionList().expression().Length != function.Parameters.Count)
+				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
+
+				if (context.expressionList() != null)
+				{
+					parameterExpressions = context.expressionList().expression();
+				}
+
+				if (parameterExpressions.Length != function.Parameters.Count)
 				{
 					throw new InvalidOperationException(string.Format("Invalid number of parameters specified for function call at Line {0}, Column {1}", context.Start.Line, context.Start.Column));
 				}
 
-				for(int parameterIndex = 0; parameterIndex <= function.Parameters.Count; parameterIndex++)
+				for(int parameterIndex = 0; parameterIndex < function.Parameters.Count; parameterIndex++)
 				{
 					string parameterName = function.Parameters[parameterIndex].GetText();
-					List<TurtleScriptParser.ExpressionContext> parameterContexts = context.expressionList().expression().ToList();
+					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
 					TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
 
 					SetVariableValue(parameterName, parameterValue);
@@ -268,7 +280,16 @@ namespace TurtleScript.Interpreter
 		public override TurtleScriptValue VisitFunctionDecl(TurtleScriptParser.FunctionDeclContext context)
 		{
 			TurtleScriptParser.FormalParametersContext formalParametersContext = context.formalParameters();
-			IParseTree[] formalParameterContexts = formalParametersContext.formalParameter();
+			IParseTree[] formalParameterContexts;
+
+			if (formalParametersContext != null)
+			{
+				formalParameterContexts = formalParametersContext.formalParameter();
+			}
+			else
+			{
+				formalParameterContexts = new IParseTree[0];
+			}
 
 			IParseTree block = context.block();
 

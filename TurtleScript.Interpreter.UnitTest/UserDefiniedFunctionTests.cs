@@ -29,7 +29,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success);
 
 			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(5, variableValue.NumericValue);
+			Assert.AreEqual(15.0, variableValue.NumericValue);
 		}
 
 	}
