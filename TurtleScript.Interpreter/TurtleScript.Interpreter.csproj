@@ -8,8 +8,8 @@
     <ProjectGuid>{75AD2673-1776-4B95-AA70-16BB5B275977}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TurtleScript.Parser</RootNamespace>
-    <AssemblyName>TurtleScript.Parser</AssemblyName>
+    <RootNamespace>TurtleScript.Interpreter</RootNamespace>
+    <AssemblyName>TurtleScript.Interpreter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -48,25 +48,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\TurtleScript\obj\Debug\TLBaseListener.cs">
-      <Link>Generated\TLBaseListener.cs</Link>
+    <Compile Include="..\TurtleScript\obj\Debug\TurtleScriptBaseListener.cs">
+      <Link>Generated\TurtleScriptBaseListener.cs</Link>
     </Compile>
-    <Compile Include="..\TurtleScript\obj\Debug\TLBaseVisitor.cs">
-      <Link>Generated\TLBaseVisitor.cs</Link>
+    <Compile Include="..\TurtleScript\obj\Debug\TurtleScriptBaseVisitor.cs">
+      <Link>Generated\TurtleScriptBaseVisitor.cs</Link>
     </Compile>
-    <Compile Include="..\TurtleScript\obj\Debug\TLLexer.cs">
-      <Link>Generated\TLLexer.cs</Link>
+    <Compile Include="..\TurtleScript\obj\Debug\TurtleScriptLexer.cs">
+      <Link>Generated\TurtleScriptLexer.cs</Link>
     </Compile>
-    <Compile Include="..\TurtleScript\obj\Debug\TLListener.cs">
-      <Link>Generated\TLListener.cs</Link>
+    <Compile Include="..\TurtleScript\obj\Debug\TurtleScriptListener.cs">
+      <Link>Generated\TurtleScriptListener.cs</Link>
     </Compile>
-    <Compile Include="..\TurtleScript\obj\Debug\TLParser.cs">
-      <Link>Generated\TLParser.cs</Link>
+    <Compile Include="..\TurtleScript\obj\Debug\TurtleScriptParser.cs">
+      <Link>Generated\TurtleScriptParser.cs</Link>
     </Compile>
-    <Compile Include="..\TurtleScript\obj\Debug\TLVisitor.cs">
-      <Link>Generated\TLVisitor.cs</Link>
+    <Compile Include="..\TurtleScript\obj\Debug\TurtleScriptVisitor.cs">
+      <Link>Generated\TurtleScriptVisitor.cs</Link>
     </Compile>
+    <Compile Include="TurtleScriptErrorListener.cs" />
+    <Compile Include="TurtleScriptInterpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TurtleScriptValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

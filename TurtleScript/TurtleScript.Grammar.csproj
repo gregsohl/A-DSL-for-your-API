@@ -64,15 +64,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Antlr4 Include="CellMath.g4">
+    <None Include="CellMath.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>TurtleScript</CustomToolNamespace>
-    </Antlr4>
+    </None>
+    <None Include="Cymbol.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>TurtleScript</CustomToolNamespace>
+    </None>
+    <None Include="Calculator.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>TurtleScript</CustomToolNamespace>
+    </None>
     <None Include="packages.config" />
-    <Antlr4 Include="TL.g4">
+    <None Include="TL.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>TurtleScript</CustomToolNamespace>
-    </Antlr4>
+    </None>
     <Antlr4 Include="TurtleScript.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>TurtleScript</CustomToolNamespace>
