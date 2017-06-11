@@ -161,7 +161,7 @@ namespace TurtleScript.Interpreter
 
 			TurtleScriptValue result;
 
-			switch (context.op.TokenIndex)
+			switch (context.op.Type)
 			{
 				case TurtleScriptParser.EQ:
 					result = new TurtleScriptValue(leftValue.NumericValue == rightValue.NumericValue);
@@ -187,16 +187,6 @@ namespace TurtleScript.Interpreter
 			}
 
 			return result;
-		}
-
-		public override TurtleScriptValue VisitElseIfStat(TurtleScriptParser.ElseIfStatContext context)
-		{
-			return base.VisitElseIfStat(context);
-		}
-
-		public override TurtleScriptValue VisitElseStat(TurtleScriptParser.ElseStatContext context)
-		{
-			return base.VisitElseStat(context);
 		}
 
 		public override TurtleScriptValue VisitFloatExpression(TurtleScriptParser.FloatExpressionContext context)
@@ -320,14 +310,36 @@ namespace TurtleScript.Interpreter
 			return TurtleScriptValue.VOID;
 		}
 
-		public override TurtleScriptValue VisitIfStat(TurtleScriptParser.IfStatContext context)
-		{
-			return base.VisitIfStat(context);
-		}
-
 		public override TurtleScriptValue VisitIfStatement(TurtleScriptParser.IfStatementContext context)
 		{
-			return base.VisitIfStatement(context);
+			TurtleScriptValue ifResult = Visit(context.ifStat().expression());
+
+			if ((ifResult.IsBoolean) &&
+				(ifResult.BooleanValue))
+			{
+				Visit(context.ifStat().block());
+			}
+			else
+			{
+				foreach (TurtleScriptParser.ElseIfStatContext elseIfStatContext in context.elseIfStat())
+				{
+					ifResult = Visit(elseIfStatContext.expression());
+
+					if ((ifResult.IsBoolean) &&
+					    (ifResult.BooleanValue))
+					{
+						Visit(elseIfStatContext.block());
+						return TurtleScriptValue.VOID;
+					}
+				}
+
+				if (context.elseStat() != null)
+				{
+					Visit(context.elseStat().block());
+				}
+			}
+
+			return TurtleScriptValue.VOID;
 		}
 
 		public override TurtleScriptValue VisitIntExpression(TurtleScriptParser.IntExpressionContext context)
