@@ -26,7 +26,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["b"];
 			Assert.AreEqual(15, variableValue.NumericValue);
@@ -49,7 +49,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["b"];
 			Assert.AreEqual(15, variableValue.NumericValue);

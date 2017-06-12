@@ -22,7 +22,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			Assert.AreEqual(1, interpreter.Variables.Count);
 
@@ -48,7 +48,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			Assert.AreEqual(2, interpreter.Variables.Count);
 
@@ -74,7 +74,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			Assert.AreEqual(2, interpreter.Variables.Count);
 

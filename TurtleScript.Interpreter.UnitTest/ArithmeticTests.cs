@@ -22,7 +22,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(2, variableValue.NumericValue);
@@ -40,7 +40,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(8, variableValue.NumericValue);
@@ -59,7 +59,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(8, variableValue.NumericValue);
@@ -77,7 +77,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(4, variableValue.NumericValue);
@@ -95,7 +95,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(30, variableValue.NumericValue);
@@ -113,7 +113,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(600, variableValue.NumericValue);
@@ -131,7 +131,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(5, variableValue.NumericValue);
@@ -149,7 +149,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(0, variableValue.NumericValue);
@@ -167,7 +167,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(10, variableValue.NumericValue);
@@ -185,7 +185,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(1010, variableValue.NumericValue);
@@ -203,7 +203,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(1010, variableValue.NumericValue);
@@ -221,7 +221,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(500, variableValue.NumericValue);
@@ -239,7 +239,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(500, variableValue.NumericValue);

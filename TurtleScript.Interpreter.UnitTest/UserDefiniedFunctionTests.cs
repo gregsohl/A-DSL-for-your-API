@@ -26,7 +26,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["b"];
 			Assert.AreEqual(15.0, variableValue.NumericValue);
@@ -49,7 +49,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["myparameter"];
 			Assert.AreEqual(20, variableValue.NumericValue);
@@ -71,10 +71,33 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["b"];
 			Assert.AreEqual(250, variableValue.NumericValue);
 		}
+
+		[Test]
+		public void FunctionDeclarationAfterCall()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("MyFunc()");
+			scriptBuilder.AppendLine("def MyFunc()");
+			scriptBuilder.AppendLine("	b = 15");
+			scriptBuilder.AppendLine("end");
+
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Execute();
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+
+			TurtleScriptValue variableValue = interpreter.Variables["b"];
+			Assert.AreEqual(15.0, variableValue.NumericValue);
+		}
+
 	}
 }

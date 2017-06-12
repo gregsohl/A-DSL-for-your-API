@@ -22,7 +22,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			bool success = interpreter.Execute();
 
 			// Assert
-			Assert.IsTrue(success);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(9, variableValue.NumericValue);
