@@ -52,6 +52,7 @@
     <Compile Include="UserDefiniedFunctionTests.cs" />
     <Compile Include="IfStatementTests.cs" />
     <Compile Include="ForLoopTests.cs" />
+    <Compile Include="RuntimeTests.cs" />
     <Compile Include="VariableReferenceTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

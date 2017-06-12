@@ -66,6 +66,7 @@
     <Compile Include="..\TurtleScript\obj\Debug\TurtleScriptVisitor.cs">
       <Link>Generated\TurtleScriptVisitor.cs</Link>
     </Compile>
+    <Compile Include="ITurtleScriptRuntime.cs" />
     <Compile Include="TurtleScriptErrorListener.cs" />
     <Compile Include="TurtleScriptFunction.cs" />
     <Compile Include="TurtleScriptInterpreter.cs" />

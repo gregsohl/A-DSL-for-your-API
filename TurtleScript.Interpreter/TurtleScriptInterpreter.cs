@@ -14,10 +14,22 @@ namespace TurtleScript.Interpreter
 		: TurtleScriptBaseVisitor<TurtleScriptValue>
 	{
 		#region Constructor
-
-		public TurtleScriptInterpreter(string script)
+		public TurtleScriptInterpreter(
+			string script, 
+			List<ITurtleScriptRuntime> runtimeLibraries = null)
 		{
 			m_Script = script;
+
+			if (runtimeLibraries != null)
+			{
+				m_RuntimeLibraries = runtimeLibraries;
+			}
+			else
+			{
+				// Create an empty list
+				m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
+			}
+
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
 			m_Variables = new Dictionary<string, TurtleScriptValue>();
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
@@ -242,7 +254,9 @@ namespace TurtleScript.Interpreter
 		public override TurtleScriptValue VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
 		{
 			TurtleScriptFunction function;
-			if (m_ScriptFunctions.TryGetValue(context.Identifier().GetText(), out function))
+
+			if ((context.Identifier() != null) &&
+				(m_ScriptFunctions.TryGetValue(context.Identifier().GetText(), out function)))
 			{
 				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
 
@@ -270,7 +284,69 @@ namespace TurtleScript.Interpreter
 				return returnValue;
 			}
 
+			if (context.QualifiedIdentifier() != null)
+			{
+				string fullIdentifier = context.QualifiedIdentifier().GetText();
+				string[] identifierParts = fullIdentifier.Split('.');
+
+				string runtimeName = identifierParts[0];
+				string functionName = identifierParts[1];
+
+				ITurtleScriptRuntime runtime = GetRuntimeLibrary(context, runtimeName);
+				TurtleScriptValue returnValue = CallRuntimeFunction(context, runtime, functionName);
+
+				return returnValue;
+			}
+
 			throw new InvalidOperationException(string.Format("Invalid identifier. Function name not previously defined. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+		}
+
+		private TurtleScriptValue CallRuntimeFunction(
+			TurtleScriptParser.FunctionCallContext context,
+			ITurtleScriptRuntime runtime,
+			string functionName)
+		{
+			Func<List<TurtleScriptValue>, TurtleScriptValue> function;
+			if (runtime.Functions.TryGetValue(functionName,
+				out function))
+			{
+				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
+
+				if (context.expressionList() != null)
+				{
+					parameterExpressions = context.expressionList().expression();
+				}
+
+				List<TurtleScriptValue> functionParameters = new List<TurtleScriptValue>();
+
+				for (int parameterIndex = 0; parameterIndex < parameterExpressions.Length; parameterIndex++)
+				{
+					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
+					TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
+
+					functionParameters.Add(parameterValue);
+				}
+
+				TurtleScriptValue returnValue = function(functionParameters);
+
+				return returnValue;
+			}
+
+			throw new InvalidOperationException(string.Format("Invalid function name in runtime. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+		}
+
+		private ITurtleScriptRuntime GetRuntimeLibrary(TurtleScriptParser.FunctionCallContext context,
+		                                               string runtimeName)
+		{
+			foreach (ITurtleScriptRuntime turtleScriptRuntime in m_RuntimeLibraries)
+			{
+				if (turtleScriptRuntime.Namespace == runtimeName)
+				{
+					return turtleScriptRuntime;
+				}
+			}
+
+			throw new InvalidOperationException(string.Format("Invalid runtime library name specified on function call. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
 		}
 
 		public override TurtleScriptValue VisitFunctionCallExpression(TurtleScriptParser.FunctionCallExpressionContext context)
@@ -433,6 +509,7 @@ namespace TurtleScript.Interpreter
 		#region Private Fields
 
 		private readonly string m_Script;
+		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
 		private string m_ErrorMessage;
 		private Dictionary<string, TurtleScriptValue> m_Variables;

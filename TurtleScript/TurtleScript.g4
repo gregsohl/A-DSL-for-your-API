@@ -28,7 +28,7 @@ assignment
  ;
 
 functionCall
- : Identifier OpenParen expressionList? CloseParen
+ : (Identifier|QualifiedIdentifier) OpenParen expressionList? CloseParen
  ;
 
 ifStatement
@@ -121,7 +121,13 @@ Float
 
 Int :   [0-9]+ ;
 
+STRING
+ : '"' (~["\r\n] | '""')* '"'
+ ;
+
 Identifier  :   Letter (Letter | [0-9])* ;
+
+QualifiedIdentifier  :   Identifier '.' Identifier ;
 
 fragment
 Letter : [a-zA-Z] ;
