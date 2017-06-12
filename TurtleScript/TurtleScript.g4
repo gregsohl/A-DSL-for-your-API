@@ -121,9 +121,9 @@ Float
 
 Int :   [0-9]+ ;
 
-STRING
- : '"' (~["\r\n] | '""')* '"'
- ;
+//STRING
+// : '"' (~["\r\n] | '""')* '"'
+// ;
 
 Identifier  :   Letter (Letter | [0-9])* ;
 
