@@ -13,7 +13,7 @@ namespace TurtleScript.Interpreter.UnitTest
 	public class RuntimeTests
 	{
 		[Test]
-		public void AssignmentAndReference()
+		public void SingleParameter()
 		{
 			// Arrange
 			StringBuilder scriptBuilder = new StringBuilder();
@@ -31,6 +31,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.AreEqual(4, variableValue.NumericValue);
 		}
 
+		[Test]
+		public void ThreeParameters()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("a = test.sum(2, 4, 6)");
+
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString(), new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+
+			// Act
+			bool success = interpreter.Execute();
+
+			// Assert
+			Assert.IsTrue(success);
+
+			TurtleScriptValue variableValue = interpreter.Variables["a"];
+			Assert.AreEqual(12, variableValue.NumericValue);
+		}
+
 
 		private class SampleRuntime : ITurtleScriptRuntime
 		{
@@ -39,6 +58,7 @@ namespace TurtleScript.Interpreter.UnitTest
 				m_Functions = new Dictionary<string, Func<List<TurtleScriptValue>, TurtleScriptValue>>();
 
 				m_Functions.Add("square", Square);
+				m_Functions.Add("sum", Sum);
 			}
 
 			public string Namespace
@@ -65,8 +85,27 @@ namespace TurtleScript.Interpreter.UnitTest
 				return TurtleScriptValue.VOID;
 			}
 
+			public TurtleScriptValue Sum(List<TurtleScriptValue> parameters)
+			{
+				if (parameters.Count == 3)
+				{
+					float value1 = parameters[0].NumericValue;
+					float value2 = parameters[1].NumericValue;
+					float value3 = parameters[2].NumericValue;
+
+					TurtleScriptValue returnValue = new TurtleScriptValue(value1 + value2 + value3);
+
+					return returnValue;
+				}
+
+				return TurtleScriptValue.VOID;
+			}
+
+			#region Private Fields
+
 			private Dictionary<string, Func<List<TurtleScriptValue>, TurtleScriptValue>> m_Functions;
 
+			#endregion Private Fields
 		}
 
 	}
