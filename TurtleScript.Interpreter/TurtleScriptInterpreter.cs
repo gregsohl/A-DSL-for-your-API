@@ -306,15 +306,19 @@ namespace TurtleScript.Interpreter
 			ITurtleScriptRuntime runtime,
 			string functionName)
 		{
-			Func<List<TurtleScriptValue>, TurtleScriptValue> function;
-			if (runtime.Functions.TryGetValue(functionName,
-				out function))
+			TurtleScriptRuntimeFunction function;
+			if (runtime.Functions.TryGetValue(functionName, out function))
 			{
 				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
 
 				if (context.expressionList() != null)
 				{
 					parameterExpressions = context.expressionList().expression();
+				}
+
+				if (parameterExpressions.Length != function.ParameterCount)
+				{
+					throw new InvalidOperationException(string.Format("Invalid number of parameters specified for function call at Line {0}, Column {1}", context.Start.Line, context.Start.Column));
 				}
 
 				List<TurtleScriptValue> functionParameters = new List<TurtleScriptValue>();
@@ -327,7 +331,7 @@ namespace TurtleScript.Interpreter
 					functionParameters.Add(parameterValue);
 				}
 
-				TurtleScriptValue returnValue = function(functionParameters);
+				TurtleScriptValue returnValue = function.Function(functionParameters);
 
 				return returnValue;
 			}

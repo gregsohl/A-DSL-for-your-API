@@ -11,6 +11,6 @@ namespace TurtleScript.Interpreter
 	{
 		string Namespace { get; }
 
-		Dictionary<string, Func<List<TurtleScriptValue>, TurtleScriptValue>> Functions { get; }
+		Dictionary<string, TurtleScriptRuntimeFunction> Functions { get; }
 	}
 }

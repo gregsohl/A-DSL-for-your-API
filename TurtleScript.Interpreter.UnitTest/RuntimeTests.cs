@@ -55,10 +55,10 @@ namespace TurtleScript.Interpreter.UnitTest
 		{
 			public SampleRuntime()
 			{
-				m_Functions = new Dictionary<string, Func<List<TurtleScriptValue>, TurtleScriptValue>>();
+				m_Functions = new Dictionary<string, TurtleScriptRuntimeFunction>();
 
-				m_Functions.Add("square", Square);
-				m_Functions.Add("sum", Sum);
+				m_Functions.Add("square", new TurtleScriptRuntimeFunction(Square, 1));
+				m_Functions.Add("sum", new TurtleScriptRuntimeFunction(Sum, 3));
 			}
 
 			public string Namespace
@@ -66,7 +66,7 @@ namespace TurtleScript.Interpreter.UnitTest
 				get { return "test"; }
 			}
 
-			public Dictionary<string, Func<List<TurtleScriptValue>, TurtleScriptValue>> Functions
+			public Dictionary<string, TurtleScriptRuntimeFunction> Functions
 			{
 				get { return m_Functions; }
 			}
@@ -103,7 +103,7 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			#region Private Fields
 
-			private Dictionary<string, Func<List<TurtleScriptValue>, TurtleScriptValue>> m_Functions;
+			private Dictionary<string, TurtleScriptRuntimeFunction> m_Functions;
 
 			#endregion Private Fields
 		}
