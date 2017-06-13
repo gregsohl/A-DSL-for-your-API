@@ -163,7 +163,7 @@ namespace TurtleScript.Interpreter
 				return turtleScriptValue;
 			}
 
-			return TurtleScriptValue.NULL;
+			return TurtleScriptValue.VOID;
 		}
 
 		public override TurtleScriptValue VisitCompareExpression(TurtleScriptParser.CompareExpressionContext context)
