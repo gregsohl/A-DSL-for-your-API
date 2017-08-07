@@ -24,7 +24,7 @@ namespace Nakov.TurtleGraphics
 
 		#region Public Properties
 
-		public static float Angle
+		public static double Angle
 		{
 			get
 			{
@@ -70,7 +70,7 @@ namespace Nakov.TurtleGraphics
 			}
 		}
 
-		public static float PenSize
+		public static double PenSize
 		{
 			get
 			{
@@ -80,7 +80,7 @@ namespace Nakov.TurtleGraphics
 			set
 			{
 				InitOnDemand();
-				m_DrawPen.Width = value;
+				m_DrawPen.Width = (float)value;
 			}
 		}
 
@@ -112,7 +112,7 @@ namespace Nakov.TurtleGraphics
 			}
 		}
 
-		public static float X
+		public static double X
 		{
 			get
 			{
@@ -125,7 +125,7 @@ namespace Nakov.TurtleGraphics
 				m_X = value;
 			}
 		}
-		public static float Y
+		public static double Y
 		{
 			get
 			{
@@ -143,7 +143,7 @@ namespace Nakov.TurtleGraphics
 
 		#region Public Methods
 
-		public static void Backward(float distance = 10)
+		public static void Backward(double distance = 10)
 		{
 			Forward(-distance);
 		}
@@ -177,11 +177,11 @@ namespace Nakov.TurtleGraphics
 			}
 		}
 
-		public static void Forward(float distance = 10)
+		public static void Forward(double distance = 10)
 		{
 			var angleRadians = Angle * Math.PI / 180;
-			var newX = X + (float)(distance * Math.Sin(angleRadians));
-			var newY = Y + (float)(distance * Math.Cos(angleRadians));
+			var newX = X + (double)(distance * Math.Sin(angleRadians));
+			var newY = Y + (double)(distance * Math.Cos(angleRadians));
 			MoveTo(newX, newY);
 		}
 
@@ -224,7 +224,7 @@ namespace Nakov.TurtleGraphics
 			m_TurtleHeadImage.BackColor = Color.Transparent;
 			m_DrawControl.Controls.Add(m_TurtleHeadImage);
 		}
-		public static void MoveTo(float newX, float newY)
+		public static void MoveTo(double newX, double newY)
 		{
 			InitOnDemand();
 			var fromX = DRAW_AREA_SIZE / 2 + X;
@@ -236,7 +236,7 @@ namespace Nakov.TurtleGraphics
 			{
 				var toX = DRAW_AREA_SIZE / 2 + X;
 				var toY = DRAW_AREA_SIZE / 2 - Y;
-				m_DrawGraphics.DrawLine(m_DrawPen, fromX, fromY, toX, toY);
+				m_DrawGraphics.DrawLine(m_DrawPen, (float)fromX, (float)fromY, (float)toX, (float)toY);
 			}
 
 			DrawTurtle();
@@ -255,15 +255,19 @@ namespace Nakov.TurtleGraphics
 
 		public static void Reset()
 		{
+			m_DrawCount = 0;
 			m_DrawGraphics.Clear(Color.White);
 			PenSize = DEFAULT_PEN_SIZE;
 			PenColor = DEFAULT_COLOR;
 			Angle = 0;
 			PenDown();
 			Delay = 10;
+			ShowTurtle = true;
+			X = 0;
+			Y = 0;
 		}
 
-		public static void Rotate(float angleDelta)
+		public static void Rotate(double angleDelta)
 		{
 			InitOnDemand();
 			Angle += angleDelta;
@@ -271,7 +275,7 @@ namespace Nakov.TurtleGraphics
 			PaintAndDelay();
 		}
 		
-		public static void RotateTo(float newAngle)
+		public static void RotateTo(double newAngle)
 		{
 			InitOnDemand();
 			Angle = newAngle;
@@ -281,9 +285,15 @@ namespace Nakov.TurtleGraphics
 
 		#endregion Public Methods
 
+		#region Private Constants
+
+		private const int SCREEN_REFRESH_FREQUENCY = 5;
+
+		#endregion Private Constants
+
 		#region Private Fields
 
-		private static float m_Angle;
+		private static double m_Angle;
 		private static int m_Delay;
 		private static Control m_DrawControl;
 		private static Graphics m_DrawGraphics;
@@ -291,8 +301,10 @@ namespace Nakov.TurtleGraphics
 		private static Pen m_DrawPen;
 		private static bool m_PenVisible;
 		private static PictureBox m_TurtleHeadImage;
-		private static float m_X;
-		private static float m_Y;
+		private static double m_X;
+		private static double m_Y;
+
+		private static int m_DrawCount;
 
 		#endregion Private Fields
 
@@ -356,11 +368,18 @@ namespace Nakov.TurtleGraphics
 				// Immediately paint the control and them delay
 				m_DrawControl.Update();
 				Thread.Sleep(Delay);
-				Application.DoEvents();
+
+				m_DrawCount++;
+
+				if (m_DrawCount % SCREEN_REFRESH_FREQUENCY == 0)
+				{
+					Application.DoEvents();
+					m_DrawCount = 0;
+				}
 			}
 		}
 
-		private static Bitmap RotateImage(Bitmap bitmap, float angleDegrees)
+		private static Bitmap RotateImage(Bitmap bitmap, double angleDegrees)
 		{
 			Bitmap rotatedImage = new Bitmap(bitmap.Width, bitmap.Height);
 			
@@ -370,7 +389,7 @@ namespace Nakov.TurtleGraphics
 				g.TranslateTransform(bitmap.Width / 2, bitmap.Height / 2);
 
 				// Rotate
-				g.RotateTransform(angleDegrees);
+				g.RotateTransform((float)angleDegrees);
 
 				// Restore the rotation point into the matrix
 				g.TranslateTransform(-bitmap.Width / 2, -bitmap.Height / 2);
@@ -394,5 +413,9 @@ namespace Nakov.TurtleGraphics
 
 		#endregion Private Methods
 
+		public static void Refresh()
+		{
+			Application.DoEvents();
+		}
 	}
 }

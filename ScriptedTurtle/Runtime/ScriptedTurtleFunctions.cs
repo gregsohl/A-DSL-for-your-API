@@ -47,7 +47,7 @@ namespace ScriptedTurtle.Runtime
 		{
 			if (parameters.Count == 1)
 			{
-				float distance = parameters[0].NumericValue;
+				double distance = parameters[0].NumericValue;
 
 				Turtle.Forward(distance);
 			}
@@ -59,7 +59,7 @@ namespace ScriptedTurtle.Runtime
 		{
 			if (parameters.Count == 1)
 			{
-				float distance = parameters[0].NumericValue;
+				double distance = parameters[0].NumericValue;
 
 				Turtle.Backward(distance);
 			}
@@ -71,8 +71,8 @@ namespace ScriptedTurtle.Runtime
 		{
 			if (parameters.Count == 2)
 			{
-				float x = parameters[0].NumericValue;
-				float y = parameters[1].NumericValue;
+				double x = parameters[0].NumericValue;
+				double y = parameters[1].NumericValue;
 
 				Turtle.MoveTo(x, y);
 			}
@@ -84,7 +84,7 @@ namespace ScriptedTurtle.Runtime
 		{
 			if (parameters.Count == 1)
 			{
-				float angle = parameters[0].NumericValue;
+				double angle = parameters[0].NumericValue;
 
 				Turtle.Rotate(angle);
 			}
@@ -96,7 +96,7 @@ namespace ScriptedTurtle.Runtime
 		{
 			if (parameters.Count == 1)
 			{
-				float angle = parameters[0].NumericValue;
+				double angle = parameters[0].NumericValue;
 
 				Turtle.RotateTo(angle);
 			}
@@ -143,7 +143,7 @@ namespace ScriptedTurtle.Runtime
 		{
 			if (parameters.Count == 1)
 			{
-				float penSize = parameters[0].NumericValue;
+				double penSize = parameters[0].NumericValue;
 
 				Turtle.PenSize = penSize;
 			}

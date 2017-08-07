@@ -17,7 +17,7 @@ namespace TurtleScript.Interpreter
 			m_IsBoolean = true;
 		}
 
-		public TurtleScriptValue(float numericValue)
+		public TurtleScriptValue(double numericValue)
 		{
 			m_NumericValue = numericValue;
 			m_IsNumeric = true;
@@ -50,7 +50,7 @@ namespace TurtleScript.Interpreter
 			get { return m_IsNumeric; }
 		}
 
-		public float NumericValue
+		public double NumericValue
 		{
 			get { return m_NumericValue; }
 		}
@@ -243,7 +243,7 @@ namespace TurtleScript.Interpreter
 
 		private readonly bool m_BooleanValue;
 		private readonly bool m_IsBoolean;
-		private readonly float m_NumericValue;
+		private readonly double m_NumericValue;
 		private readonly bool m_IsNumeric;
 		private readonly bool m_IsNull;
 

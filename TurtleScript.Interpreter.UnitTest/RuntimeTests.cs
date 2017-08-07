@@ -75,7 +75,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			{
 				if (parameters.Count == 1)
 				{
-					float value = parameters[0].NumericValue;
+					double value = parameters[0].NumericValue;
 
 					TurtleScriptValue returnValue = new TurtleScriptValue(value * value);
 
@@ -89,9 +89,9 @@ namespace TurtleScript.Interpreter.UnitTest
 			{
 				if (parameters.Count == 3)
 				{
-					float value1 = parameters[0].NumericValue;
-					float value2 = parameters[1].NumericValue;
-					float value3 = parameters[2].NumericValue;
+					double value1 = parameters[0].NumericValue;
+					double value2 = parameters[1].NumericValue;
+					double value3 = parameters[2].NumericValue;
 
 					TurtleScriptValue returnValue = new TurtleScriptValue(value1 + value2 + value3);
 

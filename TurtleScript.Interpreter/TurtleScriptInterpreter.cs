@@ -203,9 +203,9 @@ namespace TurtleScript.Interpreter
 
 		public override TurtleScriptValue VisitFloatExpression(TurtleScriptParser.FloatExpressionContext context)
 		{
-			float value;
+			double value;
 
-			if (float.TryParse(context.GetText(), out value))
+			if (double.TryParse(context.GetText(), out value))
 			{
 				return new TurtleScriptValue(value);
 			}
@@ -225,11 +225,11 @@ namespace TurtleScript.Interpreter
 				throw new InvalidOperationException(string.Format("For loop starting value must be numeric. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
 			}
 
-			float increment = startValue.NumericValue <= endValue.NumericValue ? 1.0f : -1.0f;
+			double increment = startValue.NumericValue <= endValue.NumericValue ? 1.0f : -1.0f;
 
 			if (increment == 1)
 			{
-				for (float index = startValue.NumericValue; index <= endValue.NumericValue; index += increment)
+				for (double index = startValue.NumericValue; index <= endValue.NumericValue; index += increment)
 				{
 					SetVariableValue(loopVariableName,
 						index);
@@ -239,7 +239,7 @@ namespace TurtleScript.Interpreter
 			}
 			else
 			{
-				for (float index = startValue.NumericValue; index >= endValue.NumericValue; index += increment)
+				for (double index = startValue.NumericValue; index >= endValue.NumericValue; index += increment)
 				{
 					SetVariableValue(loopVariableName,
 						index);
@@ -521,15 +521,23 @@ namespace TurtleScript.Interpreter
 
 		#endregion Private Fields
 
-		private void SetVariableValue(string variableName, TurtleScriptValue variableValue)
+		#region Private Methods
+
+		private void SetVariableValue(
+			string variableName,
+			TurtleScriptValue variableValue)
 		{
 			m_Variables[variableName] = variableValue;
 		}
 
-		private void SetVariableValue(string variableName, float variableValue)
+		private void SetVariableValue(
+			string variableName,
+			double variableValue)
 		{
 			m_Variables[variableName] = new TurtleScriptValue(variableValue);
 		}
+
+		#endregion Private Methods
 
 	}
 }
