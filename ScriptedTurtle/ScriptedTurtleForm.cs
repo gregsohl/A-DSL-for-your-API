@@ -204,9 +204,10 @@ namespace ScriptedTurtle
 
 		private void buttonExecute_Click(object sender, EventArgs e)
 		{
-			ScriptedTurtleFunctions runtimeFunctions = new ScriptedTurtleFunctions();
+			var runtimeFunctions = new ScriptedTurtleFunctions();
+			var mathRuntimeFunctions = new TurtleMath();
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(txtScript.Text, new List<ITurtleScriptRuntime> {runtimeFunctions});
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(txtScript.Text, new List<ITurtleScriptRuntime> {runtimeFunctions, mathRuntimeFunctions});
 
 			bool result = interpreter.Execute();
 

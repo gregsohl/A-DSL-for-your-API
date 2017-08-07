@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Runtime\ScriptedTurtleFunctions.cs" />
+    <Compile Include="Runtime\TurtleMath.cs" />
     <Compile Include="ScriptedTurtleForm.cs">
       <SubType>Form</SubType>
     </Compile>
