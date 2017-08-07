@@ -1,0 +1,215 @@
+=================================
+// Draw square using a loop 
+=================================
+t.color(3) 
+t.size(35) 
+for side = 1 to 4 do 
+    t.forward(50) 
+    t.rotate(90) 
+end 
+ 
+ 
+=================================
+// Spirograph 1 
+=================================
+t.color(1) 
+t.size(2) 
+for i = 1 to 50 do 
+    t.forward(200) 
+    t.rotate(-123) 
+end 
+ 
+ 
+=================================
+// Spirograph 2 
+=================================
+t.clear() 
+t.delay(2) 
+t.color(1) 
+t.size(1) 
+ 
+for i  = 1 to 180 do 
+    t.forward(100) 
+    t.rotate(30) 
+    t.forward(20) 
+    t.rotate(-60) 
+    t.forward(50) 
+    t.rotate(30) 
+     
+    t.up() 
+    t.moveto(0, 0) 
+    t.down() 
+     
+    t.rotate(2) 
+end 
+t.showturtle() 
+ 
+ 
+=================================
+// Layered spiral of squares 
+=================================
+t.clear() 
+t.delay(2) 
+t.color(1) 
+t.size(1) 
+ 
+for i = 1 to 250 do 
+    t.forward(i) 
+    t.rotate(89) 
+end 
+
+=================================
+// Draw square in loop, changing color 
+=================================
+t.clear() 
+
+for color = 1 to 3 do 
+    t.color(a) 
+    t.forward(50) 
+    t.rotate(90) 
+ 
+    t.forward(50) 
+    t.rotate(90) 
+ 
+    t.forward(50) 
+    t.rotate(90) 
+ 
+    t.forward(50) 
+    t.rotate(90) 
+end 
+
+
+=================================
+Circles
+=================================
+
+// Simple Circle 
+t.showturtle() 
+t.clear()   
+t.delay(2)   
+t.color(1)   
+t.size(1) 
+t.up() 
+  
+width = 4 * 180 
+currentX = t.x() 
+currentY = t.y() 
+t.moveto(currentX-width/2, currentY) 
+ 
+t.down() 
+  
+for angle = 1 to 180 do 
+  t.forward(4) 
+  t.rotate(2) 
+end 
+ 
+t.rotateto(90); 
+t.up() 
+t.moveto(t.x() + 20, t.y()) 
+t.down 
+
+t.color(2) 
+ 
+for angle = 1 to 180 do 
+  t.forward(4) 
+  t.rotate(2) 
+end 
+ 
+t.rotateto(90);  
+t.up()  
+t.moveto(t.x() + 20, t.y())  
+t.down() 
+  
+t.color(3)  
+t.rotateto(0) 
+
+for angle = 1 to 180 do  
+  t.forward(4)  
+  t.rotate(2)  
+end  
+
+
+
+=================================
+repeat 8 [rt 45 repeat 6 [repeat 90 [fd 2 rt 2] rt 90]]
+=================================
+
+t.showturtle() 
+t.clear()   
+t.delay(0)   
+t.color(1)   
+t.size(1) 
+
+for a = 1 to 8 do
+	t.rotate(45)
+	for b = 1 to 6 do
+		for c = 1 to 90 do
+			t.forward(2)
+			t.rotate(2)
+		end
+		
+		t.rotate(90)
+		
+	end
+	
+end
+
+=================================
+repeat 360 [setxy (sin(327 * repcount)) * 150 (sin(66 * repcount)) * 150] 
+=================================
+
+t.showturtle() 
+t.clear()   
+t.delay(0)   
+t.color(1)   
+t.size(1) 
+
+for a = 1 to 360 do
+	t.moveto(m.sin(327 * a) * 150, m.sin(66 * a) * 150)
+end
+
+
+
+=================================
+// Rose
+=================================
+
+t.clear()   
+t.showturtle() 
+t.delay(0)   
+t.color(1)   
+t.size(1) 
+
+rose(5, 5, 3)
+t.pause(3000)
+t.clear()
+t.delay(0)   
+t.color(2)   
+t.size(1) 
+
+rose(5, 7, 3)
+t.pause(3000)
+t.clear()
+t.delay(0)   
+t.color(3)   
+t.size(1) 
+
+rose(5, 10, 7)
+t.pause(3000)
+t.clear()
+t.delay(0)   
+t.color(1)   
+t.size(1) 
+
+rose(5, 12, 5) 
+
+
+def rose(l, n, k)
+	x = (2 * k - n) / (2 * n)
+
+	for i = 1 to 360 * n do
+		t.forward(l)
+		t.rotate(i + x)
+	end
+end
+
