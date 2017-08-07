@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
+
 using Nakov.TurtleGraphics;
 using TurtleScript.Interpreter;
 
@@ -31,6 +33,7 @@ namespace ScriptedTurtle.Runtime
 			m_Functions.Add("y", new TurtleScriptRuntimeFunction(CurrentY, 0));
 			m_Functions.Add("angle", new TurtleScriptRuntimeFunction(CurrentAngle, 0));
 			m_Functions.Add("delay", new TurtleScriptRuntimeFunction(Delay, 1));
+			m_Functions.Add("pause", new TurtleScriptRuntimeFunction(Pause, 1));
 		}
 
 		public string Namespace
@@ -188,6 +191,20 @@ namespace ScriptedTurtle.Runtime
 				int delay = (int) parameters[0].NumericValue;
 
 				Turtle.Delay = delay;
+			}
+
+			return TurtleScriptValue.VOID;
+		}
+
+		public TurtleScriptValue Pause(List<TurtleScriptValue> parameters)
+		{
+			Turtle.Refresh();
+
+			if (parameters.Count == 1)
+			{
+				int milliseconds = (int)parameters[0].NumericValue;
+
+				Thread.Sleep(milliseconds);
 			}
 
 			return TurtleScriptValue.VOID;
