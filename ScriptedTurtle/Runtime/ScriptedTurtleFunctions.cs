@@ -18,22 +18,23 @@ namespace ScriptedTurtle.Runtime
 		{
 			m_Functions = new Dictionary<string, TurtleScriptRuntimeFunction>();
 
-			m_Functions.Add("forward", new TurtleScriptRuntimeFunction(Forward, 1));
-			m_Functions.Add("backward", new TurtleScriptRuntimeFunction(Backward, 1));
-			m_Functions.Add("moveto", new TurtleScriptRuntimeFunction(MoveTo, 2));
-			m_Functions.Add("rotate", new TurtleScriptRuntimeFunction(Rotate, 1));
-			m_Functions.Add("rotateto", new TurtleScriptRuntimeFunction(RotateTo, 1));
-			m_Functions.Add("up", new TurtleScriptRuntimeFunction(PenUp, 0));
-			m_Functions.Add("down", new TurtleScriptRuntimeFunction(PenDown, 0));
-			m_Functions.Add("color", new TurtleScriptRuntimeFunction(PenColor, 1));
-			m_Functions.Add("size", new TurtleScriptRuntimeFunction(PenSize, 1));
-			m_Functions.Add("clear", new TurtleScriptRuntimeFunction(Clear, 0));
-			m_Functions.Add("showturtle", new TurtleScriptRuntimeFunction(ToggleTurtle, 0));
-			m_Functions.Add("x", new TurtleScriptRuntimeFunction(CurrentX, 0));
-			m_Functions.Add("y", new TurtleScriptRuntimeFunction(CurrentY, 0));
-			m_Functions.Add("angle", new TurtleScriptRuntimeFunction(CurrentAngle, 0));
-			m_Functions.Add("delay", new TurtleScriptRuntimeFunction(Delay, 1));
-			m_Functions.Add("pause", new TurtleScriptRuntimeFunction(Pause, 1));
+			m_Functions.Add("forward_1", new TurtleScriptRuntimeFunction(Forward, 1));
+			m_Functions.Add("backward_1", new TurtleScriptRuntimeFunction(Backward, 1));
+			m_Functions.Add("moveto_2", new TurtleScriptRuntimeFunction(MoveTo, 2));
+			m_Functions.Add("rotate_1", new TurtleScriptRuntimeFunction(Rotate, 1));
+			m_Functions.Add("rotateto_1", new TurtleScriptRuntimeFunction(RotateTo, 1));
+			m_Functions.Add("up_0", new TurtleScriptRuntimeFunction(PenUp, 0));
+			m_Functions.Add("down_0", new TurtleScriptRuntimeFunction(PenDown, 0));
+			m_Functions.Add("color_1", new TurtleScriptRuntimeFunction(PenColor, 1));
+			m_Functions.Add("color_3", new TurtleScriptRuntimeFunction(PenColor, 3));
+			m_Functions.Add("size_1", new TurtleScriptRuntimeFunction(PenSize, 1));
+			m_Functions.Add("clear_0", new TurtleScriptRuntimeFunction(Clear, 0));
+			m_Functions.Add("showturtle_0", new TurtleScriptRuntimeFunction(ToggleTurtle, 0));
+			m_Functions.Add("x_0", new TurtleScriptRuntimeFunction(CurrentX, 0));
+			m_Functions.Add("y_0", new TurtleScriptRuntimeFunction(CurrentY, 0));
+			m_Functions.Add("angle_0", new TurtleScriptRuntimeFunction(CurrentAngle, 0));
+			m_Functions.Add("delay_1", new TurtleScriptRuntimeFunction(Delay, 1));
+			m_Functions.Add("pause_1", new TurtleScriptRuntimeFunction(Pause, 1));
 		}
 
 		public string Namespace
@@ -136,6 +137,17 @@ namespace ScriptedTurtle.Runtime
 					case 3:
 						Turtle.PenColor = Color.Blue;
 						break;
+				}
+			}
+			else
+			{
+				if (parameters.Count == 3)
+				{
+					int red = (int) parameters[0].NumericValue;
+					int green = (int) parameters[1].NumericValue;
+					int blue = (int) parameters[2].NumericValue;
+
+					Turtle.PenColor = Color.FromArgb(red, green, blue);
 				}
 			}
 

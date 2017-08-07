@@ -209,7 +209,17 @@ namespace ScriptedTurtle
 
 			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(txtScript.Text, new List<ITurtleScriptRuntime> {runtimeFunctions, mathRuntimeFunctions});
 
-			bool result = interpreter.Execute();
+			buttonExecute.Enabled = false;
+
+			bool result;
+			try
+			{
+				result = interpreter.Execute();
+			}
+			finally
+			{
+				buttonExecute.Enabled = true;
+			}
 
 			if (!result)
 			{

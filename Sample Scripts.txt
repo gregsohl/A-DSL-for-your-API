@@ -59,6 +59,41 @@ for i = 1 to 250 do
 end 
 
 =================================
+// Layered spiral of squares 
+=================================
+t.clear() 
+t.delay(2) 
+t.color(1) 
+t.size(1) 
+color = 1
+ 
+for i = 1 to 250 do 
+    t.forward(i) 
+    t.rotate(89) 
+	if i % 10 == 0 then
+		color = color + 1
+		if (color > 3)
+			color = 1
+		end
+		t.color(color)
+	end
+end 
+
+=================================
+// Layered spiral of squares 
+=================================
+t.clear() 
+t.delay(2) 
+t.color(1) 
+t.size(1) 
+ 
+for i = 1 to 250 do 
+    t.forward(i) 
+    t.rotate(89) 
+	t.color(i, 0, 0)
+end 
+
+=================================
 // Draw square in loop, changing color 
 =================================
 t.clear() 
