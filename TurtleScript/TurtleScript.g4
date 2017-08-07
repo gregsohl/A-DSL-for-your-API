@@ -17,10 +17,10 @@ block
  ;
 
 statement
- : assignment
- | functionCall
- | ifStatement
- | forStatement
+ : assignment (Semicolon)?
+ | functionCall (Semicolon)?
+ | ifStatement (Semicolon)?
+ | forStatement (Semicolon)?
  ;
 
 assignment
@@ -114,6 +114,8 @@ Assign : '=';
 
 OpenParen  : '(';
 CloseParen : ')';
+
+Semicolon : ';';
 
 Float
 	:   Digit+ '.' Digit*
