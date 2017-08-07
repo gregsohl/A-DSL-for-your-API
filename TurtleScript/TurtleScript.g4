@@ -75,6 +75,7 @@ expression
 	|	expression op=(EQ|NE|GT|GE|LT|LE) expression     #compareExpression		            // Comparison Operations
 	|	expression '&&' expression                       #andExpression			            // Logical AND
 	|	expression '||' expression                       #orExpression	                    // Logical OR
+	|   Pi                                               #piExpression						// PI constant
 	|	Identifier	                                     #variableReferenceExpression       // Variable Reference
 	|	Float										     #floatExpression                   // Floating Point Number
 	|	Int										         #intExpression                     // Integer Number
@@ -123,6 +124,8 @@ Float
 	;
 
 Int :   [0-9]+ ;
+
+Pi	:	'pi';
 
 //STRING
 // : '"' (~["\r\n] | '""')* '"'

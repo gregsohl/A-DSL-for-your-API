@@ -511,7 +511,13 @@ namespace TurtleScript.Interpreter
 
 			throw new InvalidOperationException(string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", context.Identifier().GetText(), context.Start.Line, context.Start.Column));
 		}
-		
+
+		public override TurtleScriptValue VisitPiExpression(
+			TurtleScriptParser.PiExpressionContext context)
+		{
+			return new TurtleScriptValue(3.141592654);
+		}
+
 		#endregion Public Methods
 
 		#region Private Fields
