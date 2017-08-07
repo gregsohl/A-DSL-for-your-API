@@ -439,21 +439,25 @@ namespace TurtleScript.Interpreter
 			TurtleScriptValue leftValue = Visit(context.expression(0));
 			TurtleScriptValue rightValue = Visit(context.expression(1));
 
-			TurtleScriptValue result;
-			if (context.op.Type == TurtleScriptParser.MUL)
+			TurtleScriptValue result = null;
+			switch (context.op.Type)
 			{
-				result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
-			}
-			else
-			{
-				if (rightValue.NumericValue == 0)
-				{
-					result = new TurtleScriptValue(0);
-				}
-				else
-				{
-					result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
-				}
+				case TurtleScriptParser.MUL:
+					result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
+					break;
+				case TurtleScriptParser.DIV:
+					if (rightValue.NumericValue == 0)
+					{
+						result = new TurtleScriptValue(0);
+					}
+					else
+					{
+						result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
+					}
+					break;
+				case TurtleScriptParser.MOD:
+					result = new TurtleScriptValue(leftValue.NumericValue % rightValue.NumericValue);
+					break;
 			}
 
 			return result;

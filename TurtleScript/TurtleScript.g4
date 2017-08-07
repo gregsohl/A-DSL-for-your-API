@@ -70,7 +70,7 @@ expression
 	:  functionCall						                 #functionCallExpression			// Call to a built-in or user-defined function
 	|	'-'expression					                 #unaryNegationExpression	        // unary negation
 	|	'!'expression					                 #unaryNotExpression	            // unary not
-	|	expression op=(MUL|DIV) expression	             #multiplicativeOpExpression	    // MultiplicativeOperation
+	|	expression op=(MUL|DIV|MOD) expression	         #multiplicativeOpExpression	    // MultiplicativeOperation
 	|	expression op=(ADD|SUB) expression	             #additiveExpression			    // AdditiveOperation
 	|	expression op=(EQ|NE|GT|GE|LT|LE) expression     #compareExpression		            // Comparison Operations
 	|	expression '&&' expression                       #andExpression			            // Logical AND
@@ -98,6 +98,7 @@ Def		: 'def';
 
 MUL :   '*' ;
 DIV :   '/' ;
+MOD :   '%' ;
 ADD :   '+' ;
 SUB :   '-' ;
 EQ  :   '==';
