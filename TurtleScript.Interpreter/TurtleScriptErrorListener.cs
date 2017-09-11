@@ -6,13 +6,13 @@ using Antlr4.Runtime;
 
 namespace TurtleScript.Interpreter
 {
-	public class TurtleScriptErrorListener : BaseErrorListener, IAntlrErrorListener<int>
+	public class TurtleScriptErrorListener : IAntlrErrorListener<IToken>
 	{
 		public string Message { get; private set; }
 
 		public void SyntaxError(
 			IRecognizer recognizer,
-			int offendingSymbol,
+			IToken offendingSymbol,
 			int line,
 			int charPositionInLine,
 			string msg,
