@@ -11,9 +11,9 @@ namespace ScriptedTurtle.Runtime
 		{
 			m_Functions = new Dictionary<string, TurtleScriptRuntimeFunction>();
 
-			m_Functions.Add("sin", new TurtleScriptRuntimeFunction(Sin, 1));
-			m_Functions.Add("cos", new TurtleScriptRuntimeFunction(Cos, 1));
-			m_Functions.Add("tan", new TurtleScriptRuntimeFunction(Tan, 1));
+			m_Functions.Add("sin_1", new TurtleScriptRuntimeFunction(Sin, 1));
+			m_Functions.Add("cos_1", new TurtleScriptRuntimeFunction(Cos, 1));
+			m_Functions.Add("tan_1", new TurtleScriptRuntimeFunction(Tan, 1));
 		}
 
 		public string Namespace

@@ -422,6 +422,7 @@ namespace TurtleScript.Interpreter
 			IParseTree block = context.block();
 
 			string functionName = context.Identifier().GetText();
+			functionName += "_" + formalParameterContexts.Length;
 
 			// Check for function that exists by the same name
 			TurtleScriptFunction existingFunction;
