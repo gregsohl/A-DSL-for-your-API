@@ -248,3 +248,27 @@ def rose(l, n, k)
 	end
 end
 
+
+==========================
+Polygon
+==========================
+t.clear()   
+t.showturtle() 
+t.delay(0)   
+t.color(1)   
+t.size(1) 
+
+DrawPolygon(0, 0, 8, 100)
+
+def DrawPolygon (x, y, sides, radius)
+  sideLen = 2 * radius * m.sin (3.141592654 / sides)
+  angle = 360 / sides
+  t.up()
+  t.moveto(x, y)
+  t.down()
+  for iter = 1 to sides do
+    t.forward (sideLen)
+    t.rotate (angle * -1)
+  end
+end
+
