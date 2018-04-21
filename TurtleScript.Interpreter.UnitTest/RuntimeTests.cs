@@ -19,7 +19,9 @@ namespace TurtleScript.Interpreter.UnitTest
 			StringBuilder scriptBuilder = new StringBuilder();
 			scriptBuilder.AppendLine("a = test.square(2)");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString(), new List<ITurtleScriptRuntime>() {new SampleRuntime()});
+            TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(
+                scriptBuilder.ToString(),
+                new List<ITurtleScriptRuntime>() {new SampleRuntime()});
 
 			// Act
 			bool success = interpreter.Execute();
@@ -57,8 +59,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			{
 				m_Functions = new Dictionary<string, TurtleScriptRuntimeFunction>();
 
-				m_Functions.Add("square", new TurtleScriptRuntimeFunction(Square, 1));
-				m_Functions.Add("sum", new TurtleScriptRuntimeFunction(Sum, 3));
+				m_Functions.Add("square_1", new TurtleScriptRuntimeFunction(Square, 1));
+				m_Functions.Add("sum_3", new TurtleScriptRuntimeFunction(Sum, 3));
 			}
 
 			public string Namespace
