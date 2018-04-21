@@ -72,7 +72,7 @@ for i = 1 to 250 do
     t.rotate(89) 
 	if i % 10 == 0 then
 		color = color + 1
-		if (color > 3)
+		if (color > 3) then
 			color = 1
 		end
 		t.color(color)
@@ -252,16 +252,16 @@ end
 ==========================
 Polygon
 ==========================
-t.clear()   
-t.showturtle() 
-t.delay(0)   
-t.color(1)   
-t.size(1) 
+t.clear()
+t.showturtle()
+t.delay(10)
+t.color(1)
+t.size(1)
 
 DrawPolygon(0, 0, 8, 100)
 
 def DrawPolygon (x, y, sides, radius)
-  sideLen = 2 * radius * m.sin (3.141592654 / sides)
+  sideLen = 2 * radius * m.sin (pi / sides)
   angle = 360 / sides
   t.up()
   t.moveto(x, y)
