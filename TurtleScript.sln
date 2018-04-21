@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleScript.Grammar", "TurtleScript\TurtleScript.Grammar.csproj", "{CAA626A4-DDC2-422D-B424-229F800E4642}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleScript.Interpreter", "TurtleScript.Interpreter\TurtleScript.Interpreter.csproj", "{75AD2673-1776-4B95-AA70-16BB5B275977}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CAA626A4-DDC2-422D-B424-229F800E4642} = {CAA626A4-DDC2-422D-B424-229F800E4642}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleScript.Interpreter.UnitTest", "TurtleScript.Interpreter.UnitTest\TurtleScript.Interpreter.UnitTest.csproj", "{CBA41CEB-6C9E-45C6-BB95-46B1E11FFD36}"
 EndProject
