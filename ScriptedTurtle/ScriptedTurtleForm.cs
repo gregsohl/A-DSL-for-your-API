@@ -212,6 +212,8 @@ namespace ScriptedTurtle
 			buttonExecute.Enabled = false;
 
 			bool result;
+			Cursor = Cursors.WaitCursor;
+
 			try
 			{
 				result = interpreter.Execute();
@@ -219,6 +221,7 @@ namespace ScriptedTurtle
 			finally
 			{
 				buttonExecute.Enabled = true;
+				Cursor = Cursors.Default;
 			}
 
 			if (!result)
