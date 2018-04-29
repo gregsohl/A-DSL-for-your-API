@@ -36,11 +36,11 @@ ifStatement
  ;
 
 ifStat
- : If expression Do block
+ : IF expression Do block
  ;
 
 elseIfStat
- : Else If expression Do block
+ : Else IF expression Do block
  ;
 
 elseStat
@@ -70,12 +70,12 @@ expression
 	:  functionCall						                 #functionCallExpression			// Call to a built-in or user-defined function
 	|	'-'expression					                 #unaryNegationExpression	        // unary negation
 	|	'!'expression					                 #unaryNotExpression	            // unary not
-	|	expression op=(MUL|DIV|MOD) expression	         #multiplicativeOpExpression	    // MultiplicativeOperation
-	|	expression op=(ADD|SUB) expression	             #additiveExpression			    // AdditiveOperation
+	|	expression op=(Mul|Div|Mod) expression	         #multiplicativeOpExpression	    // MultiplicativeOperation
+	|	expression op=(Add|Sub) expression	             #additiveExpression			    // AdditiveOperation
 	|	expression op=(EQ|NE|GT|GE|LT|LE) expression     #compareExpression		            // Comparison Operations
-	|	expression '&&' expression                       #andExpression			            // Logical AND
-	|	expression '||' expression                       #orExpression	                    // Logical OR
-	|   Pi                                               #piExpression						// PI constant
+	|	expression And expression                        #andExpression			            // Logical AND
+	|	expression Or expression                         #orExpression	                    // Logical OR
+	|   Tau                                              #tauExpression						// PI constant
 	|	Identifier	                                     #variableReferenceExpression       // Variable Reference
 	|	Float										     #floatExpression                   // Floating Point Number
 	|	Int										         #intExpression                     // Integer Number
@@ -87,7 +87,7 @@ expression
  * Lexer Rules
  */
 
-If      : 'if';
+IF      : 'if';
 Else    : 'else';
 Return  : 'return';
 For     : 'for';
@@ -97,19 +97,19 @@ End     : 'end';
 Def		: 'def';
 
 
-MUL :   '*' ;
-DIV :   '/' ;
-MOD :   '%' ;
-ADD :   '+' ;
-SUB :   '-' ;
+Mul :   '*' ;
+Div :   '/' ;
+Mod :   '%' ;
+Add :   '+' ;
+Sub :   '-' ;
 EQ  :   '==';
 NE  :   '!=';
 GT  :   '>';
 LT  :   '<';
 GE  :   '>=';
 LE  :   '<=';
-AND :   '&&';
-OR  :   '||';
+And :   '&&';
+Or  :   '||';
 
 Assign : '=';
 

@@ -114,7 +114,7 @@ namespace TurtleScript.Interpreter
 			TurtleScriptValue rightValue = Visit(context.expression(1));
 
 			TurtleScriptValue result;
-			if (context.op.Type == TurtleScriptParser.ADD)
+			if (context.op.Type == TurtleScriptParser.Add)
 			{
 				result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
 			}
@@ -488,10 +488,10 @@ namespace TurtleScript.Interpreter
 			TurtleScriptValue result = null;
 			switch (context.op.Type)
 			{
-				case TurtleScriptParser.MUL:
+				case TurtleScriptParser.Mul:
 					result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
 					break;
-				case TurtleScriptParser.DIV:
+				case TurtleScriptParser.Div:
 					if (rightValue.NumericValue == 0)
 					{
 						result = new TurtleScriptValue(0);
@@ -501,7 +501,7 @@ namespace TurtleScript.Interpreter
 						result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
 					}
 					break;
-				case TurtleScriptParser.MOD:
+				case TurtleScriptParser.Mod:
 					result = new TurtleScriptValue(leftValue.NumericValue % rightValue.NumericValue);
 					break;
 			}
