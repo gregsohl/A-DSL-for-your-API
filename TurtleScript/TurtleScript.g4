@@ -75,7 +75,7 @@ expression
 	|	expression op=(EQ|NE|GT|GE|LT|LE) expression     #compareExpression		            // Comparison Operations
 	|	expression And expression                        #andExpression			            // Logical AND
 	|	expression Or expression                         #orExpression	                    // Logical OR
-	|   Tau                                              #tauExpression						// PI constant
+	|   Pi                                              #piExpression						// PI constant
 	|	Identifier	                                     #variableReferenceExpression       // Variable Reference
 	|	Float										     #floatExpression                   // Floating Point Number
 	|	Int										         #intExpression                     // Integer Number
