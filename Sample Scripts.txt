@@ -1,5 +1,5 @@
 =================================
-// Draw square using a loop 
+// Draw square using a loop (good)
 =================================
 t.color(3) 
 t.size(35) 
@@ -10,7 +10,7 @@ end
  
  
 =================================
-// Spirograph 1 
+// Spirograph 1 (good)
 =================================
 t.color(1) 
 t.size(2) 
@@ -21,7 +21,7 @@ end
  
  
 =================================
-// Spirograph 2 
+// Spirograph 2 (good)
 =================================
 t.clear() 
 t.delay(2) 
@@ -46,7 +46,7 @@ t.showturtle()
  
  
 =================================
-// Layered spiral of squares 
+// Layered spiral of squares (good)
 =================================
 t.clear() 
 t.delay(2) 
@@ -80,7 +80,7 @@ for i = 1 to 250 do
 end 
 
 =================================
-// Layered spiral of squares 
+// Layered spiral of squares (good)
 =================================
 t.clear() 
 t.delay(2) 
@@ -99,7 +99,7 @@ end
 t.clear() 
 
 for color = 1 to 3 do 
-    t.color(a) 
+    t.color(1) 
     t.forward(50) 
     t.rotate(90) 
  
@@ -150,7 +150,7 @@ for angle = 1 to 180 do
   t.rotate(2) 
 end 
  
-t.rotateto(90);  
+t.rotateto(90)
 t.up()  
 t.moveto(t.x() + 20, t.y())  
 t.down() 
@@ -206,7 +206,7 @@ end
 
 
 =================================
-// Rose
+// Rose (good)
 =================================
 
 t.clear()   
@@ -216,21 +216,21 @@ t.color(1)
 t.size(1) 
 
 rose(5, 5, 3)
-t.pause(3000)
+t.pause(2000)
 t.clear()
 t.delay(0)   
 t.color(2)   
 t.size(1) 
 
 rose(5, 7, 3)
-t.pause(3000)
+t.pause(2000)
 t.clear()
 t.delay(0)   
 t.color(3)   
 t.size(1) 
 
 rose(5, 10, 7)
-t.pause(3000)
+t.pause(2000)
 t.clear()
 t.delay(0)   
 t.color(1)   
@@ -250,7 +250,7 @@ end
 
 
 ==========================
-Polygon
+Polygon (good)
 ==========================
 t.clear()
 t.showturtle()
