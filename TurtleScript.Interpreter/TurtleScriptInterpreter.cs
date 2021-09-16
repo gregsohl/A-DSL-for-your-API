@@ -210,7 +210,7 @@ namespace TurtleScript.Interpreter
 				return new TurtleScriptValue(value);
 			}
 
-			throw new InvalidOperationException("");
+			throw new InvalidOperationException($"Invalid numeric value. Line {context.Start.Line}, Column {context.Start.Column}"); 
 		}
 
 		public override TurtleScriptValue VisitForStatement(TurtleScriptParser.ForStatementContext context)
@@ -266,14 +266,20 @@ namespace TurtleScript.Interpreter
 
 					if (parameterExpressions.Length != function.Parameters.Count)
 					{
-						throw new InvalidOperationException(string.Format("Invalid number of parameters specified for function call at Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+						// TODO: This cannot happen as number of parameters is used to find the function initially. Will fail before here.
+						throw new InvalidOperationException(
+							string.Format(
+								"Invalid number of parameters specified for function call. Line {0}, Column {1}",
+								context.Start.Line,
+								context.Start.Column));
 					}
 				}
 
-				for(int parameterIndex = 0; parameterIndex < function.Parameters.Count; parameterIndex++)
+				List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
+
+				for (int parameterIndex = 0; parameterIndex < function.Parameters.Count; parameterIndex++)
 				{
 					string parameterName = function.Parameters[parameterIndex].GetText();
-					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
 					TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
 
 					SetVariableValue(parameterName, parameterValue);
@@ -298,7 +304,12 @@ namespace TurtleScript.Interpreter
 				return returnValue;
 			}
 
-			throw new InvalidOperationException(string.Format("Invalid identifier. Function name not previously defined. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+			var invalidOperationException = new InvalidOperationException(
+				string.Format(
+					"Invalid identifier. Function name not previously defined. Line {0}, Column {1}",
+					context.Start.Line,
+					context.Start.Column));
+			throw invalidOperationException;
 		}
 
 		private bool TryGetFunction(
@@ -384,8 +395,9 @@ namespace TurtleScript.Interpreter
 			return runtime.Functions.TryGetValue(functionName, out function);
 		}
 
-		private ITurtleScriptRuntime GetRuntimeLibrary(TurtleScriptParser.FunctionCallContext context,
-		                                               string runtimeName)
+		private ITurtleScriptRuntime GetRuntimeLibrary(
+			TurtleScriptParser.FunctionCallContext context,
+			string runtimeName)
 		{
 			foreach (ITurtleScriptRuntime turtleScriptRuntime in m_RuntimeLibraries)
 			{
@@ -395,17 +407,20 @@ namespace TurtleScript.Interpreter
 				}
 			}
 
-			throw new InvalidOperationException(string.Format("Invalid runtime library name specified on function call. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+			throw new InvalidOperationException(
+				$"Invalid runtime library name '{runtimeName}' specified on function call. Line {context.Start.Line}, Column {context.Start.Column}");
 		}
 
-		public override TurtleScriptValue VisitFunctionCallExpression(TurtleScriptParser.FunctionCallExpressionContext context)
+		public override TurtleScriptValue VisitFunctionCallExpression(
+			TurtleScriptParser.FunctionCallExpressionContext context)
 		{
 			TurtleScriptValue returnValue = Visit(context.functionCall());
 
 			return returnValue;
 		}
 
-		public override TurtleScriptValue VisitFunctionDecl(TurtleScriptParser.FunctionDeclContext context)
+		public override TurtleScriptValue VisitFunctionDecl(
+			TurtleScriptParser.FunctionDeclContext context)
 		{
 			TurtleScriptParser.FormalParametersContext formalParametersContext = context.formalParameters();
 			IParseTree[] formalParameterContexts;
@@ -425,10 +440,14 @@ namespace TurtleScript.Interpreter
 			functionName += "_" + formalParameterContexts.Length;
 
 			// Check for function that exists by the same name
-			TurtleScriptFunction existingFunction;
-			if (m_ScriptFunctions.TryGetValue(context.Identifier().GetText(), out existingFunction))
+			if (m_ScriptFunctions.TryGetValue(functionName, out _))
 			{
-				throw new InvalidOperationException(string.Format("A function with the name '{0}' already exists. Line {1}, Column {2}", context.Identifier().GetText(), context.Start.Line, context.Start.Column));
+				throw new InvalidOperationException(
+					string.Format(
+						"A function with the name '{0}' already exists. Line {1}, Column {2}",
+						context.Identifier().GetText(),
+						context.Start.Line,
+						context.Start.Column));
 			}
 
 			m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, block));

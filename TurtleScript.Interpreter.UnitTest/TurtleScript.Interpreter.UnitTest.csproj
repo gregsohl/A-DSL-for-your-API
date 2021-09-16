@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ErrorConditionTests.cs" />
+    <Compile Include="SampleRuntime.cs" />
     <Compile Include="UserDefiniedFunctionTests.cs" />
     <Compile Include="IfStatementTests.cs" />
     <Compile Include="ForLoopTests.cs" />
