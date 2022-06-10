@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 
+using System;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		{
 			// Arrange
 			StringBuilder scriptBuilder = new StringBuilder();
-			scriptBuilder.AppendLine("a = 1");
+			scriptBuilder.AppendLine("a = 1 + 2");
 
 			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
@@ -27,7 +28,27 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
+		}
 
+		[Test]
+		public void TokenizeVariableAssignmentToTurtleScript()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			const string SCRIPT = "a = 1 + 2";
+			scriptBuilder.AppendLine(SCRIPT);
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Execute(out TokenBase rootToken);
+
+			// Assert
+			var generatedScript = rootToken.ToTurtleScript();
+			Assert.AreEqual(SCRIPT, generatedScript);
+
+			Console.WriteLine("Regenerated Script, ToTurtleScript");
+			Console.WriteLine(generatedScript);
 		}
 
 	}

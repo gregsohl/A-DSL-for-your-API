@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 
 using Antlr4.Runtime;
 
@@ -38,7 +40,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Children.Add(token);
 		}
 
-		public string ToTurtleScript()
+		public virtual string ToTurtleScript()
 		{
 			return string.Empty;
 		}
@@ -46,7 +48,48 @@ namespace TurtleScript.Interpreter.Tokenize
 		private List<TokenBase> m_Children;
 	}
 
-	public class TokenValue : TokenBase
+	public class TokenScript : TokenBase
+	{
+		public TokenScript()
+			: base(TokenType.Script)
+		{
+		}
+
+		public override string ToTurtleScript()
+		{
+			return Children[0].ToTurtleScript();
+		}
+	}
+
+	public class TokenBlock : TokenBase
+	{
+		public TokenBlock()
+			: base(TokenType.Block)
+		{
+		}
+
+		public override string ToTurtleScript()
+		{
+			StringBuilder result = new StringBuilder();
+			foreach (var token in Children)
+			{
+				result.AppendLine(token.ToTurtleScript());
+			}
+
+			if (result.Length >= 2)
+			{
+				if ((result[result.Length - 2] == '\r') &&
+					(result[result.Length - 1] == '\n'))
+				{
+					result.Length -= 2;
+				}
+			}
+
+			return result.ToString();
+		}
+	}
+
+	public abstract class TokenValue : TokenBase
 	{
 		public TokenValue(TokenType tokenType)
 			: base(tokenType)
@@ -75,6 +118,11 @@ namespace TurtleScript.Interpreter.Tokenize
 			[DebuggerStepThrough]
 			get;
 		}
+
+		public override string ToTurtleScript()
+		{
+			return Value ? "true" : "false";
+		}
 	}
 
 	public class TokenNumericValue : TokenValue
@@ -90,6 +138,11 @@ namespace TurtleScript.Interpreter.Tokenize
 			[DebuggerStepThrough]
 			get;
 		}
+
+		public override string ToTurtleScript()
+		{
+			return Value.ToString(CultureInfo.InvariantCulture);
+		}
 	}
 
 	public class TokenBinaryOperator : TokenBase
@@ -98,6 +151,27 @@ namespace TurtleScript.Interpreter.Tokenize
 			: base(tokenType)
 		{
 		}
+
+		public override string ToTurtleScript()
+		{
+			string left = Children[0].ToTurtleScript();
+			string right = Children[1].ToTurtleScript();
+
+			return $"{left} {AdditiveOperator(TokenType)} {right}";
+		}
+
+		private string AdditiveOperator(TokenType tokenType)
+		{
+			switch (tokenType)
+			{
+				case TokenType.Add:
+					return "+";
+				case TokenType.Subtract:
+					return "-";
+				default:
+					return "error";
+			}
+		}
 	}
 
 	public class TokenAssignment : TokenBase
@@ -105,10 +179,19 @@ namespace TurtleScript.Interpreter.Tokenize
 		public TokenAssignment(string variableName)
 			: base(TokenType.Assignment)
 		{
-			m_VariableName = variableName;
+			VariableName = variableName;
 		}
 
-		private string m_VariableName;
+		public string VariableName
+		{
+			[DebuggerStepThrough]
+			get;
+		}
+
+		public override string ToTurtleScript()
+		{
+			return $"{VariableName} = {Children[0].ToTurtleScript()}";
+		}
 	}
 
 	public enum TokenType
@@ -120,7 +203,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		NullValue,
 		Assignment,
 		Add,
-		Subtrract,
+		Subtract,
 
 	}
 }

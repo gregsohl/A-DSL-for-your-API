@@ -121,7 +121,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBase rightValue = Visit(context.expression(1));
 
 			TokenBase result = new TokenBinaryOperator(
-				context.op.Type == TurtleScriptParser.Add ? TokenType.Add : TokenType.Subtrract);
+				context.op.Type == TurtleScriptParser.Add ? TokenType.Add : TokenType.Subtract);
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
@@ -152,7 +152,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override TokenBase VisitScript(TurtleScriptParser.ScriptContext context)
 		{
-			TokenBase scriptToken = new TokenBase(TokenType.Script);
+			TokenBase scriptToken = new TokenScript();
 
 			scriptToken.AddChild(Visit(context.block()));
 
@@ -161,7 +161,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override TokenBase VisitBlock(TurtleScriptParser.BlockContext context)
 		{
-			TokenBase blockToken = new TokenBase(TokenType.Block);
+			TokenBase blockToken = new TokenBlock();
 
 			foreach (TurtleScriptParser.StatementContext statementContext in context.statement())
 			{
