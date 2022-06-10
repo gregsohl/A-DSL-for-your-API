@@ -72,8 +72,10 @@ namespace TurtleScript.Interpreter.Tokenize
 		/// Executes the script
 		/// </summary>
 		/// <returns><c>true</c> if execution is successful, otherwise <c>false</c></returns>
-		public bool Execute()
+		public bool Execute(out TokenBase rootToken)
 		{
+			rootToken = null;
+
 			AntlrInputStream input = new AntlrInputStream(m_Script);
 
 			TurtleScriptLexer lexer = new TurtleScriptLexer(input);
@@ -93,7 +95,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			try
 			{
-				TokenBase turtleScriptValue = Visit(parser.script());
+				rootToken = Visit(parser.script());
 			}
 			catch (InvalidOperationException exception)
 			{
