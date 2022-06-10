@@ -67,8 +67,10 @@
       <Link>Generated\TurtleScriptVisitor.cs</Link>
     </Compile>
     <Compile Include="ITurtleScriptRuntime.cs" />
+    <Compile Include="Tokenize\TokenBase.cs" />
     <Compile Include="TurtleScriptErrorListener.cs" />
     <Compile Include="TurtleScriptFunction.cs" />
+    <Compile Include="Tokenize\TurtleScriptTokenizer.cs" />
     <Compile Include="TurtleScriptInterpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TurtleScriptRuntimeFunction.cs" />
@@ -77,6 +79,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
