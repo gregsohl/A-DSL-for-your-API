@@ -31,12 +31,12 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
 			interpreter.Execute(rootToken, context);
 
 			// Assert
-			Assert.IsTrue(success, interpreter.ErrorMessage);
-
 			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
 
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
@@ -54,16 +54,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("a = 12345");
 			scriptBuilder.AppendLine("a = a");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "a";
+			const double EXPECTED_VALUE1 = 12345;
+			const double EXPECTED_VARIABLE_COUNT = 1;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["a"];
-			Assert.AreEqual(12345, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
+
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
 		}
 
 		[Test]
@@ -74,16 +83,47 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("a = 1");
 			scriptBuilder.AppendLine("b = a + 500");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "a";
+			const string VARIABLE_NAME2 = "b";
+			const double EXPECTED_VALUE1 = 1;
+			const double EXPECTED_VALUE2 = 501;
+			const double EXPECTED_VARIABLE_COUNT = 2;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(501, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
+
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			variableValue = context.GetVariableValue(VARIABLE_NAME2);
+			Assert.AreEqual(EXPECTED_VALUE2, variableValue.NumericValue);
 		}
+
+		[Test]
+		public void BadReference()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("a = b");
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+
+			// Assert
+			Assert.IsFalse(success, interpreter.ErrorMessage);
+
+		}
+
 	}
 }
