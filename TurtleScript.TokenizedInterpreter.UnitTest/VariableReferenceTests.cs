@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 
+using System;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -122,6 +123,11 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			// Assert
 			Assert.IsFalse(success, interpreter.ErrorMessage);
+
+			Console.WriteLine("Script:");
+			Console.WriteLine(scriptBuilder.ToString());
+			Console.WriteLine();
+			Console.WriteLine(interpreter.ErrorMessage);
 
 		}
 

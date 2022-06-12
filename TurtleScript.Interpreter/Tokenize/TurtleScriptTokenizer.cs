@@ -26,7 +26,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_RuntimeLibraries = runtimeLibraries ?? new List<ITurtleScriptRuntime>();
 
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
-			m_Variables = new Dictionary<string, TokenBase>();
+			m_VariablesDeclared = new Dictionary<string, TokenBase>();
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 		}
 
@@ -59,9 +59,9 @@ namespace TurtleScript.Interpreter.Tokenize
 			}
 		}
 
-		public Dictionary<string, TokenBase> Variables
+		public Dictionary<string, TokenBase> VariablesDeclared
 		{
-			get { return m_Variables; }
+			get { return m_VariablesDeclared; }
 		}
 
 		#endregion Public Properties
@@ -82,20 +82,21 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
-			TurtleScriptParser parser = new TurtleScriptParser(tokenStream);
+			m_Parser = new TurtleScriptParser(tokenStream);
 
-			parser.RemoveErrorListeners();
+			m_Parser.RemoveErrorListeners();
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
-			parser.AddErrorListener(m_TurtleScriptErrorListener);
+			m_Parser.AddErrorListener(m_TurtleScriptErrorListener);
 
-			parser.BuildParseTree = true;
+			m_Parser.BuildParseTree = true;
 
-			m_Variables = new Dictionary<string, TokenBase>();
+			m_VariablesDeclared = new Dictionary<string, TokenBase>();
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 
 			try
 			{
-				rootToken = Visit(parser.script());
+				rootToken = Visit(m_Parser.script());
+				m_ErrorMessage = m_TurtleScriptErrorListener.Message;
 			}
 			catch (InvalidOperationException exception)
 			{
@@ -219,14 +220,23 @@ namespace TurtleScript.Interpreter.Tokenize
 		public override TokenBase VisitVariableReferenceExpression(TurtleScriptParser.VariableReferenceExpressionContext context)
 		{
 			var variableName = context.Identifier().GetText();
-			if (m_Variables.TryGetValue(
+
+			if (m_VariablesDeclared.TryGetValue(
 					variableName,
 					out var variableDeclaration))
 			{
 				return new TokenVariableReference(variableName);
 			}
 
-			throw new InvalidOperationException(string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", variableName, context.Start.Line, context.Start.Column));
+			this.m_TurtleScriptErrorListener.SyntaxError(
+				m_Parser, 
+				m_Parser.CurrentToken, 
+				context.Start.Line,
+				context.Start.Column,
+				string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", variableName, context.Start.Line, context.Start.Column),
+				null);
+
+			return new TokenVariableReference(variableName);
 		}
 
 
@@ -238,8 +248,9 @@ namespace TurtleScript.Interpreter.Tokenize
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
 		private string m_ErrorMessage;
-		private Dictionary<string, TokenBase> m_Variables;
+		private Dictionary<string, TokenBase> m_VariablesDeclared;
 		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+		private TurtleScriptParser m_Parser;
 
 		#endregion Private Fields
 
@@ -249,9 +260,9 @@ namespace TurtleScript.Interpreter.Tokenize
 			string variableName,
 			TokenBase declaration)
 		{
-			if (!m_Variables.ContainsKey(variableName))
+			if (!m_VariablesDeclared.ContainsKey(variableName))
 			{
-				m_Variables[variableName] = declaration;
+				m_VariablesDeclared[variableName] = declaration;
 			}
 		}
 
