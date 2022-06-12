@@ -206,6 +206,8 @@ namespace TurtleScript.Interpreter.Tokenize
 					return "*";
 				case TokenType.Divide:
 					return "/";
+				case TokenType.Modulus:
+					return "%";
 				default:
 					return "error";
 			}
@@ -229,7 +231,17 @@ namespace TurtleScript.Interpreter.Tokenize
 					result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
 					break;
 				case TokenType.Divide:
-					result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
+					if (rightValue.NumericValue == 0)
+					{
+						result = new TurtleScriptValue(0);
+					}
+					else
+					{
+						result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
+					}
+					break;
+				case TokenType.Modulus:
+					result = new TurtleScriptValue(leftValue.NumericValue % rightValue.NumericValue);
 					break;
 				default:
 					result = TurtleScriptValue.NULL;
@@ -304,6 +316,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		Subtract,
 		Parenthesized,
 		Multiply,
-		Divide
+		Divide,
+		Modulus,
 	}
 }

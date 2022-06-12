@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleScript.Grammar", "TurtleScript\TurtleScript.Grammar.csproj", "{CAA626A4-DDC2-422D-B424-229F800E4642}"
 EndProject
@@ -17,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Turtle-Graphics-Example", "Turtle-Graphics-Example\Turtle-Graphics-Example.csproj", "{0009E232-CD03-4C6D-B288-70EFA46083AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptedTurtle", "ScriptedTurtle\ScriptedTurtle.csproj", "{94678CB9-99F8-4A10-9572-4B9D90E4E986}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleScript.TokenizedInterpreter.UnitTest", "TurtleScript.TokenizedInterpreter.UnitTest\TurtleScript.TokenizedInterpreter.UnitTest.csproj", "{18DDC2D0-57FE-4D88-8907-F2FC8813605E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,8 +50,15 @@ Global
 		{94678CB9-99F8-4A10-9572-4B9D90E4E986}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94678CB9-99F8-4A10-9572-4B9D90E4E986}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94678CB9-99F8-4A10-9572-4B9D90E4E986}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18DDC2D0-57FE-4D88-8907-F2FC8813605E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18DDC2D0-57FE-4D88-8907-F2FC8813605E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18DDC2D0-57FE-4D88-8907-F2FC8813605E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18DDC2D0-57FE-4D88-8907-F2FC8813605E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E27EE30-F9F7-49D1-94FA-D64E91B7A55C}
 	EndGlobalSection
 EndGlobal

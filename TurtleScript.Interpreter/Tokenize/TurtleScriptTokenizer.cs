@@ -140,8 +140,21 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBase leftValue = Visit(context.expression(0));
 			TokenBase rightValue = Visit(context.expression(1));
 
-			TokenBase result = new TokenBinaryOperator(
-				context.op.Type == TurtleScriptParser.Mul ? TokenType.Multiply : TokenType.Divide);
+			TokenType multiplicativeOperator = TokenType.Multiply;
+			switch (context.op.Type)
+			{
+				case TurtleScriptParser.Mul:
+					multiplicativeOperator = TokenType.Multiply;
+					break;
+				case TurtleScriptParser.Div:
+					multiplicativeOperator = TokenType.Divide;
+					break;
+				case TurtleScriptParser.Mod:
+					multiplicativeOperator = TokenType.Modulus;
+					break;
+			}
+
+			TokenBase result = new TokenBinaryOperator(multiplicativeOperator);
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
