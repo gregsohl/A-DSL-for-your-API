@@ -202,6 +202,10 @@ namespace TurtleScript.Interpreter.Tokenize
 					return "+";
 				case TokenType.Subtract:
 					return "-";
+				case TokenType.Multiply:
+					return "*";
+				case TokenType.Divide:
+					return "/";
 				default:
 					return "error";
 			}
@@ -213,13 +217,23 @@ namespace TurtleScript.Interpreter.Tokenize
 			TurtleScriptValue rightValue = Children[1].Visit(context);
 
 			TurtleScriptValue result;
-			if (TokenType == TokenType.Add)
+			switch (TokenType)
 			{
-				result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
-			}
-			else
-			{
-				result = new TurtleScriptValue(leftValue.NumericValue - rightValue.NumericValue);
+				case TokenType.Add:
+					result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
+					break;
+				case TokenType.Subtract:
+					result = new TurtleScriptValue(leftValue.NumericValue - rightValue.NumericValue);
+					break;
+				case TokenType.Multiply:
+					result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
+					break;
+				case TokenType.Divide:
+					result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
+					break;
+				default:
+					result = TurtleScriptValue.NULL;
+					break;
 			}
 
 			return result;
@@ -255,6 +269,29 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 	}
 
+	public class TokenParenthesizedExpression
+		: TokenBase
+	{
+		public TokenParenthesizedExpression(TokenBase childExpression)
+			: base(TokenType.Parenthesized)
+		{
+			ChildExpression = childExpression;
+		}
+
+		public TokenBase ChildExpression { get; }
+
+		public override string ToTurtleScript()
+		{
+			return $"({ChildExpression.ToTurtleScript()})";
+		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			return ChildExpression.Visit(context);
+		}
+	}
+
+
 	public enum TokenType
 	{
 		Script,
@@ -265,6 +302,8 @@ namespace TurtleScript.Interpreter.Tokenize
 		Assignment,
 		Add,
 		Subtract,
-
+		Parenthesized,
+		Multiply,
+		Divide
 	}
 }

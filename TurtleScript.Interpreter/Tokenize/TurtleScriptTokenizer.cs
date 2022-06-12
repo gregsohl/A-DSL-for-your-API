@@ -21,7 +21,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			List<ITurtleScriptRuntime> runtimeLibraries = null)
 		{
 			m_Script = script;
-			m_Tokens = new List<TokenBase>();
+			new List<TokenBase>();
 
 			m_RuntimeLibraries = runtimeLibraries ?? new List<ITurtleScriptRuntime>();
 
@@ -135,6 +135,32 @@ namespace TurtleScript.Interpreter.Tokenize
 			return result;
 		}
 
+		public override TokenBase VisitMultiplicativeOpExpression(TurtleScriptParser.MultiplicativeOpExpressionContext context)
+		{
+			TokenBase leftValue = Visit(context.expression(0));
+			TokenBase rightValue = Visit(context.expression(1));
+
+			TokenBase result = new TokenBinaryOperator(
+				context.op.Type == TurtleScriptParser.Mul ? TokenType.Multiply : TokenType.Divide);
+
+			result.AddChild(leftValue);
+			result.AddChild(rightValue);
+
+			return result;
+		}
+
+		public override TokenBase VisitBlock(TurtleScriptParser.BlockContext context)
+		{
+			TokenBase blockToken = new TokenBlock();
+
+			foreach (TurtleScriptParser.StatementContext statementContext in context.statement())
+			{
+				blockToken.AddChild(Visit(statementContext));
+			}
+
+			return blockToken;
+		}
+
 		public override TokenBase VisitFloatExpression(TurtleScriptParser.FloatExpressionContext context)
 		{
 			if (double.TryParse(context.GetText(), out var value))
@@ -156,6 +182,15 @@ namespace TurtleScript.Interpreter.Tokenize
 			throw new InvalidOperationException("Invalid integer value");
 		}
 
+		public override TokenBase VisitParenExpression(TurtleScriptParser.ParenExpressionContext context)
+		{
+			TokenBase childExpression = Visit(context.expression());
+
+			TokenParenthesizedExpression expressionToken = new TokenParenthesizedExpression(childExpression);
+
+			return expressionToken;
+		}
+
 		public override TokenBase VisitScript(TurtleScriptParser.ScriptContext context)
 		{
 			TokenBase scriptToken = new TokenScript();
@@ -163,18 +198,6 @@ namespace TurtleScript.Interpreter.Tokenize
 			scriptToken.AddChild(Visit(context.block()));
 
 			return scriptToken;
-		}
-
-		public override TokenBase VisitBlock(TurtleScriptParser.BlockContext context)
-		{
-			TokenBase blockToken = new TokenBlock();
-
-			foreach (TurtleScriptParser.StatementContext statementContext in context.statement())
-			{
-				blockToken.AddChild(Visit(statementContext));
-			}
-
-			return blockToken;
 		}
 
 		#endregion Public Methods
@@ -187,7 +210,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		private string m_ErrorMessage;
 		private Dictionary<string, TokenBase> m_Variables;
 		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
-		private List<TokenBase> m_Tokens;
 
 		#endregion Private Fields
 
@@ -196,4 +218,5 @@ namespace TurtleScript.Interpreter.Tokenize
 		#endregion Private Methods
 
 	}
+
 }

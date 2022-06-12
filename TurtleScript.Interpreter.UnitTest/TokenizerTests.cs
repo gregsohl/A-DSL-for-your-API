@@ -47,7 +47,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			var generatedScript = rootToken.ToTurtleScript();
 			Assert.AreEqual(SCRIPT, generatedScript);
 
-			Console.WriteLine("Regenerated Script, ToTurtleScript");
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
 			Console.WriteLine(generatedScript);
 		}
 
@@ -67,9 +67,41 @@ namespace TurtleScript.Interpreter.UnitTest
 			interpreter.Execute(rootToken, context);
 
 			// Assert
-			var variableValue = context.GetVariableValue("a");
+			const string VARIABLE_NAME = "a";
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
 			Assert.IsTrue(variableValue.IsNumeric);
 			Assert.AreEqual(3, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+		}
+
+		[Test]
+		public void AdditionAndMultiplication()
+		{
+			// Arrange
+			const string SCRIPT = "a = (1 + 2) * 3";
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(SCRIPT);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+			Assert.AreEqual(SCRIPT, rootToken.ToTurtleScript());
+
+			const string VARIABLE_NAME = "a";
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.AreEqual(9, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+
 		}
 
 	}
