@@ -64,28 +64,42 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="CellMath.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>TurtleScript</CustomToolNamespace>
-    </None>
-    <None Include="Cymbol.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>TurtleScript</CustomToolNamespace>
-    </None>
-    <None Include="Calculator.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>TurtleScript</CustomToolNamespace>
-    </None>
     <None Include="packages.config" />
-    <None Include="TL.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>TurtleScript</CustomToolNamespace>
-    </None>
     <Antlr4 Include="TurtleScript.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>TurtleScript</CustomToolNamespace>
     </Antlr4>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="TurtleScript_ENBF.txt" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\assignment.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\block.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\Digit.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\elseIfStat.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\elseStat.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\EOF.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\expression.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\expressionList.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\Float.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\formalParameter.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\formalParameters.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\forStatement.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\functionCall.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\functionDecl.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\Identifier.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\ifStat.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\ifStatement.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\Int.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\Letter.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\QualifiedIdentifier.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\rr-1.63.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\script.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\statement.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\WS.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\diagram\_.png" />
+    <Content Include="TurtleScript_Grammar_Diagram\index.html" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

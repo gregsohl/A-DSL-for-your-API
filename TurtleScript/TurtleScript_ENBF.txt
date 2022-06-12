@@ -1,0 +1,49 @@
+/* converted on Sun Jun 12, 2022, 15:45 (UTC-05) by antlr_4-to-w3c v0.58 which is Copyright (c) 2011-2022 by Gunther Rademacher <grd@gmx.net> */
+
+script   ::= block EOF
+block    ::= ( statement | functionDecl )* ( 'return' expression )?
+statement
+         ::= ( assignment | functionCall | ifStatement | forStatement ) ';'?
+assignment
+         ::= Identifier '=' expression
+functionCall
+         ::= ( Identifier | QualifiedIdentifier ) '(' expressionList? ')'
+ifStatement
+         ::= ifStat elseIfStat* elseStat? 'end'
+ifStat   ::= 'if' expression 'do' block
+elseIfStat
+         ::= 'else' 'if' expression 'do' block
+elseStat ::= 'else' 'do' block
+functionDecl
+         ::= 'def' Identifier '(' formalParameters? ')' block 'end'
+formalParameters
+         ::= formalParameter ( ',' formalParameter )*
+formalParameter
+         ::= Identifier
+expressionList
+         ::= expression ( ',' expression )*
+forStatement
+         ::= 'for' Identifier '=' expression 'to' expression 'do' block 'end'
+expression
+         ::= functionCall
+           | ( '-' | '!' | expression ( '*' | '/' | '%' | '+' | '-' | '==' | '!=' | '>' | '>=' | '<' | '<=' | '&&' | '||' ) ) expression
+           | 'pi'
+           | Identifier
+           | Float
+           | Int
+           | '(' expression ')'
+_        ::= WS
+          /* ws: definition */
+
+<?TOKENS?>
+
+Float    ::= ( Digit+ '.' | '.' Digit ) Digit*
+Int      ::= [0-9]+
+Identifier
+         ::= Letter ( Letter | [0-9] )*
+QualifiedIdentifier
+         ::= Identifier '.' Identifier
+Letter   ::= [a-zA-Z]
+Digit    ::= [0-9]
+WS       ::= [ #x9#xd#xa]+
+EOF      ::= $
