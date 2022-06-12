@@ -275,7 +275,8 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
-			context.SetVariableValue(VariableName, Children[0].Visit(context));
+			var variableValue = Children[0].Visit(context);
+			context.SetVariableValue(VariableName, variableValue);
 
 			return TurtleScriptValue.VOID;
 		}
@@ -303,6 +304,29 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 	}
 
+	public class TokenVariableReference : TokenBase
+	{
+		public TokenVariableReference(string variableName)
+			: base(TokenType.VariableReference)
+		{
+			VariableName = variableName;
+		}
+
+		public string VariableName { get; }
+
+		public override string ToTurtleScript()
+		{
+			return VariableName;
+		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			var variableValue = context.GetVariableValue(VariableName);
+
+			return variableValue;
+		}
+	}
+
 
 	public enum TokenType
 	{
@@ -318,5 +342,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		Multiply,
 		Divide,
 		Modulus,
+		VariableReference,
 	}
 }

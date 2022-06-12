@@ -18,10 +18,9 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public TurtleScriptValue GetVariableValue(string variableName)
 		{
-			TurtleScriptValue variableValue;
 			if (Variables.TryGetValue(
 					variableName,
-					out variableValue))
+					out var variableValue))
 			{
 				return variableValue;
 			}

@@ -115,8 +115,11 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			TokenBase value = Visit(context.expression());
 
-			TokenBase result = new TokenAssignment(context.Identifier().GetText());
+			var variableName = context.Identifier().GetText();
+			TokenBase result = new TokenAssignment(variableName);
 			result.AddChild(value);
+
+			DeclareVariable(variableName, result);
 
 			return result;
 		}
@@ -213,6 +216,20 @@ namespace TurtleScript.Interpreter.Tokenize
 			return scriptToken;
 		}
 
+		public override TokenBase VisitVariableReferenceExpression(TurtleScriptParser.VariableReferenceExpressionContext context)
+		{
+			var variableName = context.Identifier().GetText();
+			if (m_Variables.TryGetValue(
+					variableName,
+					out var variableDeclaration))
+			{
+				return new TokenVariableReference(variableName);
+			}
+
+			throw new InvalidOperationException(string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", variableName, context.Start.Line, context.Start.Column));
+		}
+
+
 		#endregion Public Methods
 
 		#region Private Fields
@@ -227,6 +244,16 @@ namespace TurtleScript.Interpreter.Tokenize
 		#endregion Private Fields
 
 		#region Private Methods
+
+		private void DeclareVariable(
+			string variableName,
+			TokenBase declaration)
+		{
+			if (!m_Variables.ContainsKey(variableName))
+			{
+				m_Variables[variableName] = declaration;
+			}
+		}
 
 		#endregion Private Methods
 

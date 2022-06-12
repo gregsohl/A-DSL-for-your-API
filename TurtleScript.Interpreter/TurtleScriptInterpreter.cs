@@ -566,10 +566,9 @@ namespace TurtleScript.Interpreter
 
 		public override TurtleScriptValue VisitVariableReferenceExpression(TurtleScriptParser.VariableReferenceExpressionContext context)
 		{
-			TurtleScriptValue variableValue;
 			if (m_Variables.TryGetValue(
-				context.Identifier().GetText(),
-				out variableValue))
+					context.Identifier().GetText(),
+					out var variableValue))
 			{
 				return variableValue;
 			}
