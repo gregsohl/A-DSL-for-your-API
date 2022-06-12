@@ -72,7 +72,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		/// Executes the script
 		/// </summary>
 		/// <returns><c>true</c> if execution is successful, otherwise <c>false</c></returns>
-		public bool Execute(out TokenBase rootToken)
+		public bool Parse(out TokenBase rootToken)
 		{
 			rootToken = null;
 
@@ -103,6 +103,12 @@ namespace TurtleScript.Interpreter.Tokenize
 			}
 
 			return !IsError;
+		}
+
+		public void Execute(TokenBase script, TurtleScriptExecutionContext context)
+		{
+			script.Visit(context);
+
 		}
 
 		public override TokenBase VisitAssignment(TurtleScriptParser.AssignmentContext context)

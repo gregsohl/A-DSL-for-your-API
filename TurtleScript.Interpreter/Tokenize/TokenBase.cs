@@ -11,7 +11,7 @@ using Antlr4.Runtime;
 
 namespace TurtleScript.Interpreter.Tokenize
 {
-	public class TokenBase
+	public abstract class TokenBase
 	{
 		public TokenBase(TokenType tokenType)
 		{
@@ -45,6 +45,8 @@ namespace TurtleScript.Interpreter.Tokenize
 			return string.Empty;
 		}
 
+		public abstract TurtleScriptValue Visit(TurtleScriptExecutionContext context);
+
 		private List<TokenBase> m_Children;
 	}
 
@@ -59,6 +61,11 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			return Children[0].ToTurtleScript();
 		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			return Children[0].Visit(context);
+		}
 	}
 
 	public class TokenBlock : TokenBase
@@ -71,9 +78,9 @@ namespace TurtleScript.Interpreter.Tokenize
 		public override string ToTurtleScript()
 		{
 			StringBuilder result = new StringBuilder();
-			foreach (var token in Children)
+			foreach (var child in Children)
 			{
-				result.AppendLine(token.ToTurtleScript());
+				result.AppendLine(child.ToTurtleScript());
 			}
 
 			if (result.Length >= 2)
@@ -87,11 +94,22 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return result.ToString();
 		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			foreach (var token in Children)
+			{
+				token.Visit(context);
+			}
+
+			return TurtleScriptValue.VOID;
+		}
+
 	}
 
 	public abstract class TokenValue : TokenBase
 	{
-		public TokenValue(TokenType tokenType)
+		protected TokenValue(TokenType tokenType)
 			: base(tokenType)
 		{
 		}
@@ -102,6 +120,11 @@ namespace TurtleScript.Interpreter.Tokenize
 		public TokenNullValue()
 			: base(TokenType.NullValue)
 		{
+		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			return TurtleScriptValue.NULL;
 		}
 	}
 
@@ -123,6 +146,11 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			return Value ? "true" : "false";
 		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			return new TurtleScriptValue(Value);
+		}
 	}
 
 	public class TokenNumericValue : TokenValue
@@ -143,6 +171,12 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			return Value.ToString(CultureInfo.InvariantCulture);
 		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			return new TurtleScriptValue(Value);
+		}
+
 	}
 
 	public class TokenBinaryOperator : TokenBase
@@ -172,6 +206,26 @@ namespace TurtleScript.Interpreter.Tokenize
 					return "error";
 			}
 		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			TurtleScriptValue leftValue = Children[0].Visit(context);
+			TurtleScriptValue rightValue = Children[1].Visit(context);
+
+			TurtleScriptValue result;
+			if (TokenType == TokenType.Add)
+			{
+				result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
+			}
+			else
+			{
+				result = new TurtleScriptValue(leftValue.NumericValue - rightValue.NumericValue);
+			}
+
+			return result;
+
+		}
+
 	}
 
 	public class TokenAssignment : TokenBase
@@ -191,6 +245,13 @@ namespace TurtleScript.Interpreter.Tokenize
 		public override string ToTurtleScript()
 		{
 			return $"{VariableName} = {Children[0].ToTurtleScript()}";
+		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			context.SetVariableValue(VariableName, Children[0].Visit(context));
+
+			return TurtleScriptValue.VOID;
 		}
 	}
 

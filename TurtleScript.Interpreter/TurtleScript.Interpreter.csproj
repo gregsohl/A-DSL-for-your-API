@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="ITurtleScriptRuntime.cs" />
     <Compile Include="Tokenize\TokenBase.cs" />
+    <Compile Include="Tokenize\TurtleScriptExecutionContext.cs" />
     <Compile Include="TurtleScriptErrorListener.cs" />
     <Compile Include="TurtleScriptFunction.cs" />
     <Compile Include="Tokenize\TurtleScriptTokenizer.cs" />
