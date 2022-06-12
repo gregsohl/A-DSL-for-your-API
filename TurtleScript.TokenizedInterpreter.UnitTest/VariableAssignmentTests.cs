@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
+using TurtleScript.Interpreter.Tokenize;
+
 #endregion Namespaces
 
 namespace TurtleScript.Interpreter.UnitTest
@@ -15,23 +17,28 @@ namespace TurtleScript.Interpreter.UnitTest
 		{
 			// Arrange
 			var script = "a = 1";
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = 1;
+			const double EXPECTED_VARIABLE_COUNT = 1;
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(script);
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
 
 			// Act
-			bool success = interpreter.Execute();
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			Assert.AreEqual(1, interpreter.Variables.Count);
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
 
-			string variableName = interpreter.Variables.Keys.First();
-			TurtleScriptValue variableValue = interpreter.Variables[variableName];
+			string variableName = context.Variables.Keys.First();
+			TurtleScriptValue variableValue = context.Variables[variableName];
 
-			Assert.AreEqual("a", variableName);
+			Assert.AreEqual(VARIABLE_NAME, variableName);
 
-			Assert.AreEqual(1, variableValue.NumericValue);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
 		}
 
 		[Test]
@@ -42,21 +49,31 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("a = 1");
 			scriptBuilder.AppendLine("bcd = 200");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "a";
+			const string VARIABLE_NAME2 = "bcd";
+			const double EXPECTED_VALUE1 = 1;
+			const double EXPECTED_VALUE2 = 200;
+			const double EXPECTED_VARIABLE_COUNT = 2;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			Assert.AreEqual(2, interpreter.Variables.Count);
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
 
-			TurtleScriptValue variableValue = interpreter.Variables["a"];
-			Assert.AreEqual(1, variableValue.NumericValue);
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
 
-			variableValue = interpreter.Variables["bcd"];
-			Assert.AreEqual(200, variableValue.NumericValue);
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			variableValue = context.GetVariableValue(VARIABLE_NAME2);
+			Assert.AreEqual(EXPECTED_VALUE2, variableValue.NumericValue);
 		}
 
 		[Test]
@@ -68,21 +85,29 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("bcd = 200");
 			scriptBuilder.AppendLine("a = 100");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "a";
+			const string VARIABLE_NAME2 = "bcd";
+			const double EXPECTED_VALUE1 = 100;
+			const double EXPECTED_VALUE2 = 200;
+			const double EXPECTED_VARIABLE_COUNT = 2;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			Assert.AreEqual(2, interpreter.Variables.Count);
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
 
-			TurtleScriptValue variableValue = interpreter.Variables["a"];
-			Assert.AreEqual(100, variableValue.NumericValue);
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
 
-			variableValue = interpreter.Variables["bcd"];
-			Assert.AreEqual(200, variableValue.NumericValue);
+			variableValue = context.GetVariableValue(VARIABLE_NAME2);
+			Assert.AreEqual(EXPECTED_VALUE2, variableValue.NumericValue);
 		}
 
 	}

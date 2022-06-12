@@ -52,6 +52,7 @@
     <Compile Include="ArithmeticTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
     <Compile Include="TokenizerTests.cs" />
+    <Compile Include="VariableAssignmentTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -12,14 +12,14 @@ namespace TurtleScript.Interpreter.Tokenize
 		public TurtleScriptExecutionContext()
 		{
 			m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
-			m_Variables = new Dictionary<string, TurtleScriptValue>();
+			Variables = new Dictionary<string, TurtleScriptValue>();
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 		}
 
 		public TurtleScriptValue GetVariableValue(string variableName)
 		{
 			TurtleScriptValue variableValue;
-			if (m_Variables.TryGetValue(
+			if (Variables.TryGetValue(
 					variableName,
 					out variableValue))
 			{
@@ -43,18 +43,20 @@ namespace TurtleScript.Interpreter.Tokenize
 			string variableName,
 			TurtleScriptValue variableValue)
 		{
-			m_Variables[variableName] = variableValue;
+			Variables[variableName] = variableValue;
 		}
 
 		public void SetVariableValue(
 			string variableName,
 			double variableValue)
 		{
-			m_Variables[variableName] = new TurtleScriptValue(variableValue);
+			Variables[variableName] = new TurtleScriptValue(variableValue);
 		}
 
+		public Dictionary<string, TurtleScriptValue> Variables { get; }
+
+
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
-		private Dictionary<string, TurtleScriptValue> m_Variables;
 		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
 
 	}
