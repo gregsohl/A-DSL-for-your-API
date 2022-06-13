@@ -185,6 +185,24 @@ namespace TurtleScript.Interpreter.Tokenize
 			return result;
 		}
 
+		public override TokenBase VisitForStatement(TurtleScriptParser.ForStatementContext context)
+		{
+			string loopVariableName = context.Identifier().GetText();
+
+			DeclareVariable(loopVariableName, null);
+
+			TokenBase startValueExpression = Visit(context.expression(0));
+			TokenBase endValueExpression = Visit(context.expression(1));
+
+			TokenBase executionBlock = Visit(context.block());
+
+			return new TokenForStatement(
+				loopVariableName,
+				startValueExpression,
+				endValueExpression,
+				executionBlock as TokenBlock);
+		}
+
 		public override TokenBase VisitMultiplicativeOpExpression(TurtleScriptParser.MultiplicativeOpExpressionContext context)
 		{
 			TokenBase leftValue = Visit(context.expression(0));
