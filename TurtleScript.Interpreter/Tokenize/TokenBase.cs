@@ -410,12 +410,13 @@ namespace TurtleScript.Interpreter.Tokenize
 			foreach (Tuple<TokenBase, TokenBase> elseIf in ElseIf)
 			{
 				indent++;
-				turtleScript.AppendLine($"elseif ({conditionalExpressionTurtleScript}) Do\r\n");
+				turtleScript.AppendLine($"{new string('\t', indent)}elseif ({conditionalExpressionTurtleScript}) Do");
 				AppendBlockToStatementScript(block, turtleScript, indent);
 			}
 
 			if (ElseStatement != null)
 			{
+				turtleScript.AppendLine($"{new string('\t', indent)}else");
 				AppendBlockToStatementScript(ElseStatement.ToTurtleScript(), turtleScript, indent);
 			}
 
@@ -430,7 +431,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			foreach (string blockLine in blockLines)
 			{
-				turtleScript.AppendLine(new string('\t', indent) + blockLine);
+				turtleScript.AppendLine(new string('\t', indent + 1) + blockLine);
 			}
 		}
 

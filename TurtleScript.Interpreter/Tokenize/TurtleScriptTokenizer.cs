@@ -112,19 +112,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		}
 
-		public override TokenBase VisitAssignment(TurtleScriptParser.AssignmentContext context)
-		{
-			TokenBase value = Visit(context.expression());
-
-			var variableName = context.Identifier().GetText();
-			TokenBase result = new TokenAssignment(variableName);
-			result.AddChild(value);
-
-			DeclareVariable(variableName, result);
-
-			return result;
-		}
-
 		public override TokenBase VisitAdditiveExpression(TurtleScriptParser.AdditiveExpressionContext context)
 		{
 			TokenBase leftValue = Visit(context.expression(0));
@@ -135,6 +122,19 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
+
+			return result;
+		}
+
+		public override TokenBase VisitAssignment(TurtleScriptParser.AssignmentContext context)
+		{
+			TokenBase value = Visit(context.expression());
+
+			var variableName = context.Identifier().GetText();
+			TokenBase result = new TokenAssignment(variableName);
+			result.AddChild(value);
+
+			DeclareVariable(variableName, result);
 
 			return result;
 		}
@@ -178,6 +178,45 @@ namespace TurtleScript.Interpreter.Tokenize
 			return blockToken;
 		}
 
+		public override TokenBase VisitCompareExpression(TurtleScriptParser.CompareExpressionContext context)
+		{
+			TokenBase leftValue = Visit(context.expression(0));
+			TokenBase rightValue = Visit(context.expression(1));
+
+			TokenBase operatorToken;
+
+
+			switch (context.op.Type)
+			{
+				case TurtleScriptParser.EQ:
+					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
+					break;
+				case TurtleScriptParser.NE:
+					operatorToken = new TokenBinaryOperator(TokenType.OpNotEqual);
+					break;
+				case TurtleScriptParser.GT:
+					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThan);
+					break;
+				case TurtleScriptParser.LT:
+					operatorToken = new TokenBinaryOperator(TokenType.OpLessThan);
+					break;
+				case TurtleScriptParser.GE:
+					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThanOrEqual);
+					break;
+				case TurtleScriptParser.LE:
+					operatorToken = new TokenBinaryOperator(TokenType.OpLessThanOrEqual);
+					break;
+				default:
+					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
+					break;
+			}
+
+			operatorToken.AddChild(leftValue);
+			operatorToken.AddChild(rightValue);
+
+			return operatorToken;
+		}
+
 		public override TokenBase VisitFloatExpression(TurtleScriptParser.FloatExpressionContext context)
 		{
 			if (double.TryParse(context.GetText(), out var value))
@@ -188,6 +227,36 @@ namespace TurtleScript.Interpreter.Tokenize
 			throw new InvalidOperationException($"Invalid numeric value. Line {context.Start.Line}, Column {context.Start.Column}"); 
 		}
 
+		public override TokenBase VisitIfStatement(TurtleScriptParser.IfStatementContext context)
+		{
+			TokenBase ifExpression = Visit(context.ifStat().expression());
+
+			TokenBase block = Visit(context.ifStat().block());
+
+			List<Tuple<TokenBase, TokenBase>> elseIfTokens = new List<Tuple<TokenBase, TokenBase>>();
+
+			foreach (TurtleScriptParser.ElseIfStatContext elseIfStatContext in context.elseIfStat())
+			{
+				TokenBase elseIfExpression = Visit(elseIfStatContext.expression());
+
+				TokenBase elseIfBlock = Visit(elseIfStatContext.block());
+
+				elseIfTokens.Add(new Tuple<TokenBase, TokenBase>(elseIfExpression, elseIfBlock));
+			}
+
+			TokenBase elseStatement = null;
+
+			if (context.elseStat() != null)
+			{
+				elseStatement = Visit(context.elseStat().block());
+			}
+
+			return new TokenIf(
+				block,
+				ifExpression,
+				elseIfTokens,
+				elseStatement);
+		}
 
 		public override TokenBase VisitIntExpression(TurtleScriptParser.IntExpressionContext context)
 		{
@@ -238,78 +307,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return new TokenVariableReference(variableName);
 		}
-
-		public override TokenBase VisitIfStatement(TurtleScriptParser.IfStatementContext context)
-		{
-			TokenBase ifExpression = Visit(context.ifStat().expression());
-
-			TokenBase block = Visit(context.ifStat().block());
-
-			List<Tuple<TokenBase, TokenBase>> elseIfTokens = new List<Tuple<TokenBase, TokenBase>>();
-
-			foreach (TurtleScriptParser.ElseIfStatContext elseIfStatContext in context.elseIfStat())
-			{
-				TokenBase elseIfExpression = Visit(elseIfStatContext.expression());
-
-				TokenBase elseIfBlock = Visit(elseIfStatContext.block());
-
-				elseIfTokens.Add(new Tuple<TokenBase, TokenBase>(elseIfExpression, elseIfBlock));
-			}
-
-			TokenBase elseStatement = null;
-
-			if (context.elseStat() != null)
-			{
-				elseStatement = Visit(context.elseStat().block());
-			}
-
-			return new TokenIf(
-				block,
-				ifExpression,
-				elseIfTokens,
-				elseStatement);
-		}
-
-		public override TokenBase VisitCompareExpression(TurtleScriptParser.CompareExpressionContext context)
-		{
-			TokenBase leftValue = Visit(context.expression(0));
-			TokenBase rightValue = Visit(context.expression(1));
-
-			TokenBase operatorToken;
-
-
-			switch (context.op.Type)
-			{
-				case TurtleScriptParser.EQ:
-					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
-					break;
-				case TurtleScriptParser.NE:
-					operatorToken = new TokenBinaryOperator(TokenType.OpNotEqual);
-					break;
-				case TurtleScriptParser.GT:
-					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThan);
-					break;
-				case TurtleScriptParser.LT:
-					operatorToken = new TokenBinaryOperator(TokenType.OpLessThan);
-					break;
-				case TurtleScriptParser.GE:
-					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThanOrEqual);
-					break;
-				case TurtleScriptParser.LE:
-					operatorToken = new TokenBinaryOperator(TokenType.OpLessThanOrEqual);
-					break;
-				default:
-					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
-					break;
-			}
-
-			operatorToken.AddChild(leftValue);
-			operatorToken.AddChild(rightValue);
-
-			return operatorToken;
-		}
-
-
 
 		#endregion Public Methods
 
