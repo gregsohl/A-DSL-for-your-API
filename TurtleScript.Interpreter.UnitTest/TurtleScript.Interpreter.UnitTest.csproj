@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PredefinedConstantsTests.cs" />
     <Compile Include="ErrorConditionTests.cs" />
     <Compile Include="ConditionalOperatorTests.cs" />
     <Compile Include="SampleRuntime.cs" />
