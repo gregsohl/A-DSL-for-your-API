@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
@@ -13,7 +14,9 @@ namespace TurtleScript.Interpreter
 	public class TurtleScriptInterpreter
 		: TurtleScriptBaseVisitor<TurtleScriptValue>
 	{
-		#region Constructor
+
+		#region Public Constructors
+
 		public TurtleScriptInterpreter(
 			string script, 
 			List<ITurtleScriptRuntime> runtimeLibraries = null)
@@ -35,7 +38,7 @@ namespace TurtleScript.Interpreter
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 		}
 
-		#endregion Constructor
+		#endregion Public Constructors
 
 		#region Public Properties
 
@@ -312,105 +315,6 @@ namespace TurtleScript.Interpreter
 			throw invalidOperationException;
 		}
 
-		private bool TryGetFunction(
-			TurtleScriptParser.FunctionCallContext context,
-			out TurtleScriptFunction function)
-		{
-			function = null;
-			var functionCallName = context.Identifier().GetText();
-
-			int parameterCount = 0;
-			if (context.expressionList() != null)
-			{
-				parameterCount = context.expressionList().expression().Length;
-			}
-
-			functionCallName += "_" + parameterCount;
-
-			foreach (var functionToTest in m_ScriptFunctions)
-			{
-				if ((functionToTest.Key == functionCallName) &&
-					(functionToTest.Value.Parameters.Count == parameterCount))
-				{
-					function = functionToTest.Value;
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		private TurtleScriptValue CallRuntimeFunction(
-			TurtleScriptParser.FunctionCallContext context,
-			ITurtleScriptRuntime runtime,
-			string functionName)
-		{
-			TurtleScriptRuntimeFunction function;
-			if (TryGetRuntimeFunction(context, runtime, functionName, out function))
-			{
-				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
-
-				if (context.expressionList() != null)
-				{
-					parameterExpressions = context.expressionList().expression();
-				}
-
-				if (parameterExpressions.Length != function.ParameterCount)
-				{
-					throw new InvalidOperationException(string.Format("Invalid number of parameters specified for function call at Line {0}, Column {1}", context.Start.Line, context.Start.Column));
-				}
-
-				List<TurtleScriptValue> functionParameters = new List<TurtleScriptValue>();
-
-				for (int parameterIndex = 0; parameterIndex < parameterExpressions.Length; parameterIndex++)
-				{
-					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
-					TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
-
-					functionParameters.Add(parameterValue);
-				}
-
-				TurtleScriptValue returnValue = function.Function(functionParameters);
-
-				return returnValue;
-			}
-
-			throw new InvalidOperationException(string.Format("Invalid function name in runtime. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
-		}
-
-		private static bool TryGetRuntimeFunction(
-			TurtleScriptParser.FunctionCallContext context,
-			ITurtleScriptRuntime runtime,
-			string functionName,
-			out TurtleScriptRuntimeFunction function)
-		{
-			int parameterCount = 0;
-			if (context.expressionList() != null)
-			{
-				parameterCount = context.expressionList().expression().Length;
-			}
-
-			functionName += "_" + parameterCount;
-
-			return runtime.Functions.TryGetValue(functionName, out function);
-		}
-
-		private ITurtleScriptRuntime GetRuntimeLibrary(
-			TurtleScriptParser.FunctionCallContext context,
-			string runtimeName)
-		{
-			foreach (ITurtleScriptRuntime turtleScriptRuntime in m_RuntimeLibraries)
-			{
-				if (turtleScriptRuntime.Namespace == runtimeName)
-				{
-					return turtleScriptRuntime;
-				}
-			}
-
-			throw new InvalidOperationException(
-				$"Invalid runtime library name '{runtimeName}' specified on function call. Line {context.Start.Line}, Column {context.Start.Column}");
-		}
-
 		public override TurtleScriptValue VisitFunctionCallExpression(
 			TurtleScriptParser.FunctionCallExpressionContext context)
 		{
@@ -471,7 +375,7 @@ namespace TurtleScript.Interpreter
 					ifResult = Visit(elseIfStatContext.expression());
 
 					if ((ifResult.IsBoolean) &&
-					    (ifResult.BooleanValue))
+						(ifResult.BooleanValue))
 					{
 						Visit(elseIfStatContext.block());
 						return TurtleScriptValue.VOID;
@@ -545,6 +449,12 @@ namespace TurtleScript.Interpreter
 			return value;
 		}
 
+		public override TurtleScriptValue VisitPiExpression(
+			TurtleScriptParser.PiExpressionContext context)
+		{
+			return new TurtleScriptValue(3.141592654);
+		}
+
 		public override TurtleScriptValue VisitScript(TurtleScriptParser.ScriptContext context)
 		{
 			return Visit(context.block());
@@ -576,26 +486,96 @@ namespace TurtleScript.Interpreter
 			throw new InvalidOperationException(string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", context.Identifier().GetText(), context.Start.Line, context.Start.Column));
 		}
 
-		public override TurtleScriptValue VisitPiExpression(
-			TurtleScriptParser.PiExpressionContext context)
-		{
-			return new TurtleScriptValue(3.141592654);
-		}
-
 		#endregion Public Methods
 
 		#region Private Fields
 
-		private readonly string m_Script;
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
-		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
+
+		private readonly string m_Script;
+
 		private string m_ErrorMessage;
-		private Dictionary<string, TurtleScriptValue> m_Variables;
+
 		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+
+		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
+
+		private Dictionary<string, TurtleScriptValue> m_Variables;
 
 		#endregion Private Fields
 
 		#region Private Methods
+
+		private static bool TryGetRuntimeFunction(
+			TurtleScriptParser.FunctionCallContext context,
+			ITurtleScriptRuntime runtime,
+			string functionName,
+			out TurtleScriptRuntimeFunction function)
+		{
+			int parameterCount = 0;
+			if (context.expressionList() != null)
+			{
+				parameterCount = context.expressionList().expression().Length;
+			}
+
+			functionName += "_" + parameterCount;
+
+			return runtime.Functions.TryGetValue(functionName, out function);
+		}
+
+		private TurtleScriptValue CallRuntimeFunction(
+			TurtleScriptParser.FunctionCallContext context,
+			ITurtleScriptRuntime runtime,
+			string functionName)
+		{
+			TurtleScriptRuntimeFunction function;
+			if (TryGetRuntimeFunction(context, runtime, functionName, out function))
+			{
+				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
+
+				if (context.expressionList() != null)
+				{
+					parameterExpressions = context.expressionList().expression();
+				}
+
+				if (parameterExpressions.Length != function.ParameterCount)
+				{
+					throw new InvalidOperationException(string.Format("Invalid number of parameters specified for function call at Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+				}
+
+				List<TurtleScriptValue> functionParameters = new List<TurtleScriptValue>();
+
+				for (int parameterIndex = 0; parameterIndex < parameterExpressions.Length; parameterIndex++)
+				{
+					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
+					TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
+
+					functionParameters.Add(parameterValue);
+				}
+
+				TurtleScriptValue returnValue = function.Function(functionParameters);
+
+				return returnValue;
+			}
+
+			throw new InvalidOperationException(string.Format("Invalid function name in runtime. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
+		}
+
+		private ITurtleScriptRuntime GetRuntimeLibrary(
+			TurtleScriptParser.FunctionCallContext context,
+			string runtimeName)
+		{
+			foreach (ITurtleScriptRuntime turtleScriptRuntime in m_RuntimeLibraries)
+			{
+				if (turtleScriptRuntime.Namespace == runtimeName)
+				{
+					return turtleScriptRuntime;
+				}
+			}
+
+			throw new InvalidOperationException(
+				$"Invalid runtime library name '{runtimeName}' specified on function call. Line {context.Start.Line}, Column {context.Start.Column}");
+		}
 
 		private void SetVariableValue(
 			string variableName,
@@ -611,7 +591,34 @@ namespace TurtleScript.Interpreter
 			m_Variables[variableName] = new TurtleScriptValue(variableValue);
 		}
 
-		#endregion Private Methods
+		private bool TryGetFunction(
+																																																	TurtleScriptParser.FunctionCallContext context,
+			out TurtleScriptFunction function)
+		{
+			function = null;
+			var functionCallName = context.Identifier().GetText();
 
+			int parameterCount = 0;
+			if (context.expressionList() != null)
+			{
+				parameterCount = context.expressionList().expression().Length;
+			}
+
+			functionCallName += "_" + parameterCount;
+
+			foreach (var functionToTest in m_ScriptFunctions)
+			{
+				if ((functionToTest.Key == functionCallName) &&
+					(functionToTest.Value.Parameters.Count == parameterCount))
+				{
+					function = functionToTest.Value;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		#endregion Private Methods
 	}
 }
