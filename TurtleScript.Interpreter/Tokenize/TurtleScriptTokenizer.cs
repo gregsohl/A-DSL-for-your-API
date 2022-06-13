@@ -126,6 +126,52 @@ namespace TurtleScript.Interpreter.Tokenize
 			return result;
 		}
 
+		/// <summary>
+		/// Visit a parse tree produced by the <c>andExpression</c>
+		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitAndExpression(TurtleScriptParser.AndExpressionContext context)
+		{
+			TokenBase leftValue = Visit(context.expression(0));
+			TokenBase rightValue = Visit(context.expression(1));
+
+			TokenBase result = new TokenBinaryOperator(TokenType.OpConditionalAnd);
+
+			result.AddChild(leftValue);
+			result.AddChild(rightValue);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Visit a parse tree produced by the <c>orExpression</c>
+		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitOrExpression(TurtleScriptParser.OrExpressionContext context)
+		{
+			TokenBase leftValue = Visit(context.expression(0));
+			TokenBase rightValue = Visit(context.expression(1));
+
+			TokenBase result = new TokenBinaryOperator(TokenType.OpConditionalOr);
+
+			result.AddChild(leftValue);
+			result.AddChild(rightValue);
+
+			return result;
+		}
+
 		public override TokenBase VisitAssignment(TurtleScriptParser.AssignmentContext context)
 		{
 			TokenBase value = Visit(context.expression());
@@ -307,6 +353,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return new TokenVariableReference(variableName);
 		}
+
 
 		#endregion Public Methods
 

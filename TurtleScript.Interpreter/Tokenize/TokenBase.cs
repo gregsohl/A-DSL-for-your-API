@@ -202,6 +202,8 @@ namespace TurtleScript.Interpreter.Tokenize
 			{
 				case TokenType.OpAdd:
 					return "+";
+				case TokenType.OpConditionalAnd:
+					return "&&";
 				case TokenType.OpSubtract:
 					return "-";
 				case TokenType.OpMultiply:
@@ -222,6 +224,8 @@ namespace TurtleScript.Interpreter.Tokenize
 					return ">=";
 				case TokenType.OpLessThanOrEqual:
 					return "<=";
+				case TokenType.OpConditionalOr:
+					return "||";
 				default:
 					return "error";
 			}
@@ -237,6 +241,9 @@ namespace TurtleScript.Interpreter.Tokenize
 			{
 				case TokenType.OpAdd:
 					result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
+					break;
+				case TokenType.OpConditionalAnd:
+					result = new TurtleScriptValue(leftValue.BooleanValue && rightValue.BooleanValue);
 					break;
 				case TokenType.OpSubtract:
 					result = new TurtleScriptValue(leftValue.NumericValue - rightValue.NumericValue);
@@ -274,6 +281,9 @@ namespace TurtleScript.Interpreter.Tokenize
 					break;
 				case TokenType.OpLessThanOrEqual:
 					result = new TurtleScriptValue(leftValue.NumericValue <= rightValue.NumericValue);
+					break;
+				case TokenType.OpConditionalOr:
+					result = new TurtleScriptValue(leftValue.BooleanValue || rightValue.BooleanValue);
 					break;
 				default:
 					result = TurtleScriptValue.NULL;

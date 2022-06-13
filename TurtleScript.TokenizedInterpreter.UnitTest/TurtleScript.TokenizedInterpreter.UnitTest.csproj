@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArithmeticTests.cs" />
+    <Compile Include="ConditionalOperatorTests.cs" />
     <Compile Include="IfStatementTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
     <Compile Include="TokenizerTests.cs" />
