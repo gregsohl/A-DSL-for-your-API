@@ -189,6 +189,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			string loopVariableName = context.Identifier().GetText();
 
+			// TODO: Figure out what to do for the TokenBase parameter in the variable declaration
 			DeclareVariable(loopVariableName, null);
 
 			TokenBase startValueExpression = Visit(context.expression(0));
@@ -341,6 +342,21 @@ namespace TurtleScript.Interpreter.Tokenize
 			return expressionToken;
 		}
 
+		/// <summary>
+		/// Visit a parse tree produced by the <c>piExpression</c>
+		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitPiExpression(TurtleScriptParser.PiExpressionContext context)
+		{
+			return new TokenPi();
+		}
+
 		public override TokenBase VisitScript(TurtleScriptParser.ScriptContext context)
 		{
 			TokenBase scriptToken = new TokenScript();
@@ -373,7 +389,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		/// <summary>
-		/// Visit a parse tree produced by the <c>piExpression</c>
+		/// Visit a parse tree produced by the <c>unaryNegationExpression</c>
 		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
 		/// <para>
 		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -382,9 +398,28 @@ namespace TurtleScript.Interpreter.Tokenize
 		/// </summary>
 		/// <param name="context">The parse tree.</param>
 		/// <return>The visitor result.</return>
-		public override TokenBase VisitPiExpression(TurtleScriptParser.PiExpressionContext context)
+		public override TokenBase VisitUnaryNegationExpression(TurtleScriptParser.UnaryNegationExpressionContext context)
 		{
-			return new TokenPi();
+			TokenUnaryOperator unaryOperatorToken = new TokenUnaryOperator(TokenType.OpUnaryNegation);
+			unaryOperatorToken.AddChild(Visit(context.expression()));
+			return unaryOperatorToken;
+		}
+
+		/// <summary>
+		/// Visit a parse tree produced by the <c>unaryNotExpression</c>
+		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitUnaryNotExpression(TurtleScriptParser.UnaryNotExpressionContext context)
+		{
+			TokenUnaryOperator unaryOperatorToken = new TokenUnaryOperator(TokenType.OpUnaryNot);
+			unaryOperatorToken.AddChild(Visit(context.expression()));
+			return unaryOperatorToken;
 		}
 
 		#endregion Public Methods

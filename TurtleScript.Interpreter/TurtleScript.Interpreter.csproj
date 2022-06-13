@@ -67,7 +67,22 @@
       <Link>Generated\TurtleScriptVisitor.cs</Link>
     </Compile>
     <Compile Include="ITurtleScriptRuntime.cs" />
+    <Compile Include="Tokenize\TokenAssignment.cs" />
     <Compile Include="Tokenize\TokenBase.cs" />
+    <Compile Include="Tokenize\TokenUnaryOperator.cs" />
+    <Compile Include="Tokenize\TokenBinaryOperator.cs" />
+    <Compile Include="Tokenize\TokenBlock.cs" />
+    <Compile Include="Tokenize\TokenBooleanValue.cs" />
+    <Compile Include="Tokenize\TokenForStatement.cs" />
+    <Compile Include="Tokenize\TokenIf.cs" />
+    <Compile Include="Tokenize\TokenNullValue.cs" />
+    <Compile Include="Tokenize\TokenNumericValue.cs" />
+    <Compile Include="Tokenize\TokenParenthesizedExpression.cs" />
+    <Compile Include="Tokenize\TokenPi.cs" />
+    <Compile Include="Tokenize\TokenScript.cs" />
+    <Compile Include="Tokenize\TokenType.cs" />
+    <Compile Include="Tokenize\TokenValue.cs" />
+    <Compile Include="Tokenize\TokenVariableReference.cs" />
     <Compile Include="Tokenize\TurtleScriptExecutionContext.cs" />
     <Compile Include="TurtleScriptErrorListener.cs" />
     <Compile Include="TurtleScriptFunction.cs" />
