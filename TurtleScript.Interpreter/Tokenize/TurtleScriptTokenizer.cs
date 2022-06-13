@@ -354,6 +354,20 @@ namespace TurtleScript.Interpreter.Tokenize
 			return new TokenVariableReference(variableName);
 		}
 
+		/// <summary>
+		/// Visit a parse tree produced by the <c>piExpression</c>
+		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitPiExpression(TurtleScriptParser.PiExpressionContext context)
+		{
+			return new TokenPi();
+		}
 
 		#endregion Public Methods
 

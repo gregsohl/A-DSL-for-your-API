@@ -53,6 +53,7 @@
     <Compile Include="ConditionalOperatorTests.cs" />
     <Compile Include="IfStatementTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
+    <Compile Include="PredefinedConstantsTests.cs" />
     <Compile Include="TokenizerTests.cs" />
     <Compile Include="VariableAssignmentTests.cs" />
     <Compile Include="VariableReferenceTests.cs" />
