@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Antlr4.Runtime;
 
@@ -198,16 +199,28 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			switch (tokenType)
 			{
-				case TokenType.Add:
+				case TokenType.OpAdd:
 					return "+";
-				case TokenType.Subtract:
+				case TokenType.OpSubtract:
 					return "-";
-				case TokenType.Multiply:
+				case TokenType.OpMultiply:
 					return "*";
-				case TokenType.Divide:
+				case TokenType.OpDivide:
 					return "/";
-				case TokenType.Modulus:
+				case TokenType.OpModulus:
 					return "%";
+				case TokenType.OpEqual:
+					return "==";
+				case TokenType.OpNotEqual:
+					return "!=";
+				case TokenType.OpGreaterThan:
+					return ">";
+				case TokenType.OpLessThan:
+					return "<";
+				case TokenType.OpGreaterThanOrEqual:
+					return ">=";
+				case TokenType.OpLessThanOrEqual:
+					return "<=";
 				default:
 					return "error";
 			}
@@ -221,16 +234,16 @@ namespace TurtleScript.Interpreter.Tokenize
 			TurtleScriptValue result;
 			switch (TokenType)
 			{
-				case TokenType.Add:
+				case TokenType.OpAdd:
 					result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
 					break;
-				case TokenType.Subtract:
+				case TokenType.OpSubtract:
 					result = new TurtleScriptValue(leftValue.NumericValue - rightValue.NumericValue);
 					break;
-				case TokenType.Multiply:
+				case TokenType.OpMultiply:
 					result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
 					break;
-				case TokenType.Divide:
+				case TokenType.OpDivide:
 					if (rightValue.NumericValue == 0)
 					{
 						result = new TurtleScriptValue(0);
@@ -240,8 +253,26 @@ namespace TurtleScript.Interpreter.Tokenize
 						result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
 					}
 					break;
-				case TokenType.Modulus:
+				case TokenType.OpModulus:
 					result = new TurtleScriptValue(leftValue.NumericValue % rightValue.NumericValue);
+					break;
+				case TokenType.OpEqual:
+					result = new TurtleScriptValue(leftValue.NumericValue == rightValue.NumericValue);
+					break;
+				case TokenType.OpNotEqual:
+					result = new TurtleScriptValue(leftValue.NumericValue != rightValue.NumericValue);
+					break;
+				case TokenType.OpGreaterThan:
+					result = new TurtleScriptValue(leftValue.NumericValue > rightValue.NumericValue);
+					break;
+				case TokenType.OpLessThan:
+					result = new TurtleScriptValue(leftValue.NumericValue < rightValue.NumericValue);
+					break;
+				case TokenType.OpGreaterThanOrEqual:
+					result = new TurtleScriptValue(leftValue.NumericValue >= rightValue.NumericValue);
+					break;
+				case TokenType.OpLessThanOrEqual:
+					result = new TurtleScriptValue(leftValue.NumericValue <= rightValue.NumericValue);
 					break;
 				default:
 					result = TurtleScriptValue.NULL;
@@ -327,6 +358,64 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 	}
 
+	public class TokenIf : TokenBase
+	{
+		public TokenIf(TokenBase block, TokenBase conditionalExpression, Dictionary<TokenBase, TokenBase> elseIf)
+			: base(TokenType.If)
+		{
+			Block = block;
+			ConditionalExpression = conditionalExpression;
+			ElseIf = elseIf;
+		}
+
+		public TokenBase Block
+		{
+			[DebuggerStepThrough]
+			get;
+		}
+
+		public TokenBase ConditionalExpression
+		{
+			[DebuggerStepThrough]
+			get;
+		}
+
+		public Dictionary<TokenBase, TokenBase> ElseIf
+		{
+			[DebuggerStepThrough]
+			get;
+		}
+
+		public override string ToTurtleScript()
+		{
+			string block = Block.ToTurtleScript();
+
+			StringBuilder turtleScript = new StringBuilder($"if ({ConditionalExpression.ToTurtleScript()}) Do\r\n");
+
+			var blockLines = Regex.Split(block, "\r\n|\r|\n");
+
+			foreach (string blockLine in blockLines)
+			{
+				turtleScript.AppendLine("\t" + blockLine);
+			}
+
+			return turtleScript.ToString();
+		}
+
+		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
+		{
+			TurtleScriptValue ifResult = ConditionalExpression.Visit(context);
+
+			if ((ifResult.IsBoolean) &&
+				(ifResult.BooleanValue))
+			{
+				Block.Visit(context);
+			}
+
+			return TurtleScriptValue.VOID;
+
+		}
+	}
 
 	public enum TokenType
 	{
@@ -336,12 +425,21 @@ namespace TurtleScript.Interpreter.Tokenize
 		Numeric,
 		NullValue,
 		Assignment,
-		Add,
-		Subtract,
+		OpAdd,
+		OpSubtract,
 		Parenthesized,
-		Multiply,
-		Divide,
-		Modulus,
+		OpMultiply,
+		OpDivide,
+		OpModulus,
 		VariableReference,
+		If,
+		OpEqual,
+		OpNotEqual,
+		OpGreaterThan,
+		OpLessThan,
+		OpGreaterThanOrEqual,
+		OpLessThanOrEqual,
+		OpConditionalAnd,
+		OpConditionalOr,
 	}
 }

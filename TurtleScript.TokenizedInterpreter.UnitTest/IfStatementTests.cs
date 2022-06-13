@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
+using TurtleScript.Interpreter.Tokenize;
+
 #endregion Namespaces
 
 namespace TurtleScript.Interpreter.UnitTest
@@ -20,16 +22,22 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  b = 20");
 			scriptBuilder.AppendLine("end");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "b";
+			const double EXPECTED_VALUE1 = 20;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(20.0, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
 		}
 
 		[Test]

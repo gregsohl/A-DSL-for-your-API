@@ -131,7 +131,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBase rightValue = Visit(context.expression(1));
 
 			TokenBase result = new TokenBinaryOperator(
-				context.op.Type == TurtleScriptParser.Add ? TokenType.Add : TokenType.Subtract);
+				context.op.Type == TurtleScriptParser.Add ? TokenType.OpAdd : TokenType.OpSubtract);
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
@@ -144,17 +144,17 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBase leftValue = Visit(context.expression(0));
 			TokenBase rightValue = Visit(context.expression(1));
 
-			TokenType multiplicativeOperator = TokenType.Multiply;
+			TokenType multiplicativeOperator = TokenType.OpMultiply;
 			switch (context.op.Type)
 			{
 				case TurtleScriptParser.Mul:
-					multiplicativeOperator = TokenType.Multiply;
+					multiplicativeOperator = TokenType.OpMultiply;
 					break;
 				case TurtleScriptParser.Div:
-					multiplicativeOperator = TokenType.Divide;
+					multiplicativeOperator = TokenType.OpDivide;
 					break;
 				case TurtleScriptParser.Mod:
-					multiplicativeOperator = TokenType.Modulus;
+					multiplicativeOperator = TokenType.OpModulus;
 					break;
 			}
 
@@ -238,6 +238,67 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return new TokenVariableReference(variableName);
 		}
+
+		public override TokenBase VisitIfStatement(TurtleScriptParser.IfStatementContext context)
+		{
+			TokenBase ifExpression = Visit(context.ifStat().expression());
+
+			TokenBase block = Visit(context.ifStat().block());
+
+			Dictionary<TokenBase, TokenBase> elseIfTokens = new Dictionary<TokenBase, TokenBase>();
+
+			foreach (TurtleScriptParser.ElseIfStatContext elseIfStatContext in context.elseIfStat())
+			{
+				TokenBase elseIfExpression = Visit(elseIfStatContext.expression());
+
+				TokenBase elseIfBlock = Visit(elseIfStatContext.block());
+			}
+
+			return new TokenIf(
+				block,
+				ifExpression,
+				elseIfTokens);
+		}
+
+		public override TokenBase VisitCompareExpression(TurtleScriptParser.CompareExpressionContext context)
+		{
+			TokenBase leftValue = Visit(context.expression(0));
+			TokenBase rightValue = Visit(context.expression(1));
+
+			TokenBase operatorToken;
+
+
+			switch (context.op.Type)
+			{
+				case TurtleScriptParser.EQ:
+					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
+					break;
+				case TurtleScriptParser.NE:
+					operatorToken = new TokenBinaryOperator(TokenType.OpNotEqual);
+					break;
+				case TurtleScriptParser.GT:
+					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThan);
+					break;
+				case TurtleScriptParser.LT:
+					operatorToken = new TokenBinaryOperator(TokenType.OpLessThan);
+					break;
+				case TurtleScriptParser.GE:
+					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThanOrEqual);
+					break;
+				case TurtleScriptParser.LE:
+					operatorToken = new TokenBinaryOperator(TokenType.OpLessThanOrEqual);
+					break;
+				default:
+					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
+					break;
+			}
+
+			operatorToken.AddChild(leftValue);
+			operatorToken.AddChild(rightValue);
+
+			return operatorToken;
+		}
+
 
 
 		#endregion Public Methods
