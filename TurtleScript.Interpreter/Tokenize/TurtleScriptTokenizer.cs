@@ -245,19 +245,29 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			TokenBase block = Visit(context.ifStat().block());
 
-			Dictionary<TokenBase, TokenBase> elseIfTokens = new Dictionary<TokenBase, TokenBase>();
+			List<Tuple<TokenBase, TokenBase>> elseIfTokens = new List<Tuple<TokenBase, TokenBase>>();
 
 			foreach (TurtleScriptParser.ElseIfStatContext elseIfStatContext in context.elseIfStat())
 			{
 				TokenBase elseIfExpression = Visit(elseIfStatContext.expression());
 
 				TokenBase elseIfBlock = Visit(elseIfStatContext.block());
+
+				elseIfTokens.Add(new Tuple<TokenBase, TokenBase>(elseIfExpression, elseIfBlock));
+			}
+
+			TokenBase elseStatement = null;
+
+			if (context.elseStat() != null)
+			{
+				elseStatement = Visit(context.elseStat().block());
 			}
 
 			return new TokenIf(
 				block,
 				ifExpression,
-				elseIfTokens);
+				elseIfTokens,
+				elseStatement);
 		}
 
 		public override TokenBase VisitCompareExpression(TurtleScriptParser.CompareExpressionContext context)

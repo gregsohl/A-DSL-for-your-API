@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -360,12 +361,17 @@ namespace TurtleScript.Interpreter.Tokenize
 
 	public class TokenIf : TokenBase
 	{
-		public TokenIf(TokenBase block, TokenBase conditionalExpression, Dictionary<TokenBase, TokenBase> elseIf)
+		public TokenIf(
+			TokenBase block,
+			TokenBase conditionalExpression,
+			List<Tuple<TokenBase, TokenBase>> elseIf,
+			TokenBase elseStatement)
 			: base(TokenType.If)
 		{
 			Block = block;
 			ConditionalExpression = conditionalExpression;
 			ElseIf = elseIf;
+			ElseStatement = elseStatement;
 		}
 
 		public TokenBase Block
@@ -380,7 +386,13 @@ namespace TurtleScript.Interpreter.Tokenize
 			get;
 		}
 
-		public Dictionary<TokenBase, TokenBase> ElseIf
+		public List<Tuple<TokenBase, TokenBase>> ElseIf
+		{
+			[DebuggerStepThrough]
+			get;
+		}
+
+		public TokenBase ElseStatement
 		{
 			[DebuggerStepThrough]
 			get;
@@ -388,18 +400,38 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
+			string conditionalExpressionTurtleScript = ConditionalExpression.ToTurtleScript();
 			string block = Block.ToTurtleScript();
+			int indent = 0;
 
-			StringBuilder turtleScript = new StringBuilder($"if ({ConditionalExpression.ToTurtleScript()}) Do\r\n");
+			StringBuilder turtleScript = new StringBuilder($"if ({conditionalExpressionTurtleScript}) Do\r\n");
+			AppendBlockToStatementScript(block, turtleScript, indent);
 
+			foreach (Tuple<TokenBase, TokenBase> elseIf in ElseIf)
+			{
+				indent++;
+				turtleScript.AppendLine($"elseif ({conditionalExpressionTurtleScript}) Do\r\n");
+				AppendBlockToStatementScript(block, turtleScript, indent);
+			}
+
+			if (ElseStatement != null)
+			{
+				AppendBlockToStatementScript(ElseStatement.ToTurtleScript(), turtleScript, indent);
+			}
+
+			turtleScript.AppendLine("end");
+
+			return turtleScript.ToString();
+		}
+
+		private static void AppendBlockToStatementScript(string block, StringBuilder turtleScript, int indent)
+		{
 			var blockLines = Regex.Split(block, "\r\n|\r|\n");
 
 			foreach (string blockLine in blockLines)
 			{
-				turtleScript.AppendLine("\t" + blockLine);
+				turtleScript.AppendLine(new string('\t', indent) + blockLine);
 			}
-
-			return turtleScript.ToString();
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
@@ -410,6 +442,24 @@ namespace TurtleScript.Interpreter.Tokenize
 				(ifResult.BooleanValue))
 			{
 				Block.Visit(context);
+				return TurtleScriptValue.VOID;
+			}
+
+			foreach (Tuple<TokenBase, TokenBase> elseIf in ElseIf)
+			{
+				TurtleScriptValue elseIfResult = elseIf.Item1.Visit(context);
+
+				if ((elseIfResult.IsBoolean) &&
+					(elseIfResult.BooleanValue))
+				{
+					elseIf.Item2.Visit(context);
+					return TurtleScriptValue.VOID;
+				}
+			}
+
+			if (ElseStatement != null)
+			{
+				ElseStatement.Visit(context);
 			}
 
 			return TurtleScriptValue.VOID;

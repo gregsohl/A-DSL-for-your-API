@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 
+using System;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -35,9 +36,13 @@ namespace TurtleScript.Interpreter.UnitTest
 			interpreter.Execute(rootToken, context);
 
 			// Assert
-
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
 			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME1} = {variableValue.NumericValue}");
+
 		}
 
 		[Test]
@@ -50,16 +55,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  b = 20");
 			scriptBuilder.AppendLine("end");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "b";
+			const double EXPECTED_VALUE1 = 10;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(10.0, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME1} = {variableValue.NumericValue}");
 		}
 
 
@@ -74,16 +88,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  b = b * 2");
 			scriptBuilder.AppendLine("end");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "b";
+			const double EXPECTED_VALUE1 = 40;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(40.0, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME1} = {variableValue.NumericValue}");
 		}
 
 		[Test]
@@ -99,16 +122,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  b = 10");
 			scriptBuilder.AppendLine("end");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "b";
+			const double EXPECTED_VALUE1 = 40;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(40.0, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME1} = {variableValue.NumericValue}");
 		}
 
 		[Test]
@@ -124,16 +156,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  b = 10");
 			scriptBuilder.AppendLine("end");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "b";
+			const double EXPECTED_VALUE1 = 10;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(10.0, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME1} = {variableValue.NumericValue}");
 		}
 
 		[Test]
@@ -150,16 +191,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  b = 1");
 			scriptBuilder.AppendLine("end");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "b";
+			const double EXPECTED_VALUE1 = 10;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(10.0, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME1} = {variableValue.NumericValue}");
 		}
 
 		[Test]
@@ -176,16 +226,25 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  b = 1");
 			scriptBuilder.AppendLine("end");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME1 = "b";
+			const double EXPECTED_VALUE1 = 1;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
-
-			// Assert
+			bool success = interpreter.Parse(out TokenBase rootToken);
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(1.0, variableValue.NumericValue);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
+			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME1} = {variableValue.NumericValue}");
 		}
 
 	}
