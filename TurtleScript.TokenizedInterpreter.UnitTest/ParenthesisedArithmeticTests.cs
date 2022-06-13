@@ -39,5 +39,31 @@ namespace TurtleScript.Interpreter.UnitTest
 			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 
+		[Test]
+		public void MultipleLevels()
+		{
+			// Arrange
+			var script = "a = (((1 + 2) * (3 + 4) + 5) * 2)";
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+			Assert.AreEqual(script, rootToken.ToTurtleScript());
+
+			const string VARIABLE_NAME = "a";
+			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.AreEqual(52, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+		}
+
 	}
 }

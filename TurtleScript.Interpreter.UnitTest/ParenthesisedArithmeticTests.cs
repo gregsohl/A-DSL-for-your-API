@@ -27,6 +27,23 @@ namespace TurtleScript.Interpreter.UnitTest
 			TurtleScriptValue variableValue = interpreter.Variables["a"];
 			Assert.AreEqual(9, variableValue.NumericValue);
 		}
-		
+
+		[Test]
+		public void MultipleLevels()
+		{
+			// Arrange
+			var script = "a = (((1 + 2) * (3 + 4) + 5) * 2)";
+
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(script);
+
+			// Act
+			bool success = interpreter.Execute();
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+
+			TurtleScriptValue variableValue = interpreter.Variables["a"];
+			Assert.AreEqual(52, variableValue.NumericValue);
+		}
 	}
 }
