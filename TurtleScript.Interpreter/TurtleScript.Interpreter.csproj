@@ -69,6 +69,8 @@
     <Compile Include="ITurtleScriptRuntime.cs" />
     <Compile Include="Tokenize\TokenAssignment.cs" />
     <Compile Include="Tokenize\TokenBase.cs" />
+    <Compile Include="Tokenize\TokenFunctionDeclaration.cs" />
+    <Compile Include="Tokenize\TokenParameters.cs" />
     <Compile Include="Tokenize\TokenUnaryOperator.cs" />
     <Compile Include="Tokenize\TokenBinaryOperator.cs" />
     <Compile Include="Tokenize\TokenBlock.cs" />

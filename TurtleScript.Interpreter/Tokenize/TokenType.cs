@@ -28,5 +28,8 @@
 		ForStatement,
 		OpUnaryNot,
 		OpUnaryNegation,
+		ParameterList,
+		Parameter,
+		FunctionDecl,
 	}
 }

@@ -204,6 +204,105 @@ namespace TurtleScript.Interpreter.Tokenize
 				executionBlock as TokenBlock);
 		}
 
+		///// <summary>
+		///// Visit a parse tree produced by <see cref="TurtleScriptParser.formalParameters"/>.
+		///// <para>
+		///// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		///// on <paramref name="context"/>.
+		///// </para>
+		///// </summary>
+		///// <param name="context">The parse tree.</param>
+		///// <return>The visitor result.</return>
+		//public override TokenBase VisitFormalParameters(TurtleScriptParser.FormalParametersContext context)
+		//{
+		//	var formalParameterContexts = 
+		//		context != null 
+		//			? context.formalParameter() 
+		//			: Array.Empty<IParseTree>();
+
+		//	List<TokenParameterDeclaration> parameterTokens = new List<TokenParameterDeclaration>();
+
+		//	foreach (IParseTree formalParameterContext in formalParameterContexts)
+		//	{
+		//		TokenParameterDeclaration parameterToken = (TokenParameterDeclaration)Visit(formalParameterContext);
+		//		parameterTokens.Add(parameterToken);
+		//	}
+
+		//	return new TokenParameterDeclarationList(parameterTokens.ToArray());
+		//}
+
+		///// <summary>
+		///// Visit a parse tree produced by <see cref="TurtleScriptParser.formalParameter"/>.
+		///// <para>
+		///// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		///// on <paramref name="context"/>.
+		///// </para>
+		///// </summary>
+		///// <param name="context">The parse tree.</param>
+		///// <return>The visitor result.</return>
+		//public override TokenBase VisitFormalParameter(TurtleScriptParser.FormalParameterContext context)
+		//{
+		//	return new TokenParameterDeclaration(context.Identifier().GetText());
+		//}
+
+		/// <summary>
+		/// Visit a parse tree produced by <see cref="TurtleScriptParser.functionDecl"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitFunctionDecl(TurtleScriptParser.FunctionDeclContext context)
+		{
+			TurtleScriptParser.FormalParametersContext formalParametersContext = context.formalParameters();
+			IParseTree[] formalParameterContexts;
+
+			if (formalParametersContext != null)
+			{
+				formalParameterContexts = formalParametersContext.formalParameter();
+			}
+			else
+			{
+				formalParameterContexts = Array.Empty<IParseTree>();
+			}
+
+			List<string> parameters = new List<string>(formalParameterContexts.Length);
+
+			foreach (var formalParameterContext in formalParameterContexts)
+			{
+				var parameterName = formalParameterContext.GetText();
+				parameters.Add(parameterName);
+
+				// Note presence of the parameter for variable resolution
+				DeclareVariable(parameterName, null);
+			}
+
+			TokenBlock functionBody = (TokenBlock)Visit(context.block());
+
+			string functionName = context.Identifier().GetText();
+			functionName += "_" + formalParameterContexts.Length;
+
+			// Check for function that exists by the same name
+			if (m_ScriptFunctions.TryGetValue(functionName, out _))
+			{
+				throw new InvalidOperationException(
+					string.Format(
+						"A function with the name '{0}' already exists. Line {1}, Column {2}",
+						context.Identifier().GetText(),
+						context.Start.Line,
+						context.Start.Column));
+			}
+
+			m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, null));
+
+			return new TokenFunctionDeclaration(
+				functionName,
+				parameters.ToArray(),
+				functionBody);
+		}
+
 		public override TokenBase VisitMultiplicativeOpExpression(TurtleScriptParser.MultiplicativeOpExpressionContext context)
 		{
 			TokenBase leftValue = Visit(context.expression(0));
@@ -234,6 +333,11 @@ namespace TurtleScript.Interpreter.Tokenize
 		public override TokenBase VisitBlock(TurtleScriptParser.BlockContext context)
 		{
 			TokenBase blockToken = new TokenBlock();
+
+			foreach (TurtleScriptParser.FunctionDeclContext functionDeclContext in context.functionDecl())
+			{
+				Visit(functionDeclContext);
+			}
 
 			foreach (TurtleScriptParser.StatementContext statementContext in context.statement())
 			{

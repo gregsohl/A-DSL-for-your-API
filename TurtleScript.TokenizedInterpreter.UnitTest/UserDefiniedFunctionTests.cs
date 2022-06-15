@@ -1,8 +1,11 @@
 ﻿#region Namespaces
 
+using System;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+
+using TurtleScript.Interpreter.Tokenize;
 
 #endregion Namespaces
 
@@ -15,21 +18,31 @@ namespace TurtleScript.Interpreter.UnitTest
 		{
 			// Arrange
 			StringBuilder scriptBuilder = new StringBuilder();
-			scriptBuilder.AppendLine("def MyFunc()");
+			scriptBuilder.AppendLine("Def MyFunc()");
 			scriptBuilder.AppendLine("	b = 15");
 			scriptBuilder.AppendLine("end");
-			scriptBuilder.AppendLine("MyFunc()");
+			// scriptBuilder.AppendLine("MyFunc()");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME = "b";
+			const double EXPECTED_VALUE = 15;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			//TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			//interpreter.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["b"];
-			Assert.AreEqual(15.0, variableValue.NumericValue);
+			//var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			//Assert.IsTrue(variableValue.IsNumeric);
+			//Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			//Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 
 		[Test]
