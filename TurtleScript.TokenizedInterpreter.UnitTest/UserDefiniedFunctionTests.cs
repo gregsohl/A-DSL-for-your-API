@@ -18,7 +18,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		{
 			// Arrange
 			StringBuilder scriptBuilder = new StringBuilder();
-			scriptBuilder.AppendLine("Def MyFunc()");
+			scriptBuilder.AppendLine("def MyFunc()");
 			scriptBuilder.AppendLine("	b = 15");
 			scriptBuilder.AppendLine("end");
 			// scriptBuilder.AppendLine("MyFunc()");

@@ -19,9 +19,12 @@ namespace TurtleScript.Interpreter.Tokenize
 		public override string ToTurtleScript()
 		{
 			StringBuilder result = new StringBuilder();
-			foreach (var child in Children)
+			if (Children != null)
 			{
-				result.AppendLine(child.ToTurtleScript());
+				foreach (var child in Children)
+				{
+					result.AppendLine(child.ToTurtleScript());
+				}
 			}
 
 			if (result.Length >= 2)

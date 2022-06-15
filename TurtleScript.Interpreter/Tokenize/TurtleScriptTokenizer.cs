@@ -1,4 +1,3 @@
-#region Namespaces
 
 using System;
 using System.Collections.Generic;
@@ -8,14 +7,15 @@ using Antlr4.Runtime.Tree;
 
 using TurtleScript.Interpreter.Tokenize;
 
-#endregion Namespaces
-
 namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TurtleScriptTokenizer
 		: TurtleScriptBaseVisitor<TokenBase>
 	{
-		#region Constructor
+
+
+		#region Public Constructors
+
 		public TurtleScriptTokenizer(
 			string script, 
 			List<ITurtleScriptRuntime> runtimeLibraries = null)
@@ -30,7 +30,8 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 		}
 
-		#endregion Constructor
+		#endregion Public Constructors
+
 
 		#region Public Properties
 
@@ -66,7 +67,14 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Public Properties
 
+
 		#region Public Methods
+
+		public void Execute(TokenBase script, TurtleScriptExecutionContext context)
+		{
+			script.Visit(context);
+
+		}
 
 		/// <summary>
 		/// Executes the script
@@ -105,13 +113,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return !IsError;
 		}
-
-		public void Execute(TokenBase script, TurtleScriptExecutionContext context)
-		{
-			script.Visit(context);
-
-		}
-
 		public override TokenBase VisitAdditiveExpression(TurtleScriptParser.AdditiveExpressionContext context)
 		{
 			TokenBase leftValue = Visit(context.expression(0));
@@ -149,29 +150,6 @@ namespace TurtleScript.Interpreter.Tokenize
 			return result;
 		}
 
-		/// <summary>
-		/// Visit a parse tree produced by the <c>orExpression</c>
-		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
-		/// <para>
-		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-		/// on <paramref name="context"/>.
-		/// </para>
-		/// </summary>
-		/// <param name="context">The parse tree.</param>
-		/// <return>The visitor result.</return>
-		public override TokenBase VisitOrExpression(TurtleScriptParser.OrExpressionContext context)
-		{
-			TokenBase leftValue = Visit(context.expression(0));
-			TokenBase rightValue = Visit(context.expression(1));
-
-			TokenBase result = new TokenBinaryOperator(TokenType.OpConditionalOr);
-
-			result.AddChild(leftValue);
-			result.AddChild(rightValue);
-
-			return result;
-		}
-
 		public override TokenBase VisitAssignment(TurtleScriptParser.AssignmentContext context)
 		{
 			TokenBase value = Visit(context.expression());
@@ -181,151 +159,6 @@ namespace TurtleScript.Interpreter.Tokenize
 			result.AddChild(value);
 
 			DeclareVariable(variableName, result);
-
-			return result;
-		}
-
-		public override TokenBase VisitForStatement(TurtleScriptParser.ForStatementContext context)
-		{
-			string loopVariableName = context.Identifier().GetText();
-
-			// TODO: Figure out what to do for the TokenBase parameter in the variable declaration
-			DeclareVariable(loopVariableName, null);
-
-			TokenBase startValueExpression = Visit(context.expression(0));
-			TokenBase endValueExpression = Visit(context.expression(1));
-
-			TokenBase executionBlock = Visit(context.block());
-
-			return new TokenForStatement(
-				loopVariableName,
-				startValueExpression,
-				endValueExpression,
-				executionBlock as TokenBlock);
-		}
-
-		///// <summary>
-		///// Visit a parse tree produced by <see cref="TurtleScriptParser.formalParameters"/>.
-		///// <para>
-		///// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-		///// on <paramref name="context"/>.
-		///// </para>
-		///// </summary>
-		///// <param name="context">The parse tree.</param>
-		///// <return>The visitor result.</return>
-		//public override TokenBase VisitFormalParameters(TurtleScriptParser.FormalParametersContext context)
-		//{
-		//	var formalParameterContexts = 
-		//		context != null 
-		//			? context.formalParameter() 
-		//			: Array.Empty<IParseTree>();
-
-		//	List<TokenParameterDeclaration> parameterTokens = new List<TokenParameterDeclaration>();
-
-		//	foreach (IParseTree formalParameterContext in formalParameterContexts)
-		//	{
-		//		TokenParameterDeclaration parameterToken = (TokenParameterDeclaration)Visit(formalParameterContext);
-		//		parameterTokens.Add(parameterToken);
-		//	}
-
-		//	return new TokenParameterDeclarationList(parameterTokens.ToArray());
-		//}
-
-		///// <summary>
-		///// Visit a parse tree produced by <see cref="TurtleScriptParser.formalParameter"/>.
-		///// <para>
-		///// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-		///// on <paramref name="context"/>.
-		///// </para>
-		///// </summary>
-		///// <param name="context">The parse tree.</param>
-		///// <return>The visitor result.</return>
-		//public override TokenBase VisitFormalParameter(TurtleScriptParser.FormalParameterContext context)
-		//{
-		//	return new TokenParameterDeclaration(context.Identifier().GetText());
-		//}
-
-		/// <summary>
-		/// Visit a parse tree produced by <see cref="TurtleScriptParser.functionDecl"/>.
-		/// <para>
-		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-		/// on <paramref name="context"/>.
-		/// </para>
-		/// </summary>
-		/// <param name="context">The parse tree.</param>
-		/// <return>The visitor result.</return>
-		public override TokenBase VisitFunctionDecl(TurtleScriptParser.FunctionDeclContext context)
-		{
-			TurtleScriptParser.FormalParametersContext formalParametersContext = context.formalParameters();
-			IParseTree[] formalParameterContexts;
-
-			if (formalParametersContext != null)
-			{
-				formalParameterContexts = formalParametersContext.formalParameter();
-			}
-			else
-			{
-				formalParameterContexts = Array.Empty<IParseTree>();
-			}
-
-			List<string> parameters = new List<string>(formalParameterContexts.Length);
-
-			foreach (var formalParameterContext in formalParameterContexts)
-			{
-				var parameterName = formalParameterContext.GetText();
-				parameters.Add(parameterName);
-
-				// Note presence of the parameter for variable resolution
-				DeclareVariable(parameterName, null);
-			}
-
-			TokenBlock functionBody = (TokenBlock)Visit(context.block());
-
-			string functionName = context.Identifier().GetText();
-			functionName += "_" + formalParameterContexts.Length;
-
-			// Check for function that exists by the same name
-			if (m_ScriptFunctions.TryGetValue(functionName, out _))
-			{
-				throw new InvalidOperationException(
-					string.Format(
-						"A function with the name '{0}' already exists. Line {1}, Column {2}",
-						context.Identifier().GetText(),
-						context.Start.Line,
-						context.Start.Column));
-			}
-
-			m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, null));
-
-			return new TokenFunctionDeclaration(
-				functionName,
-				parameters.ToArray(),
-				functionBody);
-		}
-
-		public override TokenBase VisitMultiplicativeOpExpression(TurtleScriptParser.MultiplicativeOpExpressionContext context)
-		{
-			TokenBase leftValue = Visit(context.expression(0));
-			TokenBase rightValue = Visit(context.expression(1));
-
-			TokenType multiplicativeOperator = TokenType.OpMultiply;
-			switch (context.op.Type)
-			{
-				case TurtleScriptParser.Mul:
-					multiplicativeOperator = TokenType.OpMultiply;
-					break;
-				case TurtleScriptParser.Div:
-					multiplicativeOperator = TokenType.OpDivide;
-					break;
-				case TurtleScriptParser.Mod:
-					multiplicativeOperator = TokenType.OpModulus;
-					break;
-			}
-
-			TokenBase result = new TokenBinaryOperator(multiplicativeOperator);
-
-			result.AddChild(leftValue);
-			result.AddChild(rightValue);
 
 			return result;
 		}
@@ -393,7 +226,84 @@ namespace TurtleScript.Interpreter.Tokenize
 				return new TokenNumericValue(value);
 			}
 
-			throw new InvalidOperationException($"Invalid numeric value. Line {context.Start.Line}, Column {context.Start.Column}"); 
+			throw new InvalidOperationException($"Invalid numeric value. Line {context.Start.Line}, Column {context.Start.Column}");
+		}
+
+		public override TokenBase VisitForStatement(TurtleScriptParser.ForStatementContext context)
+		{
+			string loopVariableName = context.Identifier().GetText();
+
+			// TODO: Figure out what to do for the TokenBase parameter in the variable declaration
+			DeclareVariable(loopVariableName, null);
+
+			TokenBase startValueExpression = Visit(context.expression(0));
+			TokenBase endValueExpression = Visit(context.expression(1));
+
+			TokenBase executionBlock = Visit(context.block());
+
+			return new TokenForStatement(
+				loopVariableName,
+				startValueExpression,
+				endValueExpression,
+				executionBlock as TokenBlock);
+		}
+
+		/// <summary>
+		/// Visit a parse tree produced by <see cref="TurtleScriptParser.functionDecl"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitFunctionDecl(TurtleScriptParser.FunctionDeclContext context)
+		{
+			TurtleScriptParser.FormalParametersContext formalParametersContext = context.formalParameters();
+			IParseTree[] formalParameterContexts;
+
+			if (formalParametersContext != null)
+			{
+				formalParameterContexts = formalParametersContext.formalParameter();
+			}
+			else
+			{
+				formalParameterContexts = Array.Empty<IParseTree>();
+			}
+
+			List<string> parameters = new List<string>(formalParameterContexts.Length);
+
+			foreach (var formalParameterContext in formalParameterContexts)
+			{
+				var parameterName = formalParameterContext.GetText();
+				parameters.Add(parameterName);
+
+				// Note presence of the parameter for variable resolution
+				DeclareVariable(parameterName, null);
+			}
+
+			TokenBlock functionBody = (TokenBlock)Visit(context.block());
+
+			string functionName = context.Identifier().GetText();
+			functionName += "_" + formalParameterContexts.Length;
+
+			// Check for function that exists by the same name
+			if (m_ScriptFunctions.TryGetValue(functionName, out _))
+			{
+				throw new InvalidOperationException(
+					string.Format(
+						"A function with the name '{0}' already exists. Line {1}, Column {2}",
+						context.Identifier().GetText(),
+						context.Start.Line,
+						context.Start.Column));
+			}
+
+			m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, null));
+
+			return new TokenFunctionDeclaration(
+				functionName,
+				parameters.ToArray(),
+				functionBody);
 		}
 
 		public override TokenBase VisitIfStatement(TurtleScriptParser.IfStatementContext context)
@@ -437,6 +347,55 @@ namespace TurtleScript.Interpreter.Tokenize
 			throw new InvalidOperationException("Invalid integer value");
 		}
 
+		public override TokenBase VisitMultiplicativeOpExpression(TurtleScriptParser.MultiplicativeOpExpressionContext context)
+		{
+			TokenBase leftValue = Visit(context.expression(0));
+			TokenBase rightValue = Visit(context.expression(1));
+
+			TokenType multiplicativeOperator = TokenType.OpMultiply;
+			switch (context.op.Type)
+			{
+				case TurtleScriptParser.Mul:
+					multiplicativeOperator = TokenType.OpMultiply;
+					break;
+				case TurtleScriptParser.Div:
+					multiplicativeOperator = TokenType.OpDivide;
+					break;
+				case TurtleScriptParser.Mod:
+					multiplicativeOperator = TokenType.OpModulus;
+					break;
+			}
+
+			TokenBase result = new TokenBinaryOperator(multiplicativeOperator);
+
+			result.AddChild(leftValue);
+			result.AddChild(rightValue);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Visit a parse tree produced by the <c>orExpression</c>
+		/// labeled alternative in <see cref="TurtleScriptParser.expression"/>.
+		/// <para>
+		/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+		/// on <paramref name="context"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="context">The parse tree.</param>
+		/// <return>The visitor result.</return>
+		public override TokenBase VisitOrExpression(TurtleScriptParser.OrExpressionContext context)
+		{
+			TokenBase leftValue = Visit(context.expression(0));
+			TokenBase rightValue = Visit(context.expression(1));
+
+			TokenBase result = new TokenBinaryOperator(TokenType.OpConditionalOr);
+
+			result.AddChild(leftValue);
+			result.AddChild(rightValue);
+
+			return result;
+		}
 		public override TokenBase VisitParenExpression(TurtleScriptParser.ParenExpressionContext context)
 		{
 			TokenBase childExpression = Visit(context.expression());
@@ -468,28 +427,6 @@ namespace TurtleScript.Interpreter.Tokenize
 			scriptToken.AddChild(Visit(context.block()));
 
 			return scriptToken;
-		}
-
-		public override TokenBase VisitVariableReferenceExpression(TurtleScriptParser.VariableReferenceExpressionContext context)
-		{
-			var variableName = context.Identifier().GetText();
-
-			if (m_VariablesDeclared.TryGetValue(
-					variableName,
-					out var variableDeclaration))
-			{
-				return new TokenVariableReference(variableName);
-			}
-
-			this.m_TurtleScriptErrorListener.SyntaxError(
-				m_Parser, 
-				m_Parser.CurrentToken, 
-				context.Start.Line,
-				context.Start.Column,
-				string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", variableName, context.Start.Line, context.Start.Column),
-				null);
-
-			return new TokenVariableReference(variableName);
 		}
 
 		/// <summary>
@@ -526,19 +463,43 @@ namespace TurtleScript.Interpreter.Tokenize
 			return unaryOperatorToken;
 		}
 
+		public override TokenBase VisitVariableReferenceExpression(TurtleScriptParser.VariableReferenceExpressionContext context)
+		{
+			var variableName = context.Identifier().GetText();
+
+			if (m_VariablesDeclared.TryGetValue(
+					variableName,
+					out var variableDeclaration))
+			{
+				return new TokenVariableReference(variableName);
+			}
+
+			this.m_TurtleScriptErrorListener.SyntaxError(
+				m_Parser, 
+				m_Parser.CurrentToken, 
+				context.Start.Line,
+				context.Start.Column,
+				string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", variableName, context.Start.Line, context.Start.Column),
+				null);
+
+			return new TokenVariableReference(variableName);
+		}
+
 		#endregion Public Methods
+
 
 		#region Private Fields
 
-		private readonly string m_Script;
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
-		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
+		private readonly string m_Script;
 		private string m_ErrorMessage;
-		private Dictionary<string, TokenBase> m_VariablesDeclared;
-		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
 		private TurtleScriptParser m_Parser;
+		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
+		private Dictionary<string, TokenBase> m_VariablesDeclared;
 
 		#endregion Private Fields
+
 
 		#region Private Methods
 
