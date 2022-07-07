@@ -57,6 +57,9 @@ ipch/
 *.vsp
 *.vspx
 
+# Other Visual Studio files
+.vs/
+
 # Guidance Automation Toolkit
 *.gpState
 
@@ -194,3 +197,7 @@ AutoSave/
 
 # Exclude Help CHW files
 *.chw
+
+sqlite3/
+
+.antlr/
