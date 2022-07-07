@@ -53,7 +53,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			{
 				for (double index = startValue.NumericValue; index <= endValue.NumericValue; index += increment)
 				{
-					context.SetVariableValue(LoopVariableName,
+					context.SetVariableValue(
+						LoopVariableName,
+						VariableType.Variable,
+						this,
 						index);
 
 					Block.Visit(context);
@@ -63,7 +66,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			{
 				for (double index = startValue.NumericValue; index >= endValue.NumericValue; index += increment)
 				{
-					context.SetVariableValue(LoopVariableName,
+					context.SetVariableValue(
+						LoopVariableName,
+						VariableType.Variable,
+						this,
 						index);
 
 					Block.Visit(context);

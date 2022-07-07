@@ -53,6 +53,7 @@
     <Compile Include="ConditionalOperatorTests.cs" />
     <Compile Include="ForLoopTests.cs" />
     <Compile Include="IfStatementTests.cs" />
+    <Compile Include="TurtleScriptParserContextTests.cs" />
     <Compile Include="UnaryOperatorTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
     <Compile Include="PredefinedConstantsTests.cs" />

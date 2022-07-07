@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿#region Namespaces
+
+using System;
 using System.Text;
-using System.Threading.Tasks;
+
+#endregion Namespaces
 
 namespace TurtleScript.Interpreter.Tokenize
 {
@@ -27,12 +28,17 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			string parameters = String.Join(", ", ParameterNames);
 
-			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript()}";
+			StringBuilder result = new StringBuilder();
+			result.AppendLine($"{FunctionName}({parameters})");
+
+			result.AppendLine("end");
+
+			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript()}\r\nend";
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
-			return TurtleScriptValue.VOID;
+			return FunctionBody.Visit(context);
 		}
 	}
 }

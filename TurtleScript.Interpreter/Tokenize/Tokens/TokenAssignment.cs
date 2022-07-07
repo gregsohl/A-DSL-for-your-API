@@ -24,7 +24,8 @@ namespace TurtleScript.Interpreter.Tokenize
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
 			var variableValue = Children[0].Visit(context);
-			context.SetVariableValue(VariableName, variableValue);
+
+			context.SetVariableValue(VariableName, VariableType.Variable, this, variableValue);
 
 			return TurtleScriptValue.VOID;
 		}

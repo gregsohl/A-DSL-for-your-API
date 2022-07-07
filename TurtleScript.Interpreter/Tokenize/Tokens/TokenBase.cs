@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 using Antlr4.Runtime;
 
@@ -28,7 +29,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			get;
 		}
 
-		public void AddChild(TokenBase token)
+		public virtual void AddChild(TokenBase token)
 		{
 			if (m_Children == null)
 			{
@@ -43,7 +44,25 @@ namespace TurtleScript.Interpreter.Tokenize
 			return string.Empty;
 		}
 
+		public virtual string ToTurtleScript(int indentLevel)
+		{
+			return string.Empty;
+		}
+
+		public virtual StringBuilder ToTurtleScript(
+			StringBuilder result,
+			int indentLevel)
+		{
+			return result;
+		}
+
 		public abstract TurtleScriptValue Visit(TurtleScriptExecutionContext context);
+
+		protected string Indent(int indentLevel)
+		{
+			string indentPadding = new string('\t', indentLevel);
+			return indentPadding;
+		}
 
 		private List<TokenBase> m_Children;
 	}

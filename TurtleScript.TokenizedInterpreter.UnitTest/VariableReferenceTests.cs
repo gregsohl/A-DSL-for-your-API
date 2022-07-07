@@ -38,7 +38,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			interpreter.Execute(rootToken, context);
 
 			// Assert
-			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
 
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
 			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
@@ -69,7 +69,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			interpreter.Execute(rootToken, context);
 
 			// Assert
-			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
 
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
 			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);
@@ -100,7 +100,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			interpreter.Execute(rootToken, context);
 
 			// Assert
-			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.Variables.Count);
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
 
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
 			Assert.AreEqual(EXPECTED_VALUE1, variableValue.NumericValue);

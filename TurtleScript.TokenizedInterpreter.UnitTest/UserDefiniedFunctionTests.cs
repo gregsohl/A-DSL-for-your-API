@@ -1,7 +1,6 @@
 ﻿#region Namespaces
 
 using System;
-using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -21,7 +20,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("def MyFunc()");
 			scriptBuilder.AppendLine("	b = 15");
 			scriptBuilder.AppendLine("end");
-			// scriptBuilder.AppendLine("MyFunc()");
+			scriptBuilder.AppendLine("MyFunc()");
 
 			const string VARIABLE_NAME = "b";
 			const double EXPECTED_VALUE = 15;
@@ -30,15 +29,15 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
-			//TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			//interpreter.Execute(rootToken, context);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			//var variableValue = context.GetVariableValue(VARIABLE_NAME);
-			//Assert.IsTrue(variableValue.IsNumeric);
-			//Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
 
 			Console.WriteLine("Regenerated Script via ToTurtleScript");
 			Console.WriteLine(rootToken.ToTurtleScript());
@@ -95,6 +94,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		{
 			// Arrange
 			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("b = 10");
 			scriptBuilder.AppendLine("MyFunc()");
 			scriptBuilder.AppendLine("def MyFunc()");
 			scriptBuilder.AppendLine("	b = 15");

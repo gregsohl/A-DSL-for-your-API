@@ -257,6 +257,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			interpreter.Execute(rootToken, context);
 
 			// Assert
+			Assert.GreaterOrEqual(1, context.GlobalVariableCount);
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
 			Assert.IsTrue(variableValue.IsNumeric);
 			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
