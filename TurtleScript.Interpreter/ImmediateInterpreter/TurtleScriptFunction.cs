@@ -5,7 +5,7 @@ using Antlr4.Runtime.Tree;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter
+namespace TurtleScript.Interpreter.ImmediateInterpreter
 {
 	internal class TurtleScriptFunction
 	{

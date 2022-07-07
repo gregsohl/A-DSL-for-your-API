@@ -97,9 +97,9 @@
     <Compile Include="Tokenize\TurtleScriptVariables.cs" />
     <Compile Include="Tokenize\VariableType.cs" />
     <Compile Include="TurtleScriptErrorListener.cs" />
-    <Compile Include="TurtleScriptFunction.cs" />
+    <Compile Include="ImmediateInterpreter\TurtleScriptFunction.cs" />
     <Compile Include="Tokenize\Parse\TurtleScriptTokenizer.cs" />
-    <Compile Include="TurtleScriptInterpreter.cs" />
+    <Compile Include="ImmediateInterpreter\TurtleScriptInterpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TurtleScriptRuntimeFunction.cs" />
     <Compile Include="TurtleScriptValue.cs" />

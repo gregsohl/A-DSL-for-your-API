@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 
 using TurtleScript.Interpreter.Tokenize;
+using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 

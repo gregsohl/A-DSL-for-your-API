@@ -6,10 +6,11 @@ using System.Linq;
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter
+namespace TurtleScript.Interpreter.ImmediateInterpreter
 {
 	public class TurtleScriptInterpreter
 		: TurtleScriptBaseVisitor<TurtleScriptValue>

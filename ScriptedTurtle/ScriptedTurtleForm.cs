@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using Nakov.TurtleGraphics;
 using TurtleScript.Interpreter;
+using TurtleScript.Interpreter.ImmediateInterpreter;
 
 using ScriptedTurtle.Runtime;
 

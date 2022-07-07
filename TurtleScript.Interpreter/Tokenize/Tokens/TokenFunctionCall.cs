@@ -46,6 +46,10 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			TurtleScriptValue result = null;
 
+			// Find the function, if it exists.
+			// Push scope onto the context
+			// Register parameter values in the context
+			// Call the function body
 			//context.G
 
 			return result;

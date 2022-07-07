@@ -38,6 +38,8 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
+			// Register the function with the context
+
 			return FunctionBody.Visit(context);
 		}
 	}
