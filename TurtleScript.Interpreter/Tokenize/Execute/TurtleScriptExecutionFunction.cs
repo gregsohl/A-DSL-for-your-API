@@ -7,9 +7,9 @@ using Antlr4.Runtime.Tree;
 
 namespace TurtleScript.Interpreter.Tokenize.Execute
 {
-	internal class TurtleScriptExecutionFunction
+	internal class TurtleScriptFunction
 	{
-		public TurtleScriptExecutionFunction(
+		public TurtleScriptFunction(
 			string name,
 			IParseTree[] parameters,
 			IParseTree body)

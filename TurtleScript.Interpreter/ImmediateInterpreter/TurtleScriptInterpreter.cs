@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Antlr4.Runtime;
@@ -10,7 +9,7 @@ using Antlr4.Runtime.Tree;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.ImmediateInterpreter
+namespace TurtleScript.Interpreter
 {
 	public class TurtleScriptInterpreter
 		: TurtleScriptBaseVisitor<TurtleScriptValue>
@@ -24,7 +23,15 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 		{
 			m_Script = script;
 
-			m_RuntimeLibraries = runtimeLibraries ?? new List<ITurtleScriptRuntime>();
+			if (runtimeLibraries != null)
+			{
+				m_RuntimeLibraries = runtimeLibraries;
+			}
+			else
+			{
+				// Create an empty list
+				m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
+			}
 
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
 			m_Variables = new Dictionary<string, TurtleScriptValue>();
@@ -94,7 +101,7 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 
 			try
 			{
-				Visit(parser.script());
+				TurtleScriptValue turtleScriptValue = Visit(parser.script());
 			}
 			catch (InvalidOperationException exception)
 			{
@@ -162,8 +169,6 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 			return TurtleScriptValue.VOID;
 		}
 
-		[SuppressMessage("ReSharper",
-			"CompareOfFloatsByEqualityOperator")]
 		public override TurtleScriptValue VisitCompareExpression(TurtleScriptParser.CompareExpressionContext context)
 		{
 			TurtleScriptValue leftValue = Visit(context.expression(0));
@@ -201,7 +206,9 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 
 		public override TurtleScriptValue VisitFloatExpression(TurtleScriptParser.FloatExpressionContext context)
 		{
-			if (double.TryParse(context.GetText(), out var value))
+			double value;
+
+			if (double.TryParse(context.GetText(), out value))
 			{
 				return new TurtleScriptValue(value);
 			}
@@ -209,8 +216,6 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 			throw new InvalidOperationException($"Invalid numeric value. Line {context.Start.Line}, Column {context.Start.Column}"); 
 		}
 
-		[SuppressMessage("ReSharper",
-			"CompareOfFloatsByEqualityOperator")]
 		public override TurtleScriptValue VisitForStatement(TurtleScriptParser.ForStatementContext context)
 		{
 			string loopVariableName = context.Identifier().GetText();
@@ -251,10 +256,12 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 
 		public override TurtleScriptValue VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
 		{
+			TurtleScriptFunction function;
+
 			if ((context.Identifier() != null) &&
-				(TryGetFunction(context, out var function)))
+				(TryGetFunction(context, out function)))
 			{
-				TurtleScriptParser.ExpressionContext[] parameterExpressions;
+				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
 
 				if (context.expressionList() != null)
 				{
@@ -269,10 +276,6 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 								context.Start.Line,
 								context.Start.Column));
 					}
-				}
-				else
-				{
-					parameterExpressions = Array.Empty<TurtleScriptParser.ExpressionContext>();
 				}
 
 				List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
@@ -332,7 +335,7 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 			}
 			else
 			{
-				formalParameterContexts = Array.Empty<IParseTree>();
+				formalParameterContexts = new IParseTree[0];
 			}
 
 			IParseTree block = context.block();
@@ -390,7 +393,9 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 
 		public override TurtleScriptValue VisitIntExpression(TurtleScriptParser.IntExpressionContext context)
 		{
-			if (Int32.TryParse(context.GetText(), out var value))
+			int value;
+
+			if (Int32.TryParse(context.GetText(), out value))
 			{
 				return new TurtleScriptValue(value);
 			}
@@ -523,7 +528,8 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 			ITurtleScriptRuntime runtime,
 			string functionName)
 		{
-			if (TryGetRuntimeFunction(context, runtime, functionName, out var function))
+			TurtleScriptRuntimeFunction function;
+			if (TryGetRuntimeFunction(context, runtime, functionName, out function))
 			{
 				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
 

@@ -1,11 +1,12 @@
 ﻿#region Namespaces
 
 using System.Collections.Generic;
-using TurtleScript.Interpreter.ImmediateInterpreter;
+
+using TurtleScript.Interpreter.Tokenize.Execute;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.Tokenize.Execute
+namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TurtleScriptExecutionContext
 	{
@@ -19,7 +20,7 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 			m_CurrentScope = null;
 
 			m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptExecutionFunction>();
+			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
 		}
 
 		#endregion Public Constructors
@@ -246,12 +247,10 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 		#region Private Fields
 
 		private readonly TurtleScriptExecutionScope m_GlobalScope;
+		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private readonly Stack<TurtleScriptExecutionScope> m_ScopeStack;
 		private TurtleScriptExecutionScope m_CurrentScope;
-
-		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
-		
-		private readonly Dictionary<string, TurtleScriptExecutionFunction> m_ScriptFunctions;
+		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
 
 		#endregion Private Fields
 	}

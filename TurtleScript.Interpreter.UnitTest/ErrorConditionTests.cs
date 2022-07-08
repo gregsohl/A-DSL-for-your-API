@@ -1,8 +1,6 @@
 ﻿#region Namespaces
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -197,6 +195,23 @@ namespace TurtleScript.Interpreter.UnitTest
 			OutputResults(script, interpreter);
 			Assert.IsFalse(success);
 			Assert.AreEqual("mismatched input '55' expecting <EOF>. Line 1, Col 0", interpreter.ErrorMessage);
+		}
+
+		[Test]
+		public void PartialNumber1()
+		{
+			// Arrange
+			var script = "123@abcd";
+
+			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(script);
+
+			// Act
+			bool success = interpreter.Execute();
+
+			// Assert
+			OutputResults(script, interpreter);
+			Assert.IsFalse(success);
+			Assert.AreEqual("no viable alternative at input 'abcd'. Line 1, Col 4", interpreter.ErrorMessage);
 		}
 
 		[Test]

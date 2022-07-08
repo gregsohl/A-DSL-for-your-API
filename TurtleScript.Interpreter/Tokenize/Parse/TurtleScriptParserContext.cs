@@ -1,7 +1,6 @@
 ﻿#region Namespaces
 
 using System.Collections.Generic;
-using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 

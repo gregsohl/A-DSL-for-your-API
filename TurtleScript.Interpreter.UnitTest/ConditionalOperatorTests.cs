@@ -1,10 +1,6 @@
 ﻿#region Namespaces
 
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-
-using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 
