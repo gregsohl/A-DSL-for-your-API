@@ -5,7 +5,7 @@ using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.Tokenize
+namespace TurtleScript.Interpreter.Tokenize.Execute
 {
 	public class TurtleScriptExecutionContext
 	{
@@ -19,7 +19,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_CurrentScope = null;
 
 			m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
+			m_ScriptFunctions = new Dictionary<string, TurtleScriptExecutionFunction>();
 		}
 
 		#endregion Public Constructors
@@ -246,10 +246,12 @@ namespace TurtleScript.Interpreter.Tokenize
 		#region Private Fields
 
 		private readonly TurtleScriptExecutionScope m_GlobalScope;
-		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private readonly Stack<TurtleScriptExecutionScope> m_ScopeStack;
 		private TurtleScriptExecutionScope m_CurrentScope;
-		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+
+		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
+		
+		private readonly Dictionary<string, TurtleScriptExecutionFunction> m_ScriptFunctions;
 
 		#endregion Private Fields
 	}

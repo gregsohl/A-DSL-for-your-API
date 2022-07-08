@@ -1,4 +1,6 @@
-﻿namespace TurtleScript.Interpreter.Tokenize
+﻿using TurtleScript.Interpreter.Tokenize.Execute;
+
+namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenBinaryOperator : TokenBase
 	{
