@@ -5,6 +5,11 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenForStatement : TokenBase
 	{
+		private readonly string m_LoopVariableName;
+		private readonly TokenBase m_StartValue;
+		private readonly TokenBase m_EndValue;
+		private readonly TokenBlock m_Block;
+
 		public TokenForStatement(
 			string loopVariableName, 
 			TokenBase startValue, 
@@ -12,19 +17,31 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBlock block)
 			: base(TokenType.ForStatement)
 		{
-			LoopVariableName = loopVariableName;
-			StartValue = startValue;
-			EndValue = endValue;
-			Block = block;
+			m_LoopVariableName = loopVariableName;
+			m_StartValue = startValue;
+			m_EndValue = endValue;
+			m_Block = block;
 		}
 
-		public string LoopVariableName { get; } 
+		public string LoopVariableName
+		{
+			get { return m_LoopVariableName; }
+		}
 
-		public TokenBase StartValue { get; }
+		public TokenBase StartValue
+		{
+			get { return m_StartValue; }
+		}
 
-		public TokenBase EndValue { get; }
+		public TokenBase EndValue
+		{
+			get { return m_EndValue; }
+		}
 
-		public TokenBlock Block { get; }
+		public TokenBlock Block
+		{
+			get { return m_Block; }
+		}
 
 		public override string ToTurtleScript()
 		{

@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 using TurtleScript.Interpreter.Tokenize;
 using TurtleScript.Interpreter.Tokenize.Execute;
+using TurtleScript.Interpreter.Tokenize.Parse;
 
 #endregion Namespaces
 

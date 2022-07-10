@@ -5,7 +5,7 @@ using System.Diagnostics;
 #endregion Namespaces
 
 
-namespace TurtleScript.Interpreter.Tokenize
+namespace TurtleScript.Interpreter.Tokenize.Parse
 {
 	public class TurtleScriptParserScope
 	{

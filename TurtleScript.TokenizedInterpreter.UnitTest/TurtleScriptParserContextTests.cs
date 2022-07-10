@@ -3,6 +3,7 @@
 using NUnit.Framework;
 
 using TurtleScript.Interpreter.Tokenize;
+using TurtleScript.Interpreter.Tokenize.Parse;
 
 #endregion Namespaces
 

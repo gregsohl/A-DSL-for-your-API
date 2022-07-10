@@ -5,16 +5,18 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenAssignment : TokenBase
 	{
+		private readonly string m_VariableName;
+
 		public TokenAssignment(string variableName)
 			: base(TokenType.Assignment)
 		{
-			VariableName = variableName;
+			m_VariableName = variableName;
 		}
 
 		public string VariableName
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_VariableName; }
 		}
 
 		public override string ToTurtleScript()

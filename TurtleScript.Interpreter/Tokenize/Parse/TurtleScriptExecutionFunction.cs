@@ -9,11 +9,11 @@ using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.Tokenize.Execute
+namespace TurtleScript.Interpreter.Tokenize.Parse
 {
-	internal class TurtleScriptExecutionFunction : TurtleScriptFunctionBase
+	internal class TurtleScriptParserFunction : TurtleScriptFunctionBase
 	{
-		public TurtleScriptExecutionFunction(
+		public TurtleScriptParserFunction(
 			string name,
 			int parameterCount,
 			TokenFunctionDeclaration declaration)

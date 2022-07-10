@@ -4,13 +4,18 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenVariableReference : TokenBase
 	{
+		private readonly string m_VariableName;
+
 		public TokenVariableReference(string variableName)
 			: base(TokenType.VariableReference)
 		{
-			VariableName = variableName;
+			m_VariableName = variableName;
 		}
 
-		public string VariableName { get; }
+		public string VariableName
+		{
+			get { return m_VariableName; }
+		}
 
 		public override string ToTurtleScript()
 		{

@@ -5,16 +5,18 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenBooleanValue : TokenValue
 	{
+		private readonly bool m_Value;
+
 		public TokenBooleanValue(bool value)
 			: base(TokenType.Boolean)
 		{
-			Value = value;
+			m_Value = value;
 		}
 
 		public bool Value
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_Value; }
 		}
 
 		public override string ToTurtleScript()

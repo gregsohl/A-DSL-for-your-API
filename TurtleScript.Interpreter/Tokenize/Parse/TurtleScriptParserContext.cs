@@ -1,11 +1,10 @@
 ﻿#region Namespaces
 
 using System.Collections.Generic;
-using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.Tokenize
+namespace TurtleScript.Interpreter.Tokenize.Parse
 {
 	public class TurtleScriptParserContext
 	{
@@ -15,7 +14,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		public TurtleScriptParserContext()
 		{
 			m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
+			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
 			m_GlobalScope = new TurtleScriptParserScope(0, "Global");
 			m_ScopeStack = new Stack<TurtleScriptParserScope>();
 
@@ -145,7 +144,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private readonly Stack<TurtleScriptParserScope> m_ScopeStack;
 		private TurtleScriptParserScope m_CurrentScope;
-		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+		private Dictionary<string, TurtleScriptParserFunction> m_ScriptFunctions;
 
 		#endregion Private Fields
 	}

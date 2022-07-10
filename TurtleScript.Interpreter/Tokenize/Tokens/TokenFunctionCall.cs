@@ -10,19 +10,28 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	internal class TokenFunctionCall : TokenBase
 	{
+		private readonly string m_FunctionName;
+		private readonly TokenBase[] m_Parameters;
+
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TokenFunctionCall(
 			string functionName,
 			TokenBase[] parameters)
 			: base(TokenType.FunctionDecl)
 		{
-			FunctionName = functionName;
-			Parameters = parameters;
+			m_FunctionName = functionName;
+			m_Parameters = parameters;
 		}
 
-		public string FunctionName { get; }
+		public string FunctionName
+		{
+			get { return m_FunctionName; }
+		}
 
-		public TokenBase[] Parameters { get; }
+		public TokenBase[] Parameters
+		{
+			get { return m_Parameters; }
+		}
 
 		public override string ToTurtleScript()
 		{

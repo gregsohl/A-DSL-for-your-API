@@ -9,6 +9,11 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenIf : TokenBase
 	{
+		private readonly TokenBlock m_Block;
+		private readonly TokenBase m_ConditionalExpression;
+		private readonly List<Tuple<TokenBase, TokenBase>> m_ElseIf;
+		private readonly TokenBase m_ElseStatement;
+
 		public TokenIf(
 			TokenBlock block,
 			TokenBase conditionalExpression,
@@ -16,34 +21,34 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBase elseStatement)
 			: base(TokenType.If)
 		{
-			Block = block;
-			ConditionalExpression = conditionalExpression;
-			ElseIf = elseIf;
-			ElseStatement = elseStatement;
+			m_Block = block;
+			m_ConditionalExpression = conditionalExpression;
+			m_ElseIf = elseIf;
+			m_ElseStatement = elseStatement;
 		}
 
 		public TokenBlock Block
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_Block; }
 		}
 
 		public TokenBase ConditionalExpression
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_ConditionalExpression; }
 		}
 
 		public List<Tuple<TokenBase, TokenBase>> ElseIf
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_ElseIf; }
 		}
 
 		public TokenBase ElseStatement
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_ElseStatement; }
 		}
 
 		public override string ToTurtleScript()

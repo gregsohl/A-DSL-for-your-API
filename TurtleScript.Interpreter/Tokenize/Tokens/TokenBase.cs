@@ -15,7 +15,7 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		protected TokenBase(TokenType tokenType)
 		{
-			TokenType = tokenType;
+			m_TokenType = tokenType;
 		}
 
 		public List<TokenBase> Children
@@ -27,7 +27,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		public TokenType TokenType
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_TokenType; }
 		}
 
 		public virtual void AddChild(TokenBase token)
@@ -66,5 +66,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		private List<TokenBase> m_Children;
+		private readonly TokenType m_TokenType;
 	}
 }

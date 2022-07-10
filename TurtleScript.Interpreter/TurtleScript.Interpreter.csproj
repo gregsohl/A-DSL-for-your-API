@@ -71,6 +71,7 @@
     <Compile Include="ITurtleScriptRuntime.cs" />
     <Compile Include="Tokenize\Execute\TurtleScriptExecutionFunction.cs" />
     <Compile Include="Tokenize\ITurtleScriptVariable.cs" />
+    <Compile Include="Tokenize\Parse\TurtleScriptExecutionFunction.cs" />
     <Compile Include="Tokenize\Tokens\TokenAssignment.cs" />
     <Compile Include="Tokenize\Tokens\TokenBase.cs" />
     <Compile Include="Tokenize\Tokens\TokenFunctionCall.cs" />

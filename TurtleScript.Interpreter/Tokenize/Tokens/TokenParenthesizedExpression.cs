@@ -5,13 +5,18 @@ namespace TurtleScript.Interpreter.Tokenize
 	public class TokenParenthesizedExpression
 		: TokenBase
 	{
+		private readonly TokenBase m_ChildExpression;
+
 		public TokenParenthesizedExpression(TokenBase childExpression)
 			: base(TokenType.Parenthesized)
 		{
-			ChildExpression = childExpression;
+			m_ChildExpression = childExpression;
 		}
 
-		public TokenBase ChildExpression { get; }
+		public TokenBase ChildExpression
+		{
+			get { return m_ChildExpression; }
+		}
 
 		public override string ToTurtleScript()
 		{

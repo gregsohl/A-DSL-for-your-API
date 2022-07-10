@@ -4,11 +4,11 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public interface ITurtleScriptVariable<T>
 	{
-		TokenBase Declaration
-		{
-			[DebuggerStepThrough]
-			get;
-		}
+		//TokenBase Declaration
+		//{
+		//	[DebuggerStepThrough]
+		//	get;
+		//}
 
 		string Name
 		{

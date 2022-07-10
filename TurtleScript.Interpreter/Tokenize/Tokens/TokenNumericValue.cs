@@ -6,16 +6,18 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenNumericValue : TokenValue
 	{
+		private readonly double m_Value;
+
 		public TokenNumericValue(double value)
 			: base(TokenType.Numeric)
 		{
-			Value = value;
+			m_Value = value;
 		}
 
 		public double Value
 		{
 			[DebuggerStepThrough]
-			get;
+			get { return m_Value; }
 		}
 
 		public override string ToTurtleScript()

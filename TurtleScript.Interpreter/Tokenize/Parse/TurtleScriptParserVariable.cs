@@ -1,25 +1,24 @@
 ﻿using System.Diagnostics;
 
-namespace TurtleScript.Interpreter.Tokenize
+namespace TurtleScript.Interpreter.Tokenize.Parse
 {
 	public class TurtleScriptParserVariable : ITurtleScriptVariable<TurtleScriptParserVariable>
 	{
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TurtleScriptParserVariable(
 			string name,
-			VariableType type,
-			TokenBase declaration)
+			VariableType type)
 		{
 			m_Name = name;
 			m_Type = type;
-			m_Declaration = declaration;
+			//m_Declaration = declaration;
 		}
 
-		public TokenBase Declaration
-		{
-			[DebuggerStepThrough]
-			get { return m_Declaration; }
-		}
+		//public TokenBase Declaration
+		//{
+		//	[DebuggerStepThrough]
+		//	get { return m_Declaration; }
+		//}
 
 		public string Name
 		{
@@ -72,6 +71,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		private readonly string m_Name;
 		private readonly VariableType m_Type;
-		private readonly TokenBase m_Declaration;
+		// private readonly TokenBase m_Declaration;
 	}
 }

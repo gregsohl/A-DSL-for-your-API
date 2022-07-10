@@ -2,21 +2,24 @@
 
 using System.Diagnostics;
 
+using TurtleScript.Interpreter.Tokenize.Parse;
+
 #endregion Namespaces
 
 
 namespace TurtleScript.Interpreter.Tokenize.Execute
 {
-	public class TurtleScriptExecutionVariable : TurtleScriptParserVariable, ITurtleScriptVariable<TurtleScriptExecutionVariable>
+	public class TurtleScriptExecutionVariable
+		: TurtleScriptParserVariable, 
+		  ITurtleScriptVariable<TurtleScriptExecutionVariable>
 	{
 		#region Public Constructors
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TurtleScriptExecutionVariable(
 			string name,
-			VariableType type,
-			TokenBase declaration)
-			: base(name, type, declaration)
+			VariableType type)
+			: base(name, type)
 		{
 		}
 

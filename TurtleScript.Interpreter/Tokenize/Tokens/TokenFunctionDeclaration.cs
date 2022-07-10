@@ -10,20 +10,38 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	internal class TokenFunctionDeclaration : TokenBase
 	{
+
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TokenFunctionDeclaration(string functionName, string[] parameterNames, TokenBlock functionBody)
 			: base(TokenType.FunctionDecl)
 		{
-			FunctionName = functionName;
-			ParameterNames = parameterNames;
-			FunctionBody = functionBody;
+			m_FunctionName = functionName;
+			m_ParameterNames = parameterNames;
+			m_FunctionBody = functionBody;
+
+			m_Key += functionName + "_" + parameterNames.Length;
+
 		}
 
-		public string FunctionName { get; }
+		public int ParameterCount
+		{
+			get { return ParameterNames.Length; }
+		}
 
-		public string[] ParameterNames { get; }
+		public string FunctionName
+		{
+			get { return m_FunctionName; }
+		}
 
-		public TokenBlock FunctionBody { get; }
+		public string[] ParameterNames
+		{
+			get { return m_ParameterNames; }
+		}
+
+		public TokenBlock FunctionBody
+		{
+			get { return m_FunctionBody; }
+		}
 
 		public override string ToTurtleScript()
 		{
@@ -43,5 +61,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return FunctionBody.Visit(context);
 		}
+
+		private readonly string m_Key;
+		private readonly string m_FunctionName;
+		private readonly string[] m_ParameterNames;
+		private readonly TokenBlock m_FunctionBody;
 	}
 }

@@ -593,7 +593,7 @@ namespace TurtleScript.Interpreter
 		}
 
 		private bool TryGetFunction(
-																																																	TurtleScriptParser.FunctionCallContext context,
+			TurtleScriptParser.FunctionCallContext context,
 			out TurtleScriptFunction function)
 		{
 			function = null;

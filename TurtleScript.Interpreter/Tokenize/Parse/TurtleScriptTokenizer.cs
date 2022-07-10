@@ -5,11 +5,14 @@ using System.Collections.Generic;
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using TurtleScript.Interpreter.ImmediateInterpreter;
+
+using TurtleScript.Interpreter.Tokenize.Execute;
+
+//using TurtleScript.Interpreter.ImmediateInterpreter;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.Tokenize
+namespace TurtleScript.Interpreter.Tokenize.Parse
 {
 	public class TurtleScriptTokenizer
 		: TurtleScriptBaseVisitor<TokenBase>
@@ -27,7 +30,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
 			// m_VariablesDeclared = new Dictionary<string, TokenBase>();
 			m_TurtleScriptParserContext = new TurtleScriptParserContext();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
+			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
 		}
 
 		#endregion Public Constructors
@@ -94,7 +97,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Parser.BuildParseTree = true;
 
 			m_TurtleScriptParserContext = new TurtleScriptParserContext();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
+			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
 
 			try
 			{
@@ -108,18 +111,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return !IsError;
 		}
-
-		public bool IsVariableDeclared(
-			string variableName,
-			out TurtleScriptParserScope scope)
-		{
-			bool result = m_TurtleScriptParserContext.IsVariableDeclared(
-				variableName,
-				out scope);
-
-			return result;
-		}
-
 		public override TokenBase VisitAdditiveExpression(TurtleScriptParser.AdditiveExpressionContext context)
 		{
 			TokenBase leftValue = Visit(context.expression(0));
@@ -333,6 +324,8 @@ namespace TurtleScript.Interpreter.Tokenize
 		/// <return>The visitor result.</return>
 		public override TokenBase VisitFunctionDecl(TurtleScriptParser.FunctionDeclContext context)
 		{
+			string functionName = context.Identifier().GetText();
+
 			TurtleScriptParser.FormalParametersContext formalParametersContext = context.formalParameters();
 			IParseTree[] formalParameterContexts;
 
@@ -351,15 +344,23 @@ namespace TurtleScript.Interpreter.Tokenize
 			{
 				var parameterName = formalParameterContext.GetText();
 				parameters.Add(parameterName);
-
-				// Note presence of the parameter for variable resolution
-				DeclareVariable(parameterName, null);
 			}
+
+			TokenFunctionDeclaration functionDeclaration = new TokenFunctionDeclaration(
+				functionName,
+				parameters.ToArray(),
+				null);
+
+
+			m_TurtleScriptParserContext.PushScope(functionName);
+			foreach (string parameter in parameters)
+			{
+				m_TurtleScriptParserContext.DeclareVariable(parameter, VariableType.Parameter, functionDeclaration);
+			}
+
 
 			TokenBlock functionBody = (TokenBlock)Visit(context.block());
 
-			string functionName = context.Identifier().GetText();
-			functionName += "_" + formalParameterContexts.Length;
 
 			// Check for function that exists by the same name
 			if (m_ScriptFunctions.TryGetValue(functionName, out _))
@@ -372,18 +373,12 @@ namespace TurtleScript.Interpreter.Tokenize
 						context.Start.Column));
 			}
 
-			m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, null));
-
-			TokenFunctionDeclaration functionDeclaration = new TokenFunctionDeclaration(
+			var newFunction = new TurtleScriptParserFunction(
 				functionName,
-				parameters.ToArray(),
-				functionBody);
+				formalParameterContexts.Length,
+				functionDeclaration);
 
-			m_TurtleScriptParserContext.PushScope(functionName);
-			foreach (string parameter in parameters)
-			{
-				m_TurtleScriptParserContext.DeclareVariable(parameter, VariableType.Parameter, functionDeclaration);
-			}
+			m_ScriptFunctions.Add(functionName, newFunction);
 
 			return functionDeclaration;
 		}
@@ -578,7 +573,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		private readonly string m_Script;
 		private string m_ErrorMessage;
 		private TurtleScriptParser m_Parser;
-		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+		private Dictionary<string, TurtleScriptParserFunction> m_ScriptFunctions;
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
 		//private Dictionary<string, TokenBase> m_VariablesDeclared;
 

@@ -5,13 +5,18 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	internal class TokenParameterDeclaration : TokenBase
 	{
+		private readonly string m_ParameterName;
+
 		public TokenParameterDeclaration(string parameterName)
 			:base(TokenType.Parameter)
 		{
-			ParameterName = parameterName;
+			m_ParameterName = parameterName;
 		}
 
-		public string ParameterName { get; }
+		public string ParameterName
+		{
+			get { return m_ParameterName; }
+		}
 
 		public override string ToTurtleScript()
 		{
@@ -26,13 +31,18 @@ namespace TurtleScript.Interpreter.Tokenize
 
 	internal class TokenParameterDeclarationList : TokenBase
 	{
+		private readonly TokenParameterDeclaration[] m_Parameters;
+
 		public TokenParameterDeclarationList(TokenParameterDeclaration[] parameters)
 			: base(TokenType.ParameterList)
 		{
-			Parameters = parameters;
+			m_Parameters = parameters;
 		}
 
-		public TokenParameterDeclaration[] Parameters { get; }
+		public TokenParameterDeclaration[] Parameters
+		{
+			get { return m_Parameters; }
+		}
 
 		public override string ToTurtleScript()
 		{
