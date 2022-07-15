@@ -67,11 +67,13 @@
       <Link>Generated\TurtleScriptVisitor.cs</Link>
     </Compile>
     <Compile Include="ImmediateInterpreter\TurtleScriptFunction.cs" />
-    <Compile Include="ImmediateInterpreter\TurtleScriptFunctionBase.cs" />
+    <Compile Include="ITurtleScriptFunction.cs" />
+    <Compile Include="TurtleScriptFunctionFactory.cs" />
+    <Compile Include="TurtleScriptFunctionBase.cs" />
     <Compile Include="ITurtleScriptRuntime.cs" />
     <Compile Include="Tokenize\Execute\TurtleScriptExecutionFunction.cs" />
     <Compile Include="Tokenize\ITurtleScriptVariable.cs" />
-    <Compile Include="Tokenize\Parse\TurtleScriptExecutionFunction.cs" />
+    <Compile Include="Tokenize\Parse\TurtleScriptParserFunction.cs" />
     <Compile Include="Tokenize\Tokens\TokenAssignment.cs" />
     <Compile Include="Tokenize\Tokens\TokenBase.cs" />
     <Compile Include="Tokenize\Tokens\TokenFunctionCall.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="Tokenize\Execute\TurtleScriptExecutionContext.cs" />
     <Compile Include="Tokenize\Parse\TurtleScriptParserScope.cs" />
     <Compile Include="Tokenize\Parse\TurtleScriptParserVariable.cs" />
+    <Compile Include="TurtleScriptFunctions.cs" />
     <Compile Include="Tokenize\TurtleScriptVariableFactory.cs" />
     <Compile Include="Tokenize\TurtleScriptVariables.cs" />
     <Compile Include="Tokenize\VariableType.cs" />

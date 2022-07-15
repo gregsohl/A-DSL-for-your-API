@@ -5,8 +5,6 @@ using System.Diagnostics;
 
 using Antlr4.Runtime.Tree;
 
-using TurtleScript.Interpreter.ImmediateInterpreter;
-
 #endregion Namespaces
 
 namespace TurtleScript.Interpreter.Tokenize.Parse

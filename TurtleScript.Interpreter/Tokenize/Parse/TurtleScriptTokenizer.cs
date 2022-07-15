@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
@@ -31,6 +32,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			// m_VariablesDeclared = new Dictionary<string, TokenBase>();
 			m_TurtleScriptParserContext = new TurtleScriptParserContext();
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
+			m_ScriptFunctions2 = new TurtleScriptFunctions<TurtleScriptParserFunction>();
 		}
 
 		#endregion Public Constructors
@@ -98,6 +100,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 			m_TurtleScriptParserContext = new TurtleScriptParserContext();
 			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
+			m_ScriptFunctions2 = new TurtleScriptFunctions<TurtleScriptParserFunction>();
 
 			try
 			{
@@ -252,65 +255,78 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 		public override TokenBase VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
 		{
-			TokenFunctionCall function = null;
-			return function;
+			//return new TokenFunctionCall(
+			//	"",
+			//	new TokenBase[0]);
 
-			//if ((context.Identifier() != null) &&
-			//	(TryGetFunction(context, out function)))
+			if (context.Identifier() != null)
+			{
+				// User Defined Function
+
+				string functionCallName = context.Identifier().GetText();
+
+				TurtleScriptParser.ExpressionContext[] parameterExpressions =
+					Array.Empty<TurtleScriptParser.ExpressionContext>();
+
+				if (context.expressionList() != null)
+				{
+					parameterExpressions = context.expressionList().expression();
+				}
+
+				if (m_ScriptFunctions2.TryGetFunction(
+						functionCallName,
+						parameterExpressions.Length,
+						out TurtleScriptParserFunction function))
+				{
+
+					if (parameterExpressions.Length != function.ParameterCount)
+					{
+						// TODO: This cannot happen as number of parameters is used to find the function initially. Will fail before here.
+						throw new InvalidOperationException(
+							string.Format(
+								"Invalid number of parameters specified for function call. Line {0}, Column {1}",
+								context.Start.Line,
+								context.Start.Column));
+					}
+
+					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
+					List<TokenBase> parameterTokens = new List<TokenBase>(parameterContexts.Count);
+
+					for (int parameterIndex = 0; parameterIndex < parameterContexts.Count; parameterIndex++)
+					{
+						TokenBase parameterToken = Visit(parameterContexts[parameterIndex]);
+						parameterTokens.Add(parameterToken);
+					}
+
+					TokenFunctionCall result = new TokenFunctionCall(
+						functionCallName,
+						parameterTokens.ToArray());
+
+					return result;
+				}
+			}
+
+			//if (context.QualifiedIdentifier() != null)
 			//{
-			//	TurtleScriptParser.ExpressionContext[] parameterExpressions = Array.Empty<TurtleScriptParser.ExpressionContext>();
+			//	string fullIdentifier = context.QualifiedIdentifier().GetText();
+			//	string[] identifierParts = fullIdentifier.Split('.');
 
-			//	if (context.expressionList() != null)
-			//	{
-			//		parameterExpressions = context.expressionList().expression();
+			//	string runtimeName = identifierParts[0];
+			//	string functionName = identifierParts[1];
 
-			//		if (parameterExpressions.Length != function.Parameters.Count)
-			//		{
-			//			// TODO: This cannot happen as number of parameters is used to find the function initially. Will fail before here.
-			//			throw new InvalidOperationException(
-			//				string.Format(
-			//					"Invalid number of parameters specified for function call. Line {0}, Column {1}",
-			//					context.Start.Line,
-			//					context.Start.Column));
-			//		}
-			//	}
-
-			//	List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
-
-			//	for (int parameterIndex = 0; parameterIndex < function.Parameters.Count; parameterIndex++)
-			//	{
-			//		string parameterName = function.Parameters[parameterIndex].GetText();
-			//		TokenBase parameterValue = Visit(parameterContexts[parameterIndex]);
-
-			//		SetVariableValue(parameterName, parameterValue);
-			//	}
-
-			//	TokenBase returnValue = Visit(function.Body);
+			//	ITurtleScriptRuntime runtime = GetRuntimeLibrary(context, runtimeName);
+			//	TurtleScriptValue returnValue = CallRuntimeFunction(context, runtime, functionName);
 
 			//	return returnValue;
 			//}
 
-			////if (context.QualifiedIdentifier() != null)
-			////{
-			////	string fullIdentifier = context.QualifiedIdentifier().GetText();
-			////	string[] identifierParts = fullIdentifier.Split('.');
+			var invalidOperationException = new InvalidOperationException(
+				string.Format(
+					"Invalid identifier. Function name not previously defined. Line {0}, Column {1}",
+					context.Start.Line,
+					context.Start.Column));
 
-			////	string runtimeName = identifierParts[0];
-			////	string functionName = identifierParts[1];
-
-			////	ITurtleScriptRuntime runtime = GetRuntimeLibrary(context, runtimeName);
-			////	TurtleScriptValue returnValue = CallRuntimeFunction(context, runtime, functionName);
-
-			////	return returnValue;
-			////}
-
-			//var invalidOperationException = new InvalidOperationException(
-			//	string.Format(
-			//		"Invalid identifier. Function name not previously defined. Line {0}, Column {1}",
-			//		context.Start.Line,
-			//		context.Start.Column));
-
-			//throw invalidOperationException;
+			throw invalidOperationException;
 		}
 
 		/// <summary>
@@ -348,8 +364,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 			TokenFunctionDeclaration functionDeclaration = new TokenFunctionDeclaration(
 				functionName,
-				parameters.ToArray(),
-				null);
+				parameters.ToArray());
 
 
 			m_TurtleScriptParserContext.PushScope(functionName);
@@ -358,12 +373,14 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				m_TurtleScriptParserContext.DeclareVariable(parameter, VariableType.Parameter, functionDeclaration);
 			}
 
-
 			TokenBlock functionBody = (TokenBlock)Visit(context.block());
 
+			functionDeclaration.SetFunctionBody(functionBody);
+
+			m_TurtleScriptParserContext.PopScope();
 
 			// Check for function that exists by the same name
-			if (m_ScriptFunctions.TryGetValue(functionName, out _))
+			if (m_ScriptFunctions2.TryGetFunction(functionName, parameters.Count, out _))
 			{
 				throw new InvalidOperationException(
 					string.Format(
@@ -378,7 +395,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				formalParameterContexts.Length,
 				functionDeclaration);
 
-			m_ScriptFunctions.Add(functionName, newFunction);
+			bool addResult = m_ScriptFunctions2.TryAdd(newFunction);
 
 			return functionDeclaration;
 		}
@@ -574,6 +591,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		private string m_ErrorMessage;
 		private TurtleScriptParser m_Parser;
 		private Dictionary<string, TurtleScriptParserFunction> m_ScriptFunctions;
+		private TurtleScriptFunctions<TurtleScriptParserFunction> m_ScriptFunctions2;
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
 		//private Dictionary<string, TokenBase> m_VariablesDeclared;
 
@@ -596,6 +614,36 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 					declaration);
 			}
 		}
+
+		/*
+		private bool TryGetFunction(
+			TurtleScriptParser.FunctionCallContext context,
+			out TurtleScriptParserFunction function)
+		{
+			function = null;
+			var functionCallName = context.Identifier().GetText();
+
+			int parameterCount = 0;
+			if (context.expressionList() != null)
+			{
+				parameterCount = context.expressionList().expression().Length;
+			}
+
+			functionCallName += "_" + parameterCount;
+
+			foreach (var functionToTest in m_ScriptFunctions)
+			{
+				if ((functionToTest.Key == functionCallName) &&
+					(functionToTest.Value.Parameters.Count == parameterCount))
+				{
+					function = functionToTest.Value;
+					return true;
+				}
+			}
+
+			return false;
+		}
+		*/
 
 		#endregion Private Methods
 

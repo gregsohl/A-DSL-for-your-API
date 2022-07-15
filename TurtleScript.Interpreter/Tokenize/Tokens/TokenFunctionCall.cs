@@ -54,9 +54,29 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
-			TurtleScriptValue result = null;
+			TurtleScriptValue result = TurtleScriptValue.NULL;
 
 			// Find the function, if it exists.
+			if (context.TryGetFunction(
+					m_FunctionName,
+					m_Parameters.Length,
+					out TokenFunctionDeclaration function))
+			{
+				context.PushScope(m_FunctionName);
+
+				for (var parameterIndex = 0; parameterIndex < m_Parameters.Length; parameterIndex++)
+				{
+					TokenBase parameter = m_Parameters[parameterIndex];
+					string parameterName = function.ParameterNames[parameterIndex];
+					TurtleScriptValue parameterValue = parameter.Visit(context);
+					context.SetVariableValue(parameterName, VariableType.Parameter, null, parameterValue);
+				}
+
+				result = function.FunctionBody.Visit(context);
+
+				context.PopScope();
+			}
+
 			// Push scope onto the context
 			// Register parameter values in the context
 			// Call the function body

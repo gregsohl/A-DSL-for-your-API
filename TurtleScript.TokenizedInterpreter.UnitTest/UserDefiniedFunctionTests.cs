@@ -22,6 +22,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("def MyFunc()");
 			scriptBuilder.AppendLine("	b = 15");
 			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("MyFunc()");
 
 			const string VARIABLE_NAME = "b";

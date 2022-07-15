@@ -15,7 +15,6 @@ namespace TurtleScript.Interpreter
 	public class TurtleScriptInterpreter
 		: TurtleScriptBaseVisitor<TurtleScriptValue>
 	{
-
 		#region Public Constructors
 
 		public TurtleScriptInterpreter(
@@ -36,7 +35,8 @@ namespace TurtleScript.Interpreter
 
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
 			m_Variables = new Dictionary<string, TurtleScriptValue>();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
+			new Dictionary<string, TurtleScriptFunction>();
+			m_ScriptFunctions = new TurtleScriptFunctions<TurtleScriptFunction>();
 		}
 
 		#endregion Public Constructors
@@ -98,7 +98,8 @@ namespace TurtleScript.Interpreter
 			parser.BuildParseTree = true;
 
 			m_Variables = new Dictionary<string, TurtleScriptValue>();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
+			new Dictionary<string, TurtleScriptFunction>();
+			m_ScriptFunctions = new TurtleScriptFunctions<TurtleScriptFunction>();
 
 			try
 			{
@@ -257,16 +258,24 @@ namespace TurtleScript.Interpreter
 
 		public override TurtleScriptValue VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
 		{
-			TurtleScriptFunction function;
-
-			if ((context.Identifier() != null) &&
-				(TryGetFunction(context, out function)))
+			if (context.Identifier() != null)
 			{
-				TurtleScriptParser.ExpressionContext[] parameterExpressions = new TurtleScriptParser.ExpressionContext[0];
+				string functionCallName = context.Identifier().GetText();
+
+				TurtleScriptParser.ExpressionContext[] parameterExpressions =
+					Array.Empty<TurtleScriptParser.ExpressionContext>();
 
 				if (context.expressionList() != null)
 				{
 					parameterExpressions = context.expressionList().expression();
+				}
+
+				if ((m_ScriptFunctions.TryGetFunction(
+						functionCallName,
+						parameterExpressions.Length,
+						out var function)))
+				{
+					// function = foundFunction as TurtleScriptFunction;
 
 					if (parameterExpressions.Length != function.Parameters.Count)
 					{
@@ -277,21 +286,23 @@ namespace TurtleScript.Interpreter
 								context.Start.Line,
 								context.Start.Column));
 					}
+
+					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
+
+					for (int parameterIndex = 0; parameterIndex < function.Parameters.Count; parameterIndex++)
+					{
+						string parameterName = function.Parameters[parameterIndex].GetText();
+						TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
+
+						SetVariableValue(
+							parameterName,
+							parameterValue);
+					}
+
+					TurtleScriptValue returnValue = Visit(function.Body);
+
+					return returnValue;
 				}
-
-				List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
-
-				for (int parameterIndex = 0; parameterIndex < function.Parameters.Count; parameterIndex++)
-				{
-					string parameterName = function.Parameters[parameterIndex].GetText();
-					TurtleScriptValue parameterValue = Visit(parameterContexts[parameterIndex]);
-
-					SetVariableValue(parameterName, parameterValue);
-				}
-
-				TurtleScriptValue returnValue = Visit(function.Body);
-
-				return returnValue;
 			}
 
 			if (context.QualifiedIdentifier() != null)
@@ -345,7 +356,20 @@ namespace TurtleScript.Interpreter
 			functionName += "_" + formalParameterContexts.Length;
 
 			// Check for function that exists by the same name
-			if (m_ScriptFunctions.TryGetValue(functionName, out _))
+			//if (m_ScriptFunctions.TryGetValue(functionName, out _))
+			//{
+			//	throw new InvalidOperationException(
+			//		string.Format(
+			//			"A function with the name '{0}' already exists. Line {1}, Column {2}",
+			//			context.Identifier().GetText(),
+			//			context.Start.Line,
+			//			context.Start.Column));
+			//}
+
+			if (m_ScriptFunctions.TryGetFunction(
+					context.Identifier().GetText(),
+					formalParameterContexts.Length,
+					out _))
 			{
 				throw new InvalidOperationException(
 					string.Format(
@@ -355,7 +379,16 @@ namespace TurtleScript.Interpreter
 						context.Start.Column));
 			}
 
-			m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, block));
+			// m_ScriptFunctions.Add(functionName, new TurtleScriptFunction(functionName, formalParameterContexts, block));
+			TurtleScriptFunction function = new TurtleScriptFunction(
+				context.Identifier().GetText(),
+				formalParameterContexts,
+				block);
+
+			bool added = m_ScriptFunctions.TryAdd(
+				function);
+
+			((TurtleScriptFunction)function).AddParametersAndBody(formalParameterContexts, block);
 
 			return TurtleScriptValue.VOID;
 		}
@@ -497,7 +530,7 @@ namespace TurtleScript.Interpreter
 
 		private string m_ErrorMessage;
 
-		private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+		private TurtleScriptFunctions<TurtleScriptFunction> m_ScriptFunctions;
 
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
 
@@ -592,33 +625,36 @@ namespace TurtleScript.Interpreter
 			m_Variables[variableName] = new TurtleScriptValue(variableValue);
 		}
 
-		private bool TryGetFunction(
-			TurtleScriptParser.FunctionCallContext context,
-			out TurtleScriptFunction function)
-		{
-			function = null;
-			var functionCallName = context.Identifier().GetText();
+		//private bool TryGetFunction(
+		//	TurtleScriptParser.FunctionCallContext context,
+		//	out ITurtleScriptFunction function)
+		//{
+		//	function = null;
+		//	var functionCallName = context.Identifier().GetText();
 
-			int parameterCount = 0;
-			if (context.expressionList() != null)
-			{
-				parameterCount = context.expressionList().expression().Length;
-			}
+		//	int parameterCount = 0;
+		//	if (context.expressionList() != null)
+		//	{
+		//		parameterCount = context.expressionList().expression().Length;
+		//	}
 
-			functionCallName += "_" + parameterCount;
+		//	bool found = m_ScriptFunctions.TryGetFunction(
+		//		functionCallName,
+		//		parameterCount,
+		//		out function);
 
-			foreach (var functionToTest in m_ScriptFunctions)
-			{
-				if ((functionToTest.Key == functionCallName) &&
-					(functionToTest.Value.Parameters.Count == parameterCount))
-				{
-					function = functionToTest.Value;
-					return true;
-				}
-			}
+		//	//foreach (var functionToTest in m_ScriptFunctions)
+		//	//{
+		//	//	if ((functionToTest.Key == functionCallName) &&
+		//	//		(functionToTest.Value.Parameters.Count == parameterCount))
+		//	//	{
+		//	//		function = functionToTest.Value;
+		//	//		return true;
+		//	//	}
+		//	//}
 
-			return false;
-		}
+		//	return false;
+		//}
 
 		#endregion Private Methods
 	}

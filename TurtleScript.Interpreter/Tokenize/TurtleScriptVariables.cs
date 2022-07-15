@@ -18,10 +18,16 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Public Constructors
 
+
+		#region Public Properties
+
 		public int Count
 		{
 			get { return m_VariablesDeclared.Count; }
 		}
+
+		#endregion Public Properties
+
 
 		#region Public Methods
 

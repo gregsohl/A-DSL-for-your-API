@@ -4,9 +4,10 @@ using System.Diagnostics;
 
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.ImmediateInterpreter
+namespace TurtleScript.Interpreter
 {
 	internal abstract class TurtleScriptFunctionBase
+		: ITurtleScriptFunction
 	{
 		protected TurtleScriptFunctionBase(
 			string name,
@@ -15,7 +16,22 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 			m_Name = name;
 			m_ParameterCount = parameterCount;
 
-			m_Key += m_Name + "_" + parameterCount;
+			m_FunctionIdentifier = CreateFunctionIdentifier(
+				name,
+				parameterCount);
+		}
+
+		public static string CreateFunctionIdentifier(
+			string name,
+			int parameterCount)
+		{
+			return name + "_" + parameterCount;
+		}
+
+		public string FunctionIdentifier
+		{
+			[DebuggerStepThrough]
+			get { return m_FunctionIdentifier; }
 		}
 
 		public int ParameterCount
@@ -32,7 +48,7 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 		protected bool Equals(
 			TurtleScriptFunctionBase other)
 		{
-			return m_Key == other.m_Key;
+			return m_FunctionIdentifier == other.m_FunctionIdentifier;
 		}
 
 		/// <summary>Determines whether the specified object is equal to the current object.</summary>
@@ -49,7 +65,7 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 					this,
 					obj))
 				return true;
-			if (obj.GetType() != this.GetType()) return false;
+			if (obj.GetType() != GetType()) return false;
 			return Equals((TurtleScriptFunctionBase)obj);
 		}
 
@@ -57,10 +73,10 @@ namespace TurtleScript.Interpreter.ImmediateInterpreter
 		/// <returns>A hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
-			return (m_Key != null ? m_Key.GetHashCode() : 0);
+			return m_FunctionIdentifier != null ? m_FunctionIdentifier.GetHashCode() : 0;
 		}
 
-		private readonly string m_Key;
+		private readonly string m_FunctionIdentifier;
 		private readonly string m_Name;
 		private readonly int m_ParameterCount;
 	}

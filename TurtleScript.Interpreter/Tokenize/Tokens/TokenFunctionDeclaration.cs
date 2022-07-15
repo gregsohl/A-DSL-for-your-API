@@ -8,11 +8,11 @@ using TurtleScript.Interpreter.Tokenize.Execute;
 
 namespace TurtleScript.Interpreter.Tokenize
 {
-	internal class TokenFunctionDeclaration : TokenBase
+	public class TokenFunctionDeclaration : TokenBase
 	{
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public TokenFunctionDeclaration(string functionName, string[] parameterNames, TokenBlock functionBody)
+		public TokenFunctionDeclaration(string functionName, string[] parameterNames, TokenBlock functionBody = null)
 			: base(TokenType.FunctionDecl)
 		{
 			m_FunctionName = functionName;
@@ -57,14 +57,19 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
-			// Register the function with the context
+			context.DeclareFunction(this);
+			return TurtleScriptValue.VOID;
+		}
 
-			return FunctionBody.Visit(context);
+		internal void SetFunctionBody(
+			TokenBlock functionBody)
+		{
+			m_FunctionBody = functionBody;
 		}
 
 		private readonly string m_Key;
 		private readonly string m_FunctionName;
 		private readonly string[] m_ParameterNames;
-		private readonly TokenBlock m_FunctionBody;
+		private TokenBlock m_FunctionBody;
 	}
 }

@@ -1,6 +1,8 @@
 ﻿#region Namespaces
 
 using System.Collections.Generic;
+using System.Diagnostics;
+
 using TurtleScript.Interpreter.Tokenize.Execute;
 
 #endregion Namespaces
@@ -19,7 +21,7 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 			m_CurrentScope = null;
 
 			m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
-			//m_ScriptFunctions = new Dictionary<string, TurtleScriptFunction>();
+			m_Functions = new TurtleScriptFunctions<TurtleScriptExecutionFunction>();
 		}
 
 		#endregion Public Constructors
@@ -29,11 +31,13 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 
 		public int GlobalVariableCount
 		{
+			[DebuggerStepThrough]
 			get { return m_GlobalScope.VariableCount; }
 		}
 
 		public TurtleScriptExecutionScope Scope
 		{
+			[DebuggerStepThrough]
 			get
 			{
 				if (m_CurrentScope != null)
@@ -47,6 +51,7 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 
 		public int ScopeDepth
 		{
+			[DebuggerStepThrough]
 			get
 			{
 				if (m_CurrentScope != null)
@@ -56,6 +61,12 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 
 				return 0;
 			}
+		}
+
+		public int UserDefinedFunctionCount
+		{
+			[DebuggerStepThrough]
+			get { return m_Functions.Count; }
 		}
 
 		#endregion Public Properties
@@ -240,6 +251,36 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 				new TurtleScriptValue(variableValue));
 		}
 
+		public void DeclareFunction(
+			TokenFunctionDeclaration functionToken)
+		{
+			TurtleScriptExecutionFunction function = new TurtleScriptExecutionFunction(
+				functionToken.FunctionName,
+				functionToken.ParameterCount,
+				functionToken);
+
+			m_Functions.TryAdd(function);
+		}
+
+		public bool TryGetFunction(
+			string functionName,
+			int parameterCount,
+			out TokenFunctionDeclaration functionToken)
+		{
+			functionToken = null;
+
+			if (m_Functions.TryGetFunction(
+					functionName,
+					parameterCount,
+					out TurtleScriptExecutionFunction function))
+			{
+				functionToken = function.Declaration;
+				return true;
+			}
+
+			return false;
+		}
+
 		#endregion Public Methods
 
 
@@ -249,7 +290,7 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private readonly Stack<TurtleScriptExecutionScope> m_ScopeStack;
 		private TurtleScriptExecutionScope m_CurrentScope;
-		// private Dictionary<string, TurtleScriptFunction> m_ScriptFunctions;
+		private readonly TurtleScriptFunctions<TurtleScriptExecutionFunction> m_Functions;
 
 		#endregion Private Fields
 	}
