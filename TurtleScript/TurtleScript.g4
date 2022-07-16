@@ -67,7 +67,7 @@ forStatement
  ;
 
 expression 
-	:  functionCall						                 #functionCallExpression			// Call to a built-in or user-defined function
+	:  functionCall						                 #functionCallExpression			// Call to a runtime or user-defined function
 	|	'-'expression					                 #unaryNegationExpression	        // unary negation
 	|	'!'expression					                 #unaryNotExpression	            // unary not
 	|	expression op=(Mul|Div|Mod) expression	         #multiplicativeOpExpression	    // MultiplicativeOperation

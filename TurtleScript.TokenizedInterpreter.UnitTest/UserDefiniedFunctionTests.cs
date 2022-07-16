@@ -44,6 +44,7 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			Console.WriteLine("Regenerated Script via ToTurtleScript");
 			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine();
 			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 
@@ -55,19 +56,32 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("def MyFunc(myparameter)");
 			scriptBuilder.AppendLine("	b = myparameter");
 			scriptBuilder.AppendLine("	myparameter = b * 2");
+			scriptBuilder.AppendLine("	b = myparameter + 1");
 			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("MyFunc(10)");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString());
+			const string VARIABLE_NAME = "b";
+			const double EXPECTED_VALUE = 21;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
 
 			// Act
-			bool success = interpreter.Execute();
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			interpreter.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["myparameter"];
-			Assert.AreEqual(20, variableValue.NumericValue);
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine();
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 
 		[Test]
@@ -100,6 +114,7 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			Console.WriteLine("Regenerated Script via ToTurtleScript");
 			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine();
 			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 
@@ -133,6 +148,7 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			Console.WriteLine("Regenerated Script via ToTurtleScript");
 			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine();
 			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 

@@ -40,7 +40,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			for (var index = 0; index < Parameters.Length; index++)
 			{
 				var parameter = Parameters[index];
-				result.Append(parameter.ToTurtleScript(result, 0));
+				result.Append(parameter.ToTurtleScript());
 				if (index < Parameters.Length - 1)
 				{
 					result.Append(',');

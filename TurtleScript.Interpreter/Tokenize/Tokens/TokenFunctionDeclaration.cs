@@ -47,12 +47,12 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			string parameters = String.Join(", ", ParameterNames);
 
-			StringBuilder result = new StringBuilder();
-			result.AppendLine($"{FunctionName}({parameters})");
+			//StringBuilder result = new StringBuilder();
+			//result.AppendLine($"{FunctionName}({parameters})");
 
-			result.AppendLine("end");
+			//result.AppendLine("end");
 
-			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript()}\r\nend";
+			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript(1)}\r\nend";
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
