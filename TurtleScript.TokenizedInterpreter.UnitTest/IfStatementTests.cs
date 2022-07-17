@@ -35,7 +35,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
@@ -67,7 +68,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
@@ -100,7 +102,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
@@ -134,7 +137,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
@@ -168,7 +172,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
@@ -203,7 +208,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);
@@ -238,7 +244,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME1);

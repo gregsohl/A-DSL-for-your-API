@@ -14,6 +14,7 @@ namespace TurtleScript.Interpreter.UnitTest
 	public class ArithmeticTests
 	{
 		[Test]
+		[Category("Success")]
 		public void SimpleAddition()
 		{
 			// Arrange
@@ -26,7 +27,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
@@ -41,6 +43,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void ComplexAddition()
 		{
 			// Arrange
@@ -53,7 +56,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -67,6 +71,7 @@ namespace TurtleScript.Interpreter.UnitTest
 
 
 		[Test]
+		[Category("Success")]
 		public void SimpleSubtraction()
 		{
 			// Arrange
@@ -79,7 +84,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -92,6 +98,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void ComplexSubtraction()
 		{
 			// Arrange
@@ -104,7 +111,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -117,6 +125,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void SimpleMultiplication()
 		{
 			// Arrange
@@ -129,7 +138,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -142,6 +152,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void ComplexMultiplication()
 		{
 			// Arrange
@@ -154,7 +165,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -167,6 +179,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void SimpleDivision()
 		{
 			// Arrange
@@ -179,7 +192,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -192,6 +206,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void DivideByZero()
 		{
 			// Arrange
@@ -204,7 +219,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -217,6 +233,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void ComplexDivision()
 		{
 			// Arrange
@@ -229,7 +246,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -242,6 +260,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void AdditionFirstThenMultiplication()
 		{
 			// Arrange
@@ -254,7 +273,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.GreaterOrEqual(1, context.GlobalVariableCount);
@@ -268,6 +288,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void MultiplicationFirstThenAddition()
 		{
 			// Arrange
@@ -280,7 +301,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -293,6 +315,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void MultiplicationFirstThenDivision()
 		{
 			// Arrange
@@ -305,7 +328,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -318,6 +342,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void DivisionFirstThenMultiplication()
 		{
 			// Arrange
@@ -330,7 +355,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			var variableValue = context.GetVariableValue(VARIABLE_NAME);
@@ -341,5 +367,32 @@ namespace TurtleScript.Interpreter.UnitTest
 			Console.WriteLine(rootToken.ToTurtleScript());
 			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
+
+		[Test]
+		[Category("Error")]
+		public void SimpleAdditionMismatchedOperandTypes()
+		{
+			// Arrange
+			var script = "a = 1 + (1 > 2)";
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+
+			Assert.Throws<TurtleScriptExecutionException>(() => 
+				executor.Execute(
+					rootToken,
+					context));
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+		}
+
 	}
 }

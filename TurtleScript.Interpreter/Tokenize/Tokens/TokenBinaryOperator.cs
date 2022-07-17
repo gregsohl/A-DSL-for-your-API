@@ -60,60 +60,52 @@ namespace TurtleScript.Interpreter.Tokenize
 			TurtleScriptValue leftValue = Children[0].Visit(context);
 			TurtleScriptValue rightValue = Children[1].Visit(context);
 
-			bool typesMatched = leftValue.ValueType == rightValue.ValueType;
 			TurtleScriptValue result;
 
-			if (typesMatched)
+			switch (TokenType)
 			{
-				switch (TokenType)
-				{
-					case TokenType.OpAdd:
-						result = leftValue + rightValue;
-						break;
-					case TokenType.OpConditionalAnd:
-						result = leftValue & rightValue;
-						break;
-					case TokenType.OpSubtract:
-						result = leftValue - rightValue;
-						break;
-					case TokenType.OpMultiply:
-						result = leftValue * rightValue;
-						break;
-					case TokenType.OpDivide:
-						result = leftValue / rightValue;
-						break;
-					case TokenType.OpModulus:
-						result = leftValue % rightValue;
-						break;
-					case TokenType.OpEqual:
-						result = leftValue == rightValue;
-						break;
-					case TokenType.OpNotEqual:
-						result = leftValue != rightValue;
-						break;
-					case TokenType.OpGreaterThan:
-						result = leftValue > rightValue;
-						break;
-					case TokenType.OpLessThan:
-						result = leftValue < rightValue;
-						break;
-					case TokenType.OpGreaterThanOrEqual:
-						result = leftValue >= rightValue;
-						break;
-					case TokenType.OpLessThanOrEqual:
-						result = leftValue <= rightValue;
-						break;
-					case TokenType.OpConditionalOr:
-						result = leftValue | rightValue;
-						break;
-					default:
-						result = TurtleScriptValue.NULL;
-						break;
-				}
-			}
-			else
-			{
-				throw new TurtleScriptExecutionException($"Mismatched operands. {leftValue.ValueType} {TokenType} {rightValue.ValueType}");
+				case TokenType.OpAdd:
+					result = leftValue + rightValue;
+					break;
+				case TokenType.OpConditionalAnd:
+					result = leftValue & rightValue;
+					break;
+				case TokenType.OpSubtract:
+					result = leftValue - rightValue;
+					break;
+				case TokenType.OpMultiply:
+					result = leftValue * rightValue;
+					break;
+				case TokenType.OpDivide:
+					result = leftValue / rightValue;
+					break;
+				case TokenType.OpModulus:
+					result = leftValue % rightValue;
+					break;
+				case TokenType.OpEqual:
+					result = leftValue == rightValue;
+					break;
+				case TokenType.OpNotEqual:
+					result = leftValue != rightValue;
+					break;
+				case TokenType.OpGreaterThan:
+					result = leftValue > rightValue;
+					break;
+				case TokenType.OpLessThan:
+					result = leftValue < rightValue;
+					break;
+				case TokenType.OpGreaterThanOrEqual:
+					result = leftValue >= rightValue;
+					break;
+				case TokenType.OpLessThanOrEqual:
+					result = leftValue <= rightValue;
+					break;
+				case TokenType.OpConditionalOr:
+					result = leftValue | rightValue;
+					break;
+				default:
+					result = TurtleScriptValue.NULL;
+					break;
 			}
 
 			return result;

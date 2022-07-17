@@ -38,7 +38,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
@@ -70,7 +71,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
@@ -102,7 +104,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);

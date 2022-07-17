@@ -33,7 +33,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
@@ -69,7 +70,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
@@ -103,7 +105,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
@@ -137,7 +140,8 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			(new TurtleScriptExecutor()).Execute(rootToken, context);
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
