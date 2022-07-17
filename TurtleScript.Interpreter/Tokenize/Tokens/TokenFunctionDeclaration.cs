@@ -17,17 +17,33 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			m_Default = new TokenFunctionDeclaration(
 				"",
-				Array.Empty<string>(),
-				null);
+				Array.Empty<string>());
+		}
+
+		public TokenFunctionDeclaration(
+			string functionName,
+			string[] parameterNames)
+			: this(
+				functionName,
+				parameterNames,
+				0,
+				0)
+		{
 		}
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public TokenFunctionDeclaration(string functionName, string[] parameterNames, TokenBlock functionBody = null)
-			: base(TokenType.FunctionDecl)
+		public TokenFunctionDeclaration(
+			string functionName,
+			string[] parameterNames,
+			int lineNumber,
+			int charPositionInLine)
+			: base(
+				TokenType.FunctionDecl,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_FunctionName = functionName;
 			m_ParameterNames = parameterNames;
-			m_FunctionBody = functionBody;
 		}
 
 		#endregion Public Constructors

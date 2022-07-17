@@ -7,8 +7,12 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		private readonly string m_ParameterName;
 
-		public TokenParameterDeclaration(string parameterName)
-			:base(TokenType.Parameter)
+		public TokenParameterDeclaration(string parameterName,
+			int lineNumber,
+			int charPositionInLine)
+			:base(TokenType.Parameter,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_ParameterName = parameterName;
 		}
@@ -33,8 +37,12 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		private readonly TokenParameterDeclaration[] m_Parameters;
 
-		public TokenParameterDeclarationList(TokenParameterDeclaration[] parameters)
-			: base(TokenType.ParameterList)
+		public TokenParameterDeclarationList(TokenParameterDeclaration[] parameters,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.ParameterList,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_Parameters = parameters;
 		}

@@ -5,7 +5,7 @@ namespace TurtleScript.Interpreter.Tokenize
 	public class TokenNullValue : TokenValue
 	{
 		public TokenNullValue()
-			: base(TokenType.NullValue)
+			: base(TokenType.NullValue, 0, 0)
 		{
 		}
 

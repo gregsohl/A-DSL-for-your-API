@@ -6,8 +6,12 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenBlock : TokenBase
 	{
-		public TokenBlock()
-			: base(TokenType.Block)
+		public TokenBlock(
+		int lineNumber,
+		int charPositionInLine)
+			: base(TokenType.Block,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_FunctionDeclarations = new List<TokenFunctionDeclaration>();
 			m_ChildrenAndFunctions = new List<TokenBase>();

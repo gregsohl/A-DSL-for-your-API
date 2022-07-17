@@ -7,8 +7,13 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		private readonly TokenBase m_ChildExpression;
 
-		public TokenParenthesizedExpression(TokenBase childExpression)
-			: base(TokenType.Parenthesized)
+		public TokenParenthesizedExpression(
+			TokenBase childExpression,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.Parenthesized,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_ChildExpression = childExpression;
 		}

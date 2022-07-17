@@ -4,8 +4,12 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenScript : TokenBase
 	{
-		public TokenScript()
-			: base(TokenType.Script)
+		public TokenScript(
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.Script,
+				lineNumber,
+				charPositionInLine)
 		{
 		}
 

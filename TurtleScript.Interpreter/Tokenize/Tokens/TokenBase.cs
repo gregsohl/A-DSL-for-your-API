@@ -17,7 +17,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		static TokenBase()
 		{
-			m_Default = new TokenBase(Tokenize.TokenType.Default);
+			m_Default = new TokenBase(
+				Tokenize.TokenType.Default,
+				0,
+				0);
 		}
 
 		#endregion Public Constructors
@@ -29,6 +32,12 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			[DebuggerStepThrough]
 			get { return m_Default; }
+		}
+
+		public int CharPositionInLine
+		{
+			[DebuggerStepThrough]
+			get { return m_CharPositionInLine; }
 		}
 
 		public List<TokenBase> Children
@@ -48,6 +57,12 @@ namespace TurtleScript.Interpreter.Tokenize
 					(m_Children != null) &&
 					(m_Children.Count > 0);
 			}
+		}
+
+		public int LineNumber
+		{
+			[DebuggerStepThrough]
+			get { return m_LineNumber; }
 		}
 
 		public TokenType TokenType
@@ -99,9 +114,20 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Protected Constructors
 
-		protected TokenBase(TokenType tokenType)
+		protected TokenBase(
+			TokenType tokenType)
 		{
 			m_TokenType = tokenType;
+		}
+
+		protected TokenBase(
+			TokenType tokenType,
+			int lineNumber,
+			int charPositionInLine)
+		{
+			m_TokenType = tokenType;
+			m_LineNumber = lineNumber;
+			m_CharPositionInLine = charPositionInLine;
 		}
 
 		#endregion Protected Constructors
@@ -123,6 +149,10 @@ namespace TurtleScript.Interpreter.Tokenize
 		private static readonly TokenBase m_Default;
 		private readonly TokenType m_TokenType;
 		private List<TokenBase> m_Children;
+
+		private int m_LineNumber;
+		private int m_CharPositionInLine;
+
 
 		#endregion Private Fields
 	}

@@ -23,11 +23,28 @@ namespace TurtleScript.Interpreter.Tokenize
 				Array.Empty<TokenBase>());
 		}
 
-		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TokenFunctionCall(
 			string functionName,
 			TokenBase[] parameters)
-			: base(TokenType.FunctionDecl)
+			: this(
+				functionName,
+				parameters,
+				0,
+				0)
+		{
+			m_FunctionName = functionName;
+			m_Parameters = parameters;
+		}
+
+		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+		public TokenFunctionCall(
+			string functionName,
+			TokenBase[] parameters,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.FunctionDecl,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_FunctionName = functionName;
 			m_Parameters = parameters;

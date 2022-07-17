@@ -7,10 +7,6 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-using TurtleScript.Interpreter.Tokenize.Execute;
-
-//using TurtleScript.Interpreter.ImmediateInterpreter;
-
 #endregion Namespaces
 
 namespace TurtleScript.Interpreter.Tokenize.Parse
@@ -126,7 +122,9 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			TokenBase rightValue = Visit(context.expression(1));
 
 			TokenBase result = new TokenBinaryOperator(
-				context.op.Type == TurtleScriptParser.Add ? TokenType.OpAdd : TokenType.OpSubtract);
+				context.op.Type == TurtleScriptParser.Add ? TokenType.OpAdd : TokenType.OpSubtract,
+				context.Start.Line,
+				context.Start.Column);
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
@@ -149,7 +147,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			TokenBase leftValue = Visit(context.expression(0));
 			TokenBase rightValue = Visit(context.expression(1));
 
-			TokenBase result = new TokenBinaryOperator(TokenType.OpConditionalAnd);
+			TokenBase result = new TokenBinaryOperator(
+				TokenType.OpConditionalAnd,
+				context.Start.Line,
+				context.Start.Column);
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
@@ -172,7 +173,9 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 		public override TokenBase VisitBlock(TurtleScriptParser.BlockContext context)
 		{
-			TokenBase blockToken = new TokenBlock();
+			TokenBase blockToken = new TokenBlock(
+				context.Start.Line,
+				context.Start.Column);
 
 			TurtleScriptParser.FunctionDeclContext[] functionDeclContexts = context.functionDecl();
 
@@ -197,32 +200,37 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			TokenBase rightValue = Visit(context.expression(1));
 
 			TokenBase operatorToken;
-
+			TokenType tokenType;
 
 			switch (context.op.Type)
 			{
 				case TurtleScriptParser.EQ:
-					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
+					tokenType = TokenType.OpEqual;
 					break;
 				case TurtleScriptParser.NE:
-					operatorToken = new TokenBinaryOperator(TokenType.OpNotEqual);
+					tokenType = TokenType.OpNotEqual;
 					break;
 				case TurtleScriptParser.GT:
-					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThan);
+					tokenType = TokenType.OpGreaterThan;
 					break;
 				case TurtleScriptParser.LT:
-					operatorToken = new TokenBinaryOperator(TokenType.OpLessThan);
+					tokenType = TokenType.OpLessThan;
 					break;
 				case TurtleScriptParser.GE:
-					operatorToken = new TokenBinaryOperator(TokenType.OpGreaterThanOrEqual);
+					tokenType = TokenType.OpGreaterThanOrEqual;
 					break;
 				case TurtleScriptParser.LE:
-					operatorToken = new TokenBinaryOperator(TokenType.OpLessThanOrEqual);
+					tokenType = TokenType.OpLessThanOrEqual;
 					break;
 				default:
-					operatorToken = new TokenBinaryOperator(TokenType.OpEqual);
+					tokenType = TokenType.OpEqual;
 					break;
 			}
+
+			operatorToken = new TokenBinaryOperator(
+				tokenType,
+				context.Start.Line,
+				context.Start.Column);
 
 			operatorToken.AddChild(leftValue);
 			operatorToken.AddChild(rightValue);
@@ -234,7 +242,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		{
 			if (double.TryParse(context.GetText(), out var value))
 			{
-				return new TokenNumericValue(value);
+				return new TokenNumericValue(
+					value,
+					context.Start.Line,
+					context.Start.Column);
 			}
 
 			m_TurtleScriptErrorListener.SyntaxError(
@@ -264,7 +275,9 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				loopVariableName,
 				startValueExpression,
 				endValueExpression,
-				executionBlock as TokenBlock);
+				executionBlock as TokenBlock,
+				context.Start.Line,
+				context.Start.Column);
 		}
 
 		public override TokenBase VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
@@ -312,7 +325,9 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 					TokenFunctionCall result = new TokenFunctionCall(
 						functionCallName,
-						parameterTokens.ToArray());
+						parameterTokens.ToArray(),
+						context.Start.Line,
+						context.Start.Column);
 
 					return result;
 				}
@@ -378,7 +393,9 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 			TokenFunctionDeclaration functionDeclaration = new TokenFunctionDeclaration(
 				functionName,
-				parameters.ToArray());
+				parameters.ToArray(),
+				context.Start.Line,
+				context.Start.Column);
 
 
 			m_TurtleScriptParserContext.PushScope(functionName);
@@ -446,14 +463,19 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				block,
 				ifExpression,
 				elseIfTokens,
-				elseStatement);
+				elseStatement,
+				context.Start.Line,
+				context.Start.Column);
 		}
 
 		public override TokenBase VisitIntExpression(TurtleScriptParser.IntExpressionContext context)
 		{
 			if (Int32.TryParse(context.GetText(), out var value))
 			{
-				return new TokenNumericValue(value);
+				return new TokenNumericValue(
+					value,
+					context.Start.Line,
+					context.Start.Column);
 			}
 
 			m_TurtleScriptErrorListener.SyntaxError(
@@ -486,7 +508,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 					break;
 			}
 
-			TokenBase result = new TokenBinaryOperator(multiplicativeOperator);
+			TokenBase result = new TokenBinaryOperator(
+				multiplicativeOperator,
+				context.Start.Line,
+				context.Start.Column);
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
@@ -509,7 +534,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			TokenBase leftValue = Visit(context.expression(0));
 			TokenBase rightValue = Visit(context.expression(1));
 
-			TokenBase result = new TokenBinaryOperator(TokenType.OpConditionalOr);
+			TokenBase result = new TokenBinaryOperator(
+				TokenType.OpConditionalOr,
+				context.Start.Line,
+				context.Start.Column);
 
 			result.AddChild(leftValue);
 			result.AddChild(rightValue);
@@ -521,7 +549,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		{
 			TokenBase childExpression = Visit(context.expression());
 
-			TokenParenthesizedExpression expressionToken = new TokenParenthesizedExpression(childExpression);
+			TokenParenthesizedExpression expressionToken = new TokenParenthesizedExpression(
+				childExpression,
+				context.Start.Line,
+				context.Start.Column);
 
 			return expressionToken;
 		}
@@ -538,12 +569,16 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		/// <return>The visitor result.</return>
 		public override TokenBase VisitPiExpression(TurtleScriptParser.PiExpressionContext context)
 		{
-			return new TokenPi();
+			return new TokenPi(
+				context.Start.Line,
+				context.Start.Column);
 		}
 
 		public override TokenBase VisitScript(TurtleScriptParser.ScriptContext context)
 		{
-			TokenBase scriptToken = new TokenScript();
+			TokenBase scriptToken = new TokenScript(
+				context.Start.Line,
+				context.Start.Column);
 
 			TokenBase blockToken = Visit(context.block());
 			scriptToken.AddChild(blockToken);
@@ -563,7 +598,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		/// <return>The visitor result.</return>
 		public override TokenBase VisitUnaryNegationExpression(TurtleScriptParser.UnaryNegationExpressionContext context)
 		{
-			TokenUnaryOperator unaryOperatorToken = new TokenUnaryOperator(TokenType.OpUnaryNegation);
+			TokenUnaryOperator unaryOperatorToken = new TokenUnaryOperator(
+				TokenType.OpUnaryNegation,
+				context.Start.Line,
+				context.Start.Column);
 			unaryOperatorToken.AddChild(Visit(context.expression()));
 			return unaryOperatorToken;
 		}
@@ -580,7 +618,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		/// <return>The visitor result.</return>
 		public override TokenBase VisitUnaryNotExpression(TurtleScriptParser.UnaryNotExpressionContext context)
 		{
-			TokenUnaryOperator unaryOperatorToken = new TokenUnaryOperator(TokenType.OpUnaryNot);
+			TokenUnaryOperator unaryOperatorToken = new TokenUnaryOperator(
+				TokenType.OpUnaryNot,
+				context.Start.Line,
+				context.Start.Column);
 			unaryOperatorToken.AddChild(Visit(context.expression()));
 			return unaryOperatorToken;
 		}
@@ -593,7 +634,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 					variableName,
 					out _))
 			{
-				return new TokenVariableReference(variableName);
+				return new TokenVariableReference(
+					variableName,
+					context.Start.Line,
+					context.Start.Column);
 			}
 
 			m_TurtleScriptErrorListener.SyntaxError(

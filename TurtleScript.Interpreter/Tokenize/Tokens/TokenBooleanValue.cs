@@ -19,10 +19,23 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		public TokenBooleanValue(bool value)
-			: base(TokenType.Boolean)
+			: this(value, 0, 0)
 		{
 			m_Value = value;
 		}
+
+		public TokenBooleanValue(
+			bool value,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.Boolean,
+				lineNumber,
+				charPositionInLine)
+		{
+			m_Value = value;
+		}
+
+		
 
 		#endregion Public Constructors
 

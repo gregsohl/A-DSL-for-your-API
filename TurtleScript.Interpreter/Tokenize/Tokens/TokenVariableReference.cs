@@ -15,8 +15,19 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Default = new TokenVariableReference(String.Empty);
 		}
 
-		public TokenVariableReference(string variableName)
-			: base(TokenType.VariableReference)
+		public TokenVariableReference(
+			string variableName)
+			: this(variableName, 0, 0)
+		{
+		}
+
+		public TokenVariableReference(
+			string variableName,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.VariableReference,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_VariableName = variableName;
 		}

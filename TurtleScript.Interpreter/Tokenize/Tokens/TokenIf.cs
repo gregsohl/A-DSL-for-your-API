@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
 using TurtleScript.Interpreter.Tokenize.Execute;
 
 namespace TurtleScript.Interpreter.Tokenize
@@ -18,8 +17,12 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBlock block,
 			TokenBase conditionalExpression,
 			List<Tuple<TokenBase, TokenBase>> elseIf,
-			TokenBase elseStatement)
-			: base(TokenType.If)
+			TokenBase elseStatement,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.If,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_Block = block;
 			m_ConditionalExpression = conditionalExpression;

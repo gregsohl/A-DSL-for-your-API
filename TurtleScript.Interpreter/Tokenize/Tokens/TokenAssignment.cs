@@ -13,6 +13,17 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_VariableName = variableName;
 		}
 
+		public TokenAssignment(
+			string variableName,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.Assignment,
+				lineNumber,
+				charPositionInLine)
+		{
+			m_VariableName = variableName;
+		}
+
 		public string VariableName
 		{
 			[DebuggerStepThrough]

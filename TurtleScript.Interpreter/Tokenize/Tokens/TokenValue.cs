@@ -2,8 +2,13 @@
 {
 	public abstract class TokenValue : TokenBase
 	{
-		protected TokenValue(TokenType tokenType)
-			: base(tokenType)
+		protected TokenValue(
+			TokenType tokenType,
+			int lineNumber,
+			int charPositionInLine)
+			: base(tokenType,
+				lineNumber,
+				charPositionInLine)
 		{
 		}
 	}

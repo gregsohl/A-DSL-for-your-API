@@ -7,8 +7,13 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenBinaryOperator : TokenBase
 	{
-		public TokenBinaryOperator(TokenType tokenType)
-			: base(tokenType)
+		public TokenBinaryOperator(
+			TokenType tokenType,
+			int lineNumber,
+			int charPositionInLine)
+			: base(tokenType,
+				lineNumber,
+				charPositionInLine)
 		{
 		}
 

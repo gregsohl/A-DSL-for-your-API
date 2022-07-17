@@ -4,8 +4,13 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenUnaryOperator : TokenBase
 	{
-		public TokenUnaryOperator(TokenType tokenType)
-			: base(tokenType)
+		public TokenUnaryOperator(
+			TokenType tokenType,
+			int lineNumber,
+			int charPositionInLine)
+			: base(tokenType,
+				lineNumber,
+				charPositionInLine)
 		{
 		}
 

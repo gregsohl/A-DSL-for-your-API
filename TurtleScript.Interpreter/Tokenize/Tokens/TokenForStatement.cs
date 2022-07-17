@@ -14,8 +14,12 @@ namespace TurtleScript.Interpreter.Tokenize
 			string loopVariableName, 
 			TokenBase startValue, 
 			TokenBase endValue, 
-			TokenBlock block)
-			: base(TokenType.ForStatement)
+			TokenBlock block,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.ForStatement,
+				lineNumber,
+				charPositionInLine)
 		{
 			m_LoopVariableName = loopVariableName;
 			m_StartValue = startValue;

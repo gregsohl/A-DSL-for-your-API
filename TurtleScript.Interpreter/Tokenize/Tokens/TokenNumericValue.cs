@@ -20,12 +20,24 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Default = new TokenNumericValue(0);
 		}
 
-		public TokenNumericValue(double value)
-			: base(TokenType.Numeric)
+		public TokenNumericValue(
+			double value)
+			: this(value, 0, 0)
 		{
 			m_Value = value;
 		}
-
+		public TokenNumericValue(
+			double value,
+			int lineNumber,
+			int charPositionInLine)
+			: base(
+				TokenType.Numeric,
+				lineNumber, 
+				charPositionInLine)
+		{
+			m_Value = value;
+		}
+		
 		#endregion Public Constructors
 
 
