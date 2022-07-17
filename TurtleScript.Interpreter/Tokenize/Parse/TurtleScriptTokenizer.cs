@@ -49,8 +49,18 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 					return m_ErrorMessage;
 				}
 
-				return m_TurtleScriptErrorListener.Message;
+				if (m_TurtleScriptErrorListener.HasMessages)
+				{
+					return m_TurtleScriptErrorListener.Messages[0];
+				}
+
+				return string.Empty;
 			}
+		}
+
+		public IEnumerable<string> ErrorMessages
+		{
+			get { return m_TurtleScriptErrorListener.Messages; }
 		}
 
 		public bool IsError
@@ -59,7 +69,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			{
 				return
 				(
-					(!string.IsNullOrEmpty(m_TurtleScriptErrorListener.Message)) ||
+					(m_TurtleScriptErrorListener.HasMessages) ||
 					(!string.IsNullOrEmpty(m_ErrorMessage))
 				);
 			}
@@ -83,6 +93,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		public bool Parse(out TokenBase rootToken)
 		{
 			rootToken = null;
+			m_ErrorMessage = string.Empty;
 
 			AntlrInputStream input = new AntlrInputStream(m_Script);
 
@@ -105,7 +116,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			try
 			{
 				rootToken = Visit(m_Parser.script());
-				m_ErrorMessage = m_TurtleScriptErrorListener.Message;
+				if (m_TurtleScriptErrorListener.HasMessages)
+				{
+					m_ErrorMessage = m_TurtleScriptErrorListener.Messages[0];
+				}
 			}
 			catch (InvalidOperationException exception)
 			{
@@ -231,7 +245,15 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				return new TokenNumericValue(value);
 			}
 
-			throw new InvalidOperationException($"Invalid numeric value. Line {context.Start.Line}, Column {context.Start.Column}");
+			m_TurtleScriptErrorListener.SyntaxError(
+				m_Parser,
+				m_Parser.CurrentToken,
+				context.Start.Line,
+				context.Start.Column,
+				"Invalid numeric value.",
+				null);
+
+			return TokenBase.Default;
 		}
 
 		public override TokenBase VisitForStatement(TurtleScriptParser.ForStatementContext context)
@@ -281,12 +303,15 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 					if (parameterExpressions.Length != function.ParameterCount)
 					{
-						// TODO: This cannot happen as number of parameters is used to find the function initially. Will fail before here.
-						throw new InvalidOperationException(
-							string.Format(
-								"Invalid number of parameters specified for function call. Line {0}, Column {1}",
-								context.Start.Line,
-								context.Start.Column));
+						m_TurtleScriptErrorListener.SyntaxError(
+							m_Parser,
+							m_Parser.CurrentToken,
+							context.Start.Line,
+							context.Start.Column,
+							string.Format("Invalid number of parameters specified for function call."),
+							null);
+
+						return TokenBase.Default;
 					}
 
 					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
@@ -320,13 +345,15 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			//	return returnValue;
 			//}
 
-			var invalidOperationException = new InvalidOperationException(
-				string.Format(
-					"Invalid identifier. Function name not previously defined. Line {0}, Column {1}",
-					context.Start.Line,
-					context.Start.Column));
+			m_TurtleScriptErrorListener.SyntaxError(
+				m_Parser,
+				m_Parser.CurrentToken,
+				context.Start.Line,
+				context.Start.Column,
+				"Invalid call to undefined function.",
+				null);
 
-			throw invalidOperationException;
+			return TokenBase.Default;
 		}
 
 		/// <summary>
@@ -570,15 +597,17 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				return new TokenVariableReference(variableName);
 			}
 
-			this.m_TurtleScriptErrorListener.SyntaxError(
+			m_TurtleScriptErrorListener.SyntaxError(
 				m_Parser, 
 				m_Parser.CurrentToken, 
 				context.Start.Line,
 				context.Start.Column,
-				string.Format("Reference to an unknown variable, '{0}'. Line {1}, Col {2}", variableName, context.Start.Line, context.Start.Column),
+				string.Format("Reference to an unknown variable, '{0}'.", variableName),
 				null);
 
-			return new TokenVariableReference(variableName);
+			
+
+			return TokenBase.Default;
 		}
 
 		#endregion Public Methods

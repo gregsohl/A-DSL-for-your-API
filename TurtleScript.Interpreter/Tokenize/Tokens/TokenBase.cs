@@ -4,24 +4,50 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-using Antlr4.Runtime;
 using TurtleScript.Interpreter.Tokenize.Execute;
 
 #endregion Namespaces
 
 namespace TurtleScript.Interpreter.Tokenize
 {
-	public abstract class TokenBase
+	public class TokenBase
 	{
-		protected TokenBase(TokenType tokenType)
+
+		#region Public Constructors
+
+		static TokenBase()
 		{
-			m_TokenType = tokenType;
+			m_Default = new TokenBase(Tokenize.TokenType.Default);
+		}
+
+		#endregion Public Constructors
+
+
+		#region Public Properties
+
+		public static TokenBase Default
+		{
+			[DebuggerStepThrough]
+			get { return m_Default; }
 		}
 
 		public List<TokenBase> Children
 		{
 			[DebuggerStepThrough]
-			get { return m_Children; }
+			get
+			{
+				return m_Children ?? new List<TokenBase>();
+			}
+		}
+
+		public bool HasChildren
+		{
+			get
+			{
+				return 
+					(m_Children != null) &&
+					(m_Children.Count > 0);
+			}
 		}
 
 		public TokenType TokenType
@@ -29,6 +55,11 @@ namespace TurtleScript.Interpreter.Tokenize
 			[DebuggerStepThrough]
 			get { return m_TokenType; }
 		}
+
+		#endregion Public Properties
+
+
+		#region Public Methods
 
 		public virtual void AddChild(TokenBase token)
 		{
@@ -57,7 +88,26 @@ namespace TurtleScript.Interpreter.Tokenize
 			return result;
 		}
 
-		public abstract TurtleScriptValue Visit(TurtleScriptExecutionContext context);
+		public virtual TurtleScriptValue Visit(
+			TurtleScriptExecutionContext context)
+		{
+			return TurtleScriptValue.NULL;
+		}
+
+		#endregion Public Methods
+
+
+		#region Protected Constructors
+
+		protected TokenBase(TokenType tokenType)
+		{
+			m_TokenType = tokenType;
+		}
+
+		#endregion Protected Constructors
+
+
+		#region Protected Methods
 
 		protected string Indent(int indentLevel)
 		{
@@ -65,7 +115,15 @@ namespace TurtleScript.Interpreter.Tokenize
 			return indentPadding;
 		}
 
-		private List<TokenBase> m_Children;
+		#endregion Protected Methods
+
+
+		#region Private Fields
+
+		private static readonly TokenBase m_Default;
 		private readonly TokenType m_TokenType;
+		private List<TokenBase> m_Children;
+
+		#endregion Private Fields
 	}
 }

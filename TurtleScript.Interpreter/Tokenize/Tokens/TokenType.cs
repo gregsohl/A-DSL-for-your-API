@@ -2,6 +2,7 @@
 {
 	public enum TokenType
 	{
+		Default,
 		Script,
 		Block,
 		Boolean,

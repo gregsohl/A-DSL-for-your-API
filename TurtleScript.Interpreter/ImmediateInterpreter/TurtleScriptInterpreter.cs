@@ -52,8 +52,18 @@ namespace TurtleScript.Interpreter
 					return m_ErrorMessage;
 				}
 
-				return m_TurtleScriptErrorListener.Message;
+				if (m_TurtleScriptErrorListener.HasMessages)
+				{
+					return m_TurtleScriptErrorListener.Messages[0];
+				}
+
+				return string.Empty;
 			}
+		}
+
+		public IEnumerable<string> ErrorMessages
+		{
+			get { return m_TurtleScriptErrorListener.Messages; }
 		}
 
 		public bool IsError
@@ -62,7 +72,7 @@ namespace TurtleScript.Interpreter
 			{
 				return
 				(
-					(!string.IsNullOrEmpty(m_TurtleScriptErrorListener.Message)) ||
+					(m_TurtleScriptErrorListener.HasMessages) ||
 					(!string.IsNullOrEmpty(m_ErrorMessage))
 				);
 			}

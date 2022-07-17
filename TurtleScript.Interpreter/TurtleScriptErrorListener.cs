@@ -1,5 +1,7 @@
 #region Namespaces
 
+using System.Collections.Generic;
+
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Dfa;
@@ -11,7 +13,18 @@ namespace TurtleScript.Interpreter
 {
 	public class TurtleScriptErrorListener : IParserErrorListener
 	{
-		public string Message { get; private set; }
+		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+		public TurtleScriptErrorListener()
+		{
+			m_Messages = new List<string>();
+		}
+
+		public bool HasMessages
+		{ get { return m_Messages.Count > 0; } }
+
+		public string[] Messages
+		{ get { return m_Messages.ToArray(); } }
+
 
 		public void SyntaxError(
 			IRecognizer recognizer,
@@ -21,7 +34,7 @@ namespace TurtleScript.Interpreter
 			string msg,
 			RecognitionException e)
 		{
-			Message = string.Format("{0}. Line {1}, Col {2}", msg, line, charPositionInLine);
+			m_Messages.Add(string.Format("{0}. Line {1}, Col {2}", msg, line, charPositionInLine));
 		}
 
 		/// <summary>
@@ -212,5 +225,8 @@ namespace TurtleScript.Interpreter
 		{
 			throw new System.NotImplementedException();
 		}
+
+		private readonly List<string> m_Messages;
+
 	}
 }
