@@ -1,17 +1,27 @@
 ﻿#region Namespaces
 
 using System;
+using System.Diagnostics;
 using System.Text;
+
 using TurtleScript.Interpreter.Tokenize.Execute;
 
 #endregion Namespaces
+
 
 namespace TurtleScript.Interpreter.Tokenize
 {
 	internal class TokenFunctionCall : TokenBase
 	{
-		private readonly string m_FunctionName;
-		private readonly TokenBase[] m_Parameters;
+
+		#region Public Constructors
+
+		static TokenFunctionCall()
+		{
+			m_Default = new TokenFunctionCall(
+				string.Empty,
+				Array.Empty<TokenBase>());
+		}
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TokenFunctionCall(
@@ -23,6 +33,17 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Parameters = parameters;
 		}
 
+		#endregion Public Constructors
+
+
+		#region Public Properties
+
+		public new static TokenFunctionCall Default
+		{
+			[DebuggerStepThrough]
+			get { return m_Default; }
+		}
+
 		public string FunctionName
 		{
 			get { return m_FunctionName; }
@@ -32,6 +53,11 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			get { return m_Parameters; }
 		}
+
+		#endregion Public Properties
+
+
+		#region Public Methods
 
 		public override string ToTurtleScript()
 		{
@@ -84,5 +110,16 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return result;
 		}
+
+		#endregion Public Methods
+
+
+		#region Private Fields
+
+		private static TokenFunctionCall m_Default;
+		private readonly string m_FunctionName;
+		private readonly TokenBase[] m_Parameters;
+
+		#endregion Private Fields
 	}
 }

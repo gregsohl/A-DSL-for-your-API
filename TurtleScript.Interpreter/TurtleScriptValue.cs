@@ -1,12 +1,15 @@
 ﻿#region Namespaces
 
 using System;
-using System.Collections.Generic;
 
 #endregion Namespaces
 
 namespace TurtleScript.Interpreter
 {
+	/// <summary>
+	/// Represents a value within the execution of a TurtleScript script. 
+	/// </summary>
+	/// <seealso cref="System.IComparable&lt;TurtleScript.Interpreter.TurtleScriptValue&gt;" />
 	public class TurtleScriptValue : IComparable<TurtleScriptValue>
 	{
 		#region Public Constructors
@@ -15,17 +18,20 @@ namespace TurtleScript.Interpreter
 		{
 			m_BooleanValue = booleanValue;
 			m_IsBoolean = true;
+			m_ValueType = TurtleScriptValueType.Boolean;
 		}
 
 		public TurtleScriptValue(double numericValue)
 		{
 			m_NumericValue = numericValue;
 			m_IsNumeric = true;
+			m_ValueType = TurtleScriptValueType.Numeric;
 		}
 
 		public TurtleScriptValue()
 		{
 			m_IsNull = true;
+			m_ValueType = TurtleScriptValueType.Null;
 		}
 
 		#endregion Public Constructors
@@ -58,6 +64,14 @@ namespace TurtleScript.Interpreter
 		public bool BooleanValue
 		{
 			get { return m_BooleanValue; }
+		}
+
+		public TurtleScriptValueType ValueType
+		{
+			get
+			{
+				return m_ValueType;
+			}
 		}
 
 		#endregion Public Properties
@@ -197,7 +211,7 @@ namespace TurtleScript.Interpreter
 			if ((result1.IsNumeric != result2.IsNumeric) ||
 			    (result1.IsBoolean != result2.IsBoolean))
 			{
-				throw new InvalidOperationException("Cannot add mismatched data types.");
+				throw new InvalidOperationException("Mismatched data types for division operation.");
 			}
 
 			if ((result1.IsBoolean) ||
@@ -216,24 +230,147 @@ namespace TurtleScript.Interpreter
 			return new TurtleScriptValue(result1.NumericValue / result2.NumericValue);
 		}
 
-		public static TurtleScriptValue operator !(TurtleScriptValue result)
+		public static TurtleScriptValue operator %(
+			TurtleScriptValue left,
+			TurtleScriptValue right)
 		{
-			if (!result.IsBoolean)
+			if (left.ValueType != right.ValueType)
+			{
+				throw new InvalidOperationException("Mismatched data types for Modulus operation");
+			}
+
+			if (!left.IsNumeric)
+			{
+				throw new InvalidOperationException("Invalid data types for Modulus operation");
+			}
+
+			if (right.NumericValue == 0)
+			{
+				return new TurtleScriptValue(0);
+			}
+
+			return new TurtleScriptValue(left.NumericValue % right.NumericValue);
+		}
+
+		public static TurtleScriptValue operator !(TurtleScriptValue value)
+		{
+			if (!value.IsBoolean)
 			{
 				throw new InvalidOperationException("Invalid data type for Not operation");
 			}
 
-			return new TurtleScriptValue(!result.BooleanValue);
+			return new TurtleScriptValue(!value.BooleanValue);
 		}
 
-		public static TurtleScriptValue operator -(TurtleScriptValue result)
+		public static TurtleScriptValue operator -(TurtleScriptValue value)
 		{
-			if (!result.IsNumeric)
+			if (!value.IsNumeric)
 			{
 				throw new InvalidOperationException("Invalid data type for Negation operation");
 			}
 
-			return new TurtleScriptValue(result.NumericValue * -1);
+			return new TurtleScriptValue(value.NumericValue * -1);
+		}
+
+		public static TurtleScriptValue operator ==(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			return new TurtleScriptValue(left.Equals(right));
+		}
+
+		public static TurtleScriptValue operator !=(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			return new TurtleScriptValue(!left.Equals(right));
+		}
+
+
+		public static TurtleScriptValue operator >(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			if (left.ValueType != right.ValueType)
+			{
+				throw new InvalidOperationException("Mismatched data types for Greater Than operation");
+			}
+
+			if (!left.IsNumeric)
+			{
+				throw new InvalidOperationException("Invalid data type for Greater Than operation");
+			}
+
+			return new TurtleScriptValue(left.NumericValue > right.NumericValue);
+		}
+
+		public static TurtleScriptValue operator <(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			if (left.ValueType != right.ValueType)
+			{
+				throw new InvalidOperationException("Mismatched data types for Less Than operation");
+			}
+
+			if (!left.IsNumeric)
+			{
+				throw new InvalidOperationException("Invalid data type for Less Than operation");
+			}
+
+			return new TurtleScriptValue(left.NumericValue < right.NumericValue);
+		}
+
+		public static TurtleScriptValue operator >=(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			if (left.ValueType != right.ValueType)
+			{
+				throw new InvalidOperationException("Mismatched data types for Greater Than or Equal operation");
+			}
+
+			if (!left.IsNumeric)
+			{
+				throw new InvalidOperationException("Invalid data type for Greater Than or Equal operation");
+			}
+
+			return new TurtleScriptValue(left.NumericValue >= right.NumericValue);
+		}
+
+		public static TurtleScriptValue operator <=(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			if (left.ValueType != right.ValueType)
+			{
+				throw new InvalidOperationException("Mismatched data types for Less Than or Equal operation");
+			}
+
+			if (!left.IsNumeric)
+			{
+				throw new InvalidOperationException("Invalid data type for Less Than or Equal operation");
+			}
+
+			return new TurtleScriptValue(left.NumericValue <= right.NumericValue);
+		}
+
+		public static TurtleScriptValue operator &(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			if (left.ValueType != right.ValueType)
+			{
+				throw new InvalidOperationException("Mismatched data types for Logical AND operation");
+			}
+
+			if (!left.IsBoolean)
+			{
+				throw new InvalidOperationException("Invalid data type for Logical AND operation");
+			}
+
+			return new TurtleScriptValue(left.BooleanValue && right.BooleanValue);
+		}
+
+		public static TurtleScriptValue operator |(TurtleScriptValue left, TurtleScriptValue right)
+		{
+			if (left.ValueType != right.ValueType)
+			{
+				throw new InvalidOperationException("Mismatched data types for Logical AND operation");
+			}
+
+			if (!left.IsBoolean)
+			{
+				throw new InvalidOperationException("Invalid data type for Logical AND operation");
+			}
+
+			return new TurtleScriptValue(left.BooleanValue || right.BooleanValue);
 		}
 
 
@@ -246,6 +383,7 @@ namespace TurtleScript.Interpreter
 		private readonly double m_NumericValue;
 		private readonly bool m_IsNumeric;
 		private readonly bool m_IsNull;
+		private readonly TurtleScriptValueType m_ValueType;
 
 		#endregion Private Fields
 	}

@@ -31,8 +31,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
 			// m_VariablesDeclared = new Dictionary<string, TokenBase>();
 			m_TurtleScriptParserContext = new TurtleScriptParserContext();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
-			m_ScriptFunctions2 = new TurtleScriptFunctions<TurtleScriptParserFunction>();
+			m_ScriptFunctions = new TurtleScriptFunctions<TurtleScriptParserFunction>();
 		}
 
 		#endregion Public Constructors
@@ -80,12 +79,6 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 		#region Public Methods
 
-		public void Execute(TokenBase script, TurtleScriptExecutionContext context)
-		{
-			script.Visit(context);
-
-		}
-
 		/// <summary>
 		/// Executes the script
 		/// </summary>
@@ -110,8 +103,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			m_Parser.BuildParseTree = true;
 
 			m_TurtleScriptParserContext = new TurtleScriptParserContext();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
-			m_ScriptFunctions2 = new TurtleScriptFunctions<TurtleScriptParserFunction>();
+			m_ScriptFunctions = new TurtleScriptFunctions<TurtleScriptParserFunction>();
 
 			try
 			{
@@ -250,10 +242,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				m_Parser.CurrentToken,
 				context.Start.Line,
 				context.Start.Column,
-				"Invalid numeric value.",
+				"Invalid numeric value",
 				null);
 
-			return TokenBase.Default;
+			return TokenNumericValue.Default;
 		}
 
 		public override TokenBase VisitForStatement(TurtleScriptParser.ForStatementContext context)
@@ -277,14 +269,9 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 		public override TokenBase VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
 		{
-			//return new TokenFunctionCall(
-			//	"",
-			//	new TokenBase[0]);
-
 			if (context.Identifier() != null)
 			{
 				// User Defined Function
-
 				string functionCallName = context.Identifier().GetText();
 
 				TurtleScriptParser.ExpressionContext[] parameterExpressions =
@@ -295,7 +282,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 					parameterExpressions = context.expressionList().expression();
 				}
 
-				if (m_ScriptFunctions2.TryGetFunction(
+				if (m_ScriptFunctions.TryGetFunction(
 						functionCallName,
 						parameterExpressions.Length,
 						out TurtleScriptParserFunction function))
@@ -308,7 +295,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 							m_Parser.CurrentToken,
 							context.Start.Line,
 							context.Start.Column,
-							string.Format("Invalid number of parameters specified for function call."),
+							string.Format("Invalid number of parameters specified for function call"),
 							null);
 
 						return TokenBase.Default;
@@ -350,10 +337,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				m_Parser.CurrentToken,
 				context.Start.Line,
 				context.Start.Column,
-				"Invalid call to undefined function.",
+				"Invalid call to undefined function",
 				null);
 
-			return TokenBase.Default;
+			return TokenFunctionCall.Default;
 		}
 
 		/// <summary>
@@ -407,14 +394,17 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			m_TurtleScriptParserContext.PopScope();
 
 			// Check for function that exists by the same name
-			if (m_ScriptFunctions2.TryGetFunction(functionName, parameters.Count, out _))
+			if (m_ScriptFunctions.TryGetFunction(functionName, parameters.Count, out _))
 			{
-				throw new InvalidOperationException(
-					string.Format(
-						"A function with the name '{0}' already exists. Line {1}, Column {2}",
-						context.Identifier().GetText(),
-						context.Start.Line,
-						context.Start.Column));
+				m_TurtleScriptErrorListener.SyntaxError(
+					m_Parser,
+					m_Parser.CurrentToken,
+					context.Start.Line,
+					context.Start.Column,
+					"A function with the name '{0}' already exists",
+					null);
+
+				return TokenFunctionDeclaration.Default;
 			}
 
 			var newFunction = new TurtleScriptParserFunction(
@@ -422,7 +412,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				formalParameterContexts.Length,
 				functionDeclaration);
 
-			bool addResult = m_ScriptFunctions2.TryAdd(newFunction);
+			bool addResult = m_ScriptFunctions.TryAdd(newFunction);
 
 			return functionDeclaration;
 		}
@@ -466,7 +456,15 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				return new TokenNumericValue(value);
 			}
 
-			throw new InvalidOperationException("Invalid integer value");
+			m_TurtleScriptErrorListener.SyntaxError(
+				m_Parser,
+				m_Parser.CurrentToken,
+				context.Start.Line,
+				context.Start.Column,
+				"Invalid integer value",
+				null);
+
+			return TokenNumericValue.Default;
 		}
 
 		public override TokenBase VisitMultiplicativeOpExpression(TurtleScriptParser.MultiplicativeOpExpressionContext context)
@@ -518,6 +516,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 			return result;
 		}
+
 		public override TokenBase VisitParenExpression(TurtleScriptParser.ParenExpressionContext context)
 		{
 			TokenBase childExpression = Visit(context.expression());
@@ -602,12 +601,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				m_Parser.CurrentToken, 
 				context.Start.Line,
 				context.Start.Column,
-				string.Format("Reference to an unknown variable, '{0}'.", variableName),
+				string.Format("Reference to an unknown variable, '{0}'", variableName),
 				null);
 
-			
-
-			return TokenBase.Default;
+			return TokenVariableReference.Default;
 		}
 
 		#endregion Public Methods
@@ -615,16 +612,13 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 		#region Private Fields
 
-		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private readonly string m_Script;
 		private string m_ErrorMessage;
 		private TurtleScriptParser m_Parser;
-		private Dictionary<string, TurtleScriptParserFunction> m_ScriptFunctions;
-		private TurtleScriptFunctions<TurtleScriptParserFunction> m_ScriptFunctions2;
+		private TurtleScriptFunctions<TurtleScriptParserFunction> m_ScriptFunctions;
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
-		//private Dictionary<string, TokenBase> m_VariablesDeclared;
-
 		private TurtleScriptParserContext m_TurtleScriptParserContext;
+		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 
 		#endregion Private Fields
 

@@ -1,4 +1,7 @@
-﻿using TurtleScript.Interpreter.Tokenize.Execute;
+﻿using System;
+using System.Collections.Generic;
+
+using TurtleScript.Interpreter.Tokenize.Execute;
 
 namespace TurtleScript.Interpreter.Tokenize
 {
@@ -57,58 +60,60 @@ namespace TurtleScript.Interpreter.Tokenize
 			TurtleScriptValue leftValue = Children[0].Visit(context);
 			TurtleScriptValue rightValue = Children[1].Visit(context);
 
+			bool typesMatched = leftValue.ValueType == rightValue.ValueType;
 			TurtleScriptValue result;
-			switch (TokenType)
+
+			if (typesMatched)
 			{
-				case TokenType.OpAdd:
-					result = new TurtleScriptValue(leftValue.NumericValue + rightValue.NumericValue);
-					break;
-				case TokenType.OpConditionalAnd:
-					result = new TurtleScriptValue(leftValue.BooleanValue && rightValue.BooleanValue);
-					break;
-				case TokenType.OpSubtract:
-					result = new TurtleScriptValue(leftValue.NumericValue - rightValue.NumericValue);
-					break;
-				case TokenType.OpMultiply:
-					result = new TurtleScriptValue(leftValue.NumericValue * rightValue.NumericValue);
-					break;
-				case TokenType.OpDivide:
-					if (rightValue.NumericValue == 0)
-					{
-						result = new TurtleScriptValue(0);
-					}
-					else
-					{
-						result = new TurtleScriptValue(leftValue.NumericValue / rightValue.NumericValue);
-					}
-					break;
-				case TokenType.OpModulus:
-					result = new TurtleScriptValue(leftValue.NumericValue % rightValue.NumericValue);
-					break;
-				case TokenType.OpEqual:
-					result = new TurtleScriptValue(leftValue.NumericValue == rightValue.NumericValue);
-					break;
-				case TokenType.OpNotEqual:
-					result = new TurtleScriptValue(leftValue.NumericValue != rightValue.NumericValue);
-					break;
-				case TokenType.OpGreaterThan:
-					result = new TurtleScriptValue(leftValue.NumericValue > rightValue.NumericValue);
-					break;
-				case TokenType.OpLessThan:
-					result = new TurtleScriptValue(leftValue.NumericValue < rightValue.NumericValue);
-					break;
-				case TokenType.OpGreaterThanOrEqual:
-					result = new TurtleScriptValue(leftValue.NumericValue >= rightValue.NumericValue);
-					break;
-				case TokenType.OpLessThanOrEqual:
-					result = new TurtleScriptValue(leftValue.NumericValue <= rightValue.NumericValue);
-					break;
-				case TokenType.OpConditionalOr:
-					result = new TurtleScriptValue(leftValue.BooleanValue || rightValue.BooleanValue);
-					break;
-				default:
-					result = TurtleScriptValue.NULL;
-					break;
+				switch (TokenType)
+				{
+					case TokenType.OpAdd:
+						result = leftValue + rightValue;
+						break;
+					case TokenType.OpConditionalAnd:
+						result = leftValue & rightValue;
+						break;
+					case TokenType.OpSubtract:
+						result = leftValue - rightValue;
+						break;
+					case TokenType.OpMultiply:
+						result = leftValue * rightValue;
+						break;
+					case TokenType.OpDivide:
+						result = leftValue / rightValue;
+						break;
+					case TokenType.OpModulus:
+						result = leftValue % rightValue;
+						break;
+					case TokenType.OpEqual:
+						result = leftValue == rightValue;
+						break;
+					case TokenType.OpNotEqual:
+						result = leftValue != rightValue;
+						break;
+					case TokenType.OpGreaterThan:
+						result = leftValue > rightValue;
+						break;
+					case TokenType.OpLessThan:
+						result = leftValue < rightValue;
+						break;
+					case TokenType.OpGreaterThanOrEqual:
+						result = leftValue >= rightValue;
+						break;
+					case TokenType.OpLessThanOrEqual:
+						result = leftValue <= rightValue;
+						break;
+					case TokenType.OpConditionalOr:
+						result = leftValue | rightValue;
+						break;
+					default:
+						result = TurtleScriptValue.NULL;
+						break;
+				}
+			}
+			else
+			{
+				throw new TurtleScriptExecutionException($"Mismatched operands. {leftValue.ValueType} {TokenType} {rightValue.ValueType}");
 			}
 
 			return result;

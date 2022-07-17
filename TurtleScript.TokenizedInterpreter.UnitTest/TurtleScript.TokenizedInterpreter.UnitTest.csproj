@@ -57,7 +57,6 @@
     <Compile Include="UnaryOperatorTests.cs" />
     <Compile Include="ParenthesisedArithmeticTests.cs" />
     <Compile Include="PredefinedConstantsTests.cs" />
-    <Compile Include="TokenizerTests.cs" />
     <Compile Include="UserDefiniedFunctionTests.cs" />
     <Compile Include="VariableAssignmentTests.cs" />
     <Compile Include="VariableReferenceTests.cs" />

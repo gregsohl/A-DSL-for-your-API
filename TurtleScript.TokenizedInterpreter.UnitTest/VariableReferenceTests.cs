@@ -16,6 +16,7 @@ namespace TurtleScript.Interpreter.UnitTest
 	public class VariableReferenceTests
 	{
 		[Test]
+		[Category("Success")]
 		public void AssignmentAndReference()
 		{
 			// Arrange
@@ -37,7 +38,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			interpreter.Execute(rootToken, context);
+			(new TurtleScriptExecutor()).Execute(rootToken, context);
 
 			// Assert
 			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
@@ -50,6 +51,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void AssignmentAndSelfReassignment()
 		{
 			// Arrange
@@ -68,7 +70,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			interpreter.Execute(rootToken, context);
+			(new TurtleScriptExecutor()).Execute(rootToken, context);
 
 			// Assert
 			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
@@ -79,6 +81,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
 		public void AssignmentAndReferenceInExpression()
 		{
 			// Arrange
@@ -99,7 +102,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			interpreter.Execute(rootToken, context);
+			(new TurtleScriptExecutor()).Execute(rootToken, context);
 
 			// Assert
 			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, context.GlobalVariableCount);
@@ -112,6 +115,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Error")]
 		public void BadReference()
 		{
 			// Arrange
@@ -131,6 +135,110 @@ namespace TurtleScript.Interpreter.UnitTest
 			Console.WriteLine();
 			Console.WriteLine(interpreter.ErrorMessage);
 
+		}
+
+		[Test]
+		[Category("Error")]
+		public void BadReferenceLocalVariableNotAvailableInGlobalScope()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("def MyFunc()");
+			scriptBuilder.AppendLine("	myLocal = 15");
+			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine("MyFunc()");
+			scriptBuilder.AppendLine("b = myLocal");
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+
+			// Assert
+			Assert.IsFalse(success, interpreter.ErrorMessage);
+
+			Console.WriteLine("Script:");
+			Console.WriteLine(scriptBuilder.ToString());
+			Console.WriteLine();
+			Console.WriteLine(interpreter.ErrorMessage);
+		}
+
+		[Test]
+		[Category("Error")]
+		public void BadReferenceGlobalVariableNotAvailableForFunctionCall()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("def MyFunc(myParameter)");
+			scriptBuilder.AppendLine("	myLocal = 15");
+			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine("MyFunc(badVariable)");
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+
+			// Assert
+			Assert.IsFalse(success, interpreter.ErrorMessage);
+
+			Console.WriteLine("Script:");
+			Console.WriteLine(scriptBuilder.ToString());
+			Console.WriteLine();
+			Console.WriteLine(interpreter.ErrorMessage);
+		}
+
+		[Test]
+		[Category("Error")]
+		public void BadReferenceInsideFunctionCall()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("def MyFunc()");
+			scriptBuilder.AppendLine("	myLocal = badVariable");
+			scriptBuilder.AppendLine("end");
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+
+			// Assert
+			Assert.IsFalse(success, interpreter.ErrorMessage);
+
+			Console.WriteLine("Script:");
+			Console.WriteLine(scriptBuilder.ToString());
+			Console.WriteLine();
+			Console.WriteLine(interpreter.ErrorMessage);
+		}
+
+		[Test]
+		[Category("Error")]
+		public void BadReferencesInsideFunctionCall()
+		{
+			// Arrange
+			StringBuilder scriptBuilder = new StringBuilder();
+			scriptBuilder.AppendLine("def MyFunc()");
+			scriptBuilder.AppendLine("	myLocal = badVariable1");
+			scriptBuilder.AppendLine("	myLocal = badVariable2");
+			scriptBuilder.AppendLine("end");
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+
+			// Assert
+			Assert.IsFalse(success);
+
+			Console.WriteLine("Script:");
+			Console.WriteLine(scriptBuilder.ToString());
+			Console.WriteLine();
+
+			foreach (string message in interpreter.ErrorMessages)
+			{
+				Console.WriteLine(message);
+			}
 		}
 
 	}

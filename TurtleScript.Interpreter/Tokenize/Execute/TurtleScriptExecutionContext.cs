@@ -3,8 +3,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using TurtleScript.Interpreter.Tokenize.Execute;
-
 #endregion Namespaces
 
 namespace TurtleScript.Interpreter.Tokenize.Execute

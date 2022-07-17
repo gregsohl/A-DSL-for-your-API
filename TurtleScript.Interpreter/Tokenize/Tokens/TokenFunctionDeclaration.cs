@@ -1,7 +1,8 @@
 ﻿#region Namespaces
 
 using System;
-using System.Text;
+using System.Diagnostics;
+
 using TurtleScript.Interpreter.Tokenize.Execute;
 
 #endregion Namespaces
@@ -10,6 +11,15 @@ namespace TurtleScript.Interpreter.Tokenize
 {
 	public class TokenFunctionDeclaration : TokenBase
 	{
+		#region Public Constructors
+
+		static TokenFunctionDeclaration()
+		{
+			m_Default = new TokenFunctionDeclaration(
+				"",
+				Array.Empty<string>(),
+				null);
+		}
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TokenFunctionDeclaration(string functionName, string[] parameterNames, TokenBlock functionBody = null)
@@ -18,24 +28,17 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_FunctionName = functionName;
 			m_ParameterNames = parameterNames;
 			m_FunctionBody = functionBody;
-
-			m_Key += functionName + "_" + parameterNames.Length;
-
 		}
 
-		public int ParameterCount
-		{
-			get { return ParameterNames.Length; }
-		}
+		#endregion Public Constructors
 
-		public string FunctionName
-		{
-			get { return m_FunctionName; }
-		}
 
-		public string[] ParameterNames
+		#region Public Properties
+
+		public new static TokenFunctionDeclaration Default
 		{
-			get { return m_ParameterNames; }
+			[DebuggerStepThrough]
+			get { return m_Default; }
 		}
 
 		public TokenBlock FunctionBody
@@ -43,14 +46,28 @@ namespace TurtleScript.Interpreter.Tokenize
 			get { return m_FunctionBody; }
 		}
 
+		public string FunctionName
+		{
+			get { return m_FunctionName; }
+		}
+
+		public int ParameterCount
+		{
+			get { return ParameterNames.Length; }
+		}
+		public string[] ParameterNames
+		{
+			get { return m_ParameterNames; }
+		}
+
+		#endregion Public Properties
+
+
+		#region Public Methods
+
 		public override string ToTurtleScript()
 		{
 			string parameters = String.Join(", ", ParameterNames);
-
-			//StringBuilder result = new StringBuilder();
-			//result.AppendLine($"{FunctionName}({parameters})");
-
-			//result.AppendLine("end");
 
 			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript(1)}\r\nend";
 		}
@@ -61,15 +78,27 @@ namespace TurtleScript.Interpreter.Tokenize
 			return TurtleScriptValue.VOID;
 		}
 
+		#endregion Public Methods
+
+
+		#region Internal Methods
+
 		internal void SetFunctionBody(
 			TokenBlock functionBody)
 		{
 			m_FunctionBody = functionBody;
 		}
 
-		private readonly string m_Key;
+		#endregion Internal Methods
+
+
+		#region Private Fields
+
+		private static TokenFunctionDeclaration m_Default;
 		private readonly string m_FunctionName;
 		private readonly string[] m_ParameterNames;
 		private TokenBlock m_FunctionBody;
+
+		#endregion Private Fields
 	}
 }
