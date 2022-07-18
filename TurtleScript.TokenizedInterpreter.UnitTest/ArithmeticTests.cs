@@ -382,16 +382,23 @@ namespace TurtleScript.Interpreter.UnitTest
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
 			TurtleScriptExecutor executor = new TurtleScriptExecutor();
 
-			Assert.Throws<TurtleScriptExecutionException>(() => 
-				executor.Execute(
-					rootToken,
-					context));
+			//Assert.Throws<TurtleScriptExecutionException>(() => 
+			//	executor.Execute(
+			//		rootToken,
+			//		context));
+
+			executor.Execute(
+				rootToken,
+				context);
 
 			// Assert
 			Assert.IsTrue(success, interpreter.ErrorMessage);
+			Assert.IsTrue(executor.IsError, executor.ErrorMessage);
 
 			Console.WriteLine("Regenerated Script via ToTurtleScript");
 			Console.WriteLine(rootToken.ToTurtleScript());
+
+			Console.WriteLine($"Execution Error: {executor.ErrorMessage}");
 		}
 
 	}

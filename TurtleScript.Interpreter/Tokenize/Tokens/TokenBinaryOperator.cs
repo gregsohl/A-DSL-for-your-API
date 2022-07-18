@@ -65,56 +65,70 @@ namespace TurtleScript.Interpreter.Tokenize
 			TurtleScriptValue leftValue = Children[0].Visit(context);
 			TurtleScriptValue rightValue = Children[1].Visit(context);
 
-			TurtleScriptValue result;
+			TurtleScriptValue result = TurtleScriptValue.NULL;
 
-			switch (TokenType)
+			try
 			{
-				case TokenType.OpAdd:
-					result = leftValue + rightValue;
-					break;
-				case TokenType.OpConditionalAnd:
-					result = leftValue & rightValue;
-					break;
-				case TokenType.OpSubtract:
-					result = leftValue - rightValue;
-					break;
-				case TokenType.OpMultiply:
-					result = leftValue * rightValue;
-					break;
-				case TokenType.OpDivide:
-					result = leftValue / rightValue;
-					break;
-				case TokenType.OpModulus:
-					result = leftValue % rightValue;
-					break;
-				case TokenType.OpEqual:
-					result = leftValue == rightValue;
-					break;
-				case TokenType.OpNotEqual:
-					result = leftValue != rightValue;
-					break;
-				case TokenType.OpGreaterThan:
-					result = leftValue > rightValue;
-					break;
-				case TokenType.OpLessThan:
-					result = leftValue < rightValue;
-					break;
-				case TokenType.OpGreaterThanOrEqual:
-					result = leftValue >= rightValue;
-					break;
-				case TokenType.OpLessThanOrEqual:
-					result = leftValue <= rightValue;
-					break;
-				case TokenType.OpConditionalOr:
-					result = leftValue | rightValue;
-					break;
-				default:
-					result = TurtleScriptValue.NULL;
-					break;
+				switch (TokenType)
+				{
+					case TokenType.OpAdd:
+						result = leftValue + rightValue;
+						break;
+					case TokenType.OpConditionalAnd:
+						result = leftValue & rightValue;
+						break;
+					case TokenType.OpSubtract:
+						result = leftValue - rightValue;
+						break;
+					case TokenType.OpMultiply:
+						result = leftValue * rightValue;
+						break;
+					case TokenType.OpDivide:
+						result = leftValue / rightValue;
+						break;
+					case TokenType.OpModulus:
+						result = leftValue % rightValue;
+						break;
+					case TokenType.OpEqual:
+						result = leftValue == rightValue;
+						break;
+					case TokenType.OpNotEqual:
+						result = leftValue != rightValue;
+						break;
+					case TokenType.OpGreaterThan:
+						result = leftValue > rightValue;
+						break;
+					case TokenType.OpLessThan:
+						result = leftValue < rightValue;
+						break;
+					case TokenType.OpGreaterThanOrEqual:
+						result = leftValue >= rightValue;
+						break;
+					case TokenType.OpLessThanOrEqual:
+						result = leftValue <= rightValue;
+						break;
+					case TokenType.OpConditionalOr:
+						result = leftValue | rightValue;
+						break;
+					default:
+						result = TurtleScriptValue.NULL;
+						break;
+				}
+			}
+			catch (TurtleScriptExecutionException operatorException)
+			{
+				string message = GetExceptionMessage(operatorException.Message);
+				throw new TurtleScriptExecutionException(message, operatorException);
 			}
 
 			return result;
 
+		}
+
+		private string GetExceptionMessage(
+			string message)
+		{
+			return $"{message}, Line {LineNumber}, Col {CharPositionInLine}";
 		}
 
 	}
