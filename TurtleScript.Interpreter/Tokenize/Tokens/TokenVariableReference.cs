@@ -20,6 +20,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Default = new TokenVariableReference(String.Empty);
 		}
 
+		public TokenVariableReference()
+		{
+		}
+
 		public TokenVariableReference(
 			string variableName)
 			: this(variableName, 0, 0)
@@ -109,13 +113,17 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Public Methods
 
-
-		#region Private Fields
+		#region Private Constants
 
 		private const int VERSION = 1;
 
 		[CompactFormatter.Attributes.NotSerialized]
 		private static readonly TokenVariableReference m_Default;
+
+		#endregion Private Constants
+
+
+		#region Private Fields
 
 		private string m_VariableName;
 

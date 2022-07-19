@@ -16,6 +16,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Public Constructors
 
+		public TokenBlock()
+		{
+		}
+
 		public TokenBlock(
 		int lineNumber,
 		int charPositionInLine)
@@ -60,8 +64,13 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			int version = (int)parent.Deserialize(stream);
 
-			m_FunctionDeclarations =
-				new List<TokenFunctionDeclaration>((TokenFunctionDeclaration[])parent.Deserialize(stream));
+			m_FunctionDeclarations = null;
+			object functions = parent.Deserialize(stream);
+			if (functions != null)
+			{
+				m_FunctionDeclarations =
+					new List<TokenFunctionDeclaration>((TokenFunctionDeclaration[])functions);
+			}
 		}
 
 		/// <summary>
@@ -79,7 +88,16 @@ namespace TurtleScript.Interpreter.Tokenize
 				stream);
 
 			parent.Serialize(stream, VERSION);
-			parent.Serialize(stream, m_FunctionDeclarations.ToArray());
+			if (m_FunctionDeclarations != null)
+			{
+				parent.Serialize(
+					stream,
+					m_FunctionDeclarations.ToArray());
+			}
+			else
+			{
+				parent.Serialize(stream, m_FunctionDeclarations);
+			}
 		}
 
 		public override StringBuilder ToTurtleScript(StringBuilder result, int indentLevel)

@@ -163,7 +163,7 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			TokenBase value = Visit(context.expression());
 
 			var variableName = context.Identifier().GetText();
-			TokenBase result = new TokenAssignment(variableName);
+			TokenBase result = new TokenAssignment(variableName, context.Start.Line, context.Start.Column);
 			result.AddChild(value);
 
 			DeclareVariable(variableName, result);

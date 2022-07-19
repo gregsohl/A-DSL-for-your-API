@@ -11,6 +11,10 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		#region Public Constructors
 
+		public TokenBinaryOperator()
+		{
+		}
+
 		public TokenBinaryOperator(
 			TokenType tokenType,
 			int lineNumber,

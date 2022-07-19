@@ -14,6 +14,10 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		#region Public Constructors
 
+		public TokenForStatement()
+		{
+		}
+
 		public TokenForStatement(
 			string loopVariableName,
 			TokenBase startValue,

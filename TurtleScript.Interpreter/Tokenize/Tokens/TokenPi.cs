@@ -3,6 +3,10 @@
 	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenPi : TokenNumericValue
 	{
+		public TokenPi()
+		{
+		}
+
 		public TokenPi(
 			int lineNumber,
 			int columnNumber)

@@ -22,6 +22,10 @@ namespace TurtleScript.Interpreter.Tokenize
 				Array.Empty<string>());
 		}
 
+		public TokenFunctionDeclaration()
+		{
+		}
+
 		public TokenFunctionDeclaration(
 			string functionName,
 			string[] parameterNames)

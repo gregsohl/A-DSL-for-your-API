@@ -1,6 +1,7 @@
 ﻿#region Namespaces
 
 using System.Diagnostics;
+using System.IO;
 
 using TurtleScript.Interpreter.Tokenize.Execute;
 
@@ -14,6 +15,10 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 
 		#region Public Constructors
+
+		public TokenAssignment()
+		{
+		}
 
 		public TokenAssignment(string variableName)
 			: base(TokenType.Assignment)
@@ -48,6 +53,42 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Public Methods
 
+		/// <summary>
+		/// This function is invoked by CompactFormatter when deserializing a
+		/// Custom Serializable object.
+		/// </summary>
+		/// <param name="parent">A reference to the CompactFormatter instance which called this method.</param>
+		/// <param name="stream">The Stream where object data must be read</param>
+		public override void ReceiveObjectData(
+			CompactFormatter.CompactFormatter parent,
+			Stream stream)
+		{
+			base.ReceiveObjectData(
+				parent,
+				stream);
+			
+			int version = (int)parent.Deserialize(stream);
+			m_VariableName = (string)parent.Deserialize(stream);
+		}
+
+		/// <summary>
+		/// This function is invoked by CompactFormatter when serializing a 
+		/// Custom Serializable object.
+		/// </summary>
+		/// <param name="parent">A reference to the CompactFormatter instance which called this method.</param>
+		/// <param name="stream">The Stream where object data must be written</param>
+		public override void SendObjectData(
+			CompactFormatter.CompactFormatter parent,
+			Stream stream)
+		{
+			base.SendObjectData(
+				parent,
+				stream);
+		
+			parent.Serialize(stream, VERSION);
+			parent.Serialize(stream, m_VariableName);
+		}
+
 		public override string ToTurtleScript()
 		{
 			return $"{VariableName} = {Children[0].ToTurtleScript()}";
@@ -64,10 +105,15 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Public Methods
 
+		#region Private Constants
+
+		private const int VERSION = 1;
+
+		#endregion Private Constants
 
 		#region Private Fields
 
-		private readonly string m_VariableName;
+		private string m_VariableName;
 
 		#endregion Private Fields
 	}
