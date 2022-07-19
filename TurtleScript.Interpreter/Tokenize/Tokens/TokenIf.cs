@@ -1,23 +1,31 @@
-﻿using System;
+﻿#region Namespaces
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+
+using CompactFormatter.Interfaces;
+
 using TurtleScript.Interpreter.Tokenize.Execute;
+
+#endregion Namespaces
+
 
 namespace TurtleScript.Interpreter.Tokenize
 {
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenIf : TokenBase
 	{
-		private readonly TokenBlock m_Block;
-		private readonly TokenBase m_ConditionalExpression;
-		private readonly List<Tuple<TokenBase, TokenBase>> m_ElseIf;
-		private readonly TokenBase m_ElseStatement;
+
+		#region Public Constructors
 
 		public TokenIf(
 			TokenBlock block,
 			TokenBase conditionalExpression,
 			List<Tuple<TokenBase, TokenBase>> elseIf,
-			TokenBase elseStatement,
+			TokenBlock elseStatement,
 			int lineNumber,
 			int charPositionInLine)
 			: base(TokenType.If,
@@ -29,6 +37,11 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_ElseIf = elseIf;
 			m_ElseStatement = elseStatement;
 		}
+
+		#endregion Public Constructors
+
+
+		#region Public Properties
 
 		public TokenBlock Block
 		{
@@ -52,6 +65,75 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			[DebuggerStepThrough]
 			get { return m_ElseStatement; }
+		}
+
+		#endregion Public Properties
+
+
+		#region Public Methods
+
+		/// <summary>
+		/// This function is invoked by CompactFormatter when deserializing a
+		/// Custom Serializable object.
+		/// </summary>
+		/// <param name="parent">A reference to the CompactFormatter instance which called this method.</param>
+		/// <param name="stream">The Stream where object data must be read</param>
+		public override void ReceiveObjectData(
+			CompactFormatter.CompactFormatter parent,
+			Stream stream)
+		{
+			base.ReceiveObjectData(
+				parent,
+				stream);
+		
+			int version = (int)parent.Deserialize(stream);
+
+			m_Block = (TokenBlock)parent.Deserialize(stream);
+			m_ConditionalExpression = (TokenBase)parent.Deserialize(stream);
+
+			int elseIfCount = (int)parent.Deserialize(stream);
+
+			m_ElseIf = new List<Tuple<TokenBase, TokenBase>>();
+			for (int index = 0; index < elseIfCount; index++)
+			{
+				TokenBase item1 = (TokenBase)parent.Deserialize(stream);
+				TokenBase item2 = (TokenBase)parent.Deserialize(stream);
+
+				m_ElseIf.Add(new Tuple<TokenBase, TokenBase>(item1, item2));
+			}
+
+			m_ElseStatement = (TokenBlock)parent.Deserialize(stream);
+
+		}
+
+		/// <summary>
+		/// This function is invoked by CompactFormatter when serializing a 
+		/// Custom Serializable object.
+		/// </summary>
+		/// <param name="parent">A reference to the CompactFormatter instance which called this method.</param>
+		/// <param name="stream">The Stream where object data must be written</param>
+		public override void SendObjectData(
+			CompactFormatter.CompactFormatter parent,
+			Stream stream)
+		{
+			base.SendObjectData(
+				parent,
+				stream);
+
+			parent.Serialize(stream, VERSION);
+
+			parent.Serialize(stream, m_Block);
+			parent.Serialize(stream, m_ConditionalExpression);
+
+			parent.Serialize(stream, m_ElseIf.Count);
+
+			foreach (Tuple<TokenBase, TokenBase> statement in m_ElseIf)
+			{
+				parent.Serialize(stream, statement.Item1);
+				parent.Serialize(stream, statement.Item2);
+			}
+
+			parent.Serialize(stream, m_ElseStatement);
 		}
 
 		public override string ToTurtleScript()
@@ -82,16 +164,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return turtleScript.ToString();
 		}
-
-		//private static void AppendBlockToStatementScript(string block, StringBuilder turtleScript, int indent)
-		//{
-		//	var blockLines = Regex.Split(block, "\r\n|\r|\n");
-
-		//	foreach (string blockLine in blockLines)
-		//	{
-		//		turtleScript.AppendLine(new string('\t', indent + 1) + blockLine);
-		//	}
-		//}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
@@ -124,5 +196,23 @@ namespace TurtleScript.Interpreter.Tokenize
 			return TurtleScriptValue.VOID;
 
 		}
+
+		#endregion Public Methods
+
+		#region Private Constants
+
+		private const int VERSION = 1;
+
+		#endregion Private Constants
+
+		#region Private Fields
+
+		private TokenBlock m_Block;
+		private TokenBase m_ConditionalExpression;
+		private List<Tuple<TokenBase, TokenBase>> m_ElseIf;
+		private TokenBlock m_ElseStatement;
+
+		#endregion Private Fields
+
 	}
 }

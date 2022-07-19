@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region Namespaces
 
 using TurtleScript.Interpreter.Tokenize.Execute;
 
+#endregion Namespaces
+
 namespace TurtleScript.Interpreter.Tokenize
 {
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenBinaryOperator : TokenBase
 	{
+		#region Public Constructors
+
 		public TokenBinaryOperator(
 			TokenType tokenType,
 			int lineNumber,
@@ -17,47 +21,16 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 		}
 
+		#endregion Public Constructors
+
+		#region Public Methods
+
 		public override string ToTurtleScript()
 		{
 			string left = Children[0].ToTurtleScript();
 			string right = Children[1].ToTurtleScript();
 
 			return $"{left} {AdditiveOperator(TokenType)} {right}";
-		}
-
-		private string AdditiveOperator(TokenType tokenType)
-		{
-			switch (tokenType)
-			{
-				case TokenType.OpAdd:
-					return "+";
-				case TokenType.OpConditionalAnd:
-					return "&&";
-				case TokenType.OpSubtract:
-					return "-";
-				case TokenType.OpMultiply:
-					return "*";
-				case TokenType.OpDivide:
-					return "/";
-				case TokenType.OpModulus:
-					return "%";
-				case TokenType.OpEqual:
-					return "==";
-				case TokenType.OpNotEqual:
-					return "!=";
-				case TokenType.OpGreaterThan:
-					return ">";
-				case TokenType.OpLessThan:
-					return "<";
-				case TokenType.OpGreaterThanOrEqual:
-					return ">=";
-				case TokenType.OpLessThanOrEqual:
-					return "<=";
-				case TokenType.OpConditionalOr:
-					return "||";
-				default:
-					return "error";
-			}
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
@@ -125,11 +98,51 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		}
 
+		#endregion Public Methods
+
+		#region Private Methods
+
+		private string AdditiveOperator(TokenType tokenType)
+		{
+			switch (tokenType)
+			{
+				case TokenType.OpAdd:
+					return "+";
+				case TokenType.OpConditionalAnd:
+					return "&&";
+				case TokenType.OpSubtract:
+					return "-";
+				case TokenType.OpMultiply:
+					return "*";
+				case TokenType.OpDivide:
+					return "/";
+				case TokenType.OpModulus:
+					return "%";
+				case TokenType.OpEqual:
+					return "==";
+				case TokenType.OpNotEqual:
+					return "!=";
+				case TokenType.OpGreaterThan:
+					return ">";
+				case TokenType.OpLessThan:
+					return "<";
+				case TokenType.OpGreaterThanOrEqual:
+					return ">=";
+				case TokenType.OpLessThanOrEqual:
+					return "<=";
+				case TokenType.OpConditionalOr:
+					return "||";
+				default:
+					return "error";
+			}
+		}
 		private string GetExceptionMessage(
 			string message)
 		{
 			return $"{message}, Line {LineNumber}, Col {CharPositionInLine}";
 		}
+
+		#endregion Private Methods
 
 	}
 }

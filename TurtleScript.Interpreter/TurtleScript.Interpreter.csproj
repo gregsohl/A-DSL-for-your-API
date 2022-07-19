@@ -70,6 +70,7 @@
     <Compile Include="ITurtleScriptFunction.cs" />
     <Compile Include="Tokenize\Execute\TurtleScriptExecutionException.cs" />
     <Compile Include="Tokenize\Execute\TurtleScriptExecutor.cs" />
+    <Compile Include="Tokenize\TokenSerializer.cs" />
     <Compile Include="TurtleScriptFunctionBase.cs" />
     <Compile Include="ITurtleScriptRuntime.cs" />
     <Compile Include="Tokenize\Execute\TurtleScriptExecutionFunction.cs" />
@@ -86,7 +87,6 @@
     <Compile Include="Tokenize\Tokens\TokenBooleanValue.cs" />
     <Compile Include="Tokenize\Tokens\TokenForStatement.cs" />
     <Compile Include="Tokenize\Tokens\TokenIf.cs" />
-    <Compile Include="Tokenize\Tokens\TokenNullValue.cs" />
     <Compile Include="Tokenize\Tokens\TokenNumericValue.cs" />
     <Compile Include="Tokenize\Tokens\TokenParenthesizedExpression.cs" />
     <Compile Include="Tokenize\Tokens\TokenPi.cs" />
@@ -115,7 +115,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\CompactFormatter\src\CompactFormatter.csproj">
+      <Project>{6f873b2f-21a4-4c98-a107-5c42227b892f}</Project>
+      <Name>CompactFormatter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

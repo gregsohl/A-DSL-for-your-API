@@ -2,7 +2,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+
+using CompactFormatter;
 
 using TurtleScript.Interpreter.Tokenize.Execute;
 
@@ -10,7 +13,9 @@ using TurtleScript.Interpreter.Tokenize.Execute;
 
 namespace TurtleScript.Interpreter.Tokenize
 {
-	public class TokenBase
+
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
+	public class TokenBase : CompactFormatter.Interfaces.ICSerializable
 	{
 
 		#region Public Constructors
@@ -86,6 +91,54 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Children.Add(token);
 		}
 
+
+		/// <summary>
+		/// This function is invoked by CompactFormatter when deserializing a
+		/// Custom Serializable object.
+		/// </summary>
+		/// <param name="parent">A reference to the CompactFormatter instance which called this method.</param>
+		/// <param name="stream">The Stream where object data must be read</param>
+		public virtual void ReceiveObjectData(
+			CompactFormatter.CompactFormatter parent,
+			Stream stream)
+		{
+			int version = (int)parent.Deserialize(stream);
+
+			m_TokenType = (TokenType)parent.Deserialize(stream);
+			
+			object children = parent.Deserialize(stream);
+			m_Children = children != null ? new List<TokenBase>((TokenBase[])children) : null;
+
+			m_LineNumber = (int)parent.Deserialize(stream);
+			m_CharPositionInLine = (int)parent.Deserialize(stream);
+		}
+
+		/// <summary>
+		/// This function is invoked by CompactFormatter when serializing a 
+		/// Custom Serializable object.
+		/// </summary>
+		/// <param name="parent">A reference to the CompactFormatter instance which called this method.</param>
+		/// <param name="stream">The Stream where object data must be written</param>
+		public virtual void SendObjectData(
+			CompactFormatter.CompactFormatter parent,
+			Stream stream)
+		{
+			parent.Serialize(stream, VERSION);
+
+			parent.Serialize(stream, m_TokenType);
+			if (m_Children != null)
+			{
+				parent.Serialize(stream, m_Children.ToArray());
+			}
+			else
+			{
+				parent.Serialize(stream, m_Children);
+			}
+
+			parent.Serialize(stream, m_LineNumber);
+			parent.Serialize(stream, m_CharPositionInLine);
+		}
+
 		public virtual string ToTurtleScript()
 		{
 			return string.Empty;
@@ -113,6 +166,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 
 		#region Protected Constructors
+
+		protected TokenBase()
+		{
+		}
 
 		protected TokenBase(
 			TokenType tokenType)
@@ -144,10 +201,18 @@ namespace TurtleScript.Interpreter.Tokenize
 		#endregion Protected Methods
 
 
+		#region Private Constants
+
+		private const int VERSION = 1;
+
+		#endregion Private Constants
+
 		#region Private Fields
 
+		[CompactFormatter.Attributes.NotSerialized]
 		private static readonly TokenBase m_Default;
-		private readonly TokenType m_TokenType;
+
+		private TokenType m_TokenType;
 		private List<TokenBase> m_Children;
 
 		private int m_LineNumber;
@@ -155,5 +220,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 
 		#endregion Private Fields
+
+
 	}
 }

@@ -1,11 +1,19 @@
-﻿using System.Diagnostics;
+﻿#region Namespaces
+
+using System.Diagnostics;
+
 using TurtleScript.Interpreter.Tokenize.Execute;
+
+#endregion Namespaces
+
 
 namespace TurtleScript.Interpreter.Tokenize
 {
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenAssignment : TokenBase
 	{
-		private readonly string m_VariableName;
+
+		#region Public Constructors
 
 		public TokenAssignment(string variableName)
 			: base(TokenType.Assignment)
@@ -24,11 +32,21 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_VariableName = variableName;
 		}
 
+		#endregion Public Constructors
+
+
+		#region Public Properties
+
 		public string VariableName
 		{
 			[DebuggerStepThrough]
 			get { return m_VariableName; }
 		}
+
+		#endregion Public Properties
+
+
+		#region Public Methods
 
 		public override string ToTurtleScript()
 		{
@@ -43,5 +61,14 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			return TurtleScriptValue.VOID;
 		}
+
+		#endregion Public Methods
+
+
+		#region Private Fields
+
+		private readonly string m_VariableName;
+
+		#endregion Private Fields
 	}
 }

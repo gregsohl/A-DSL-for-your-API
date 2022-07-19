@@ -382,11 +382,6 @@ namespace TurtleScript.Interpreter.UnitTest
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
 			TurtleScriptExecutor executor = new TurtleScriptExecutor();
 
-			//Assert.Throws<TurtleScriptExecutionException>(() => 
-			//	executor.Execute(
-			//		rootToken,
-			//		context));
-
 			executor.Execute(
 				rootToken,
 				context);

@@ -2,6 +2,7 @@
 
 namespace TurtleScript.Interpreter.Tokenize
 {
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenScript : TokenBase
 	{
 		public TokenScript(

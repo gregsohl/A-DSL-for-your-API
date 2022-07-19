@@ -452,11 +452,11 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				elseIfTokens.Add(new Tuple<TokenBase, TokenBase>(elseIfExpression, elseIfBlock));
 			}
 
-			TokenBase elseStatement = null;
+			TokenBlock elseStatement = null;
 
 			if (context.elseStat() != null)
 			{
-				elseStatement = Visit(context.elseStat().block());
+				elseStatement = (TokenBlock)Visit(context.elseStat().block());
 			}
 
 			return new TokenIf(

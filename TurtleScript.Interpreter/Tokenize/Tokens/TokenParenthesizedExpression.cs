@@ -2,10 +2,11 @@
 
 namespace TurtleScript.Interpreter.Tokenize
 {
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenParenthesizedExpression
 		: TokenBase
 	{
-		private readonly TokenBase m_ChildExpression;
+		#region Public Constructors
 
 		public TokenParenthesizedExpression(
 			TokenBase childExpression,
@@ -15,13 +16,25 @@ namespace TurtleScript.Interpreter.Tokenize
 				lineNumber,
 				charPositionInLine)
 		{
-			m_ChildExpression = childExpression;
+			AddChild(childExpression);
+
+//			m_ChildExpression = childExpression;
 		}
+
+		#endregion Public Constructors
+
+
+		#region Public Properties
 
 		public TokenBase ChildExpression
 		{
-			get { return m_ChildExpression; }
+			get { return Children[0]; }
 		}
+
+		#endregion Public Properties
+
+
+		#region Public Methods
 
 		public override string ToTurtleScript()
 		{
@@ -32,5 +45,14 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			return ChildExpression.Visit(context);
 		}
+
+		#endregion Public Methods
+
+
+		#region Private Fields
+
+		// private readonly TokenBase m_ChildExpression;
+
+		#endregion Private Fields
 	}
 }

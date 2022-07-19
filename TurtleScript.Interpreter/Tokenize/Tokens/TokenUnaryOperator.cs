@@ -1,9 +1,18 @@
-﻿using TurtleScript.Interpreter.Tokenize.Execute;
+﻿#region Namespaces
+
+using TurtleScript.Interpreter.Tokenize.Execute;
+
+#endregion Namespaces
+
 
 namespace TurtleScript.Interpreter.Tokenize
 {
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenUnaryOperator : TokenBase
 	{
+
+		#region Public Constructors
+
 		public TokenUnaryOperator(
 			TokenType tokenType,
 			int lineNumber,
@@ -14,24 +23,16 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 		}
 
+		#endregion Public Constructors
+
+
+		#region Public Methods
+
 		public override string ToTurtleScript()
 		{
 			string right = Children[0].ToTurtleScript();
 
 			return $"{UnaryOperator(TokenType)}{right}";
-		}
-
-		private string UnaryOperator(TokenType tokenType)
-		{
-			switch (tokenType)
-			{
-				case TokenType.OpUnaryNegation:
-					return "-";
-				case TokenType.OpUnaryNot:
-					return "!";
-				default:
-					return "error";
-			}
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
@@ -56,5 +57,24 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		}
 
+		#endregion Public Methods
+
+
+		#region Private Methods
+
+		private string UnaryOperator(TokenType tokenType)
+		{
+			switch (tokenType)
+			{
+				case TokenType.OpUnaryNegation:
+					return "-";
+				case TokenType.OpUnaryNot:
+					return "!";
+				default:
+					return "error";
+			}
+		}
+
+		#endregion Private Methods
 	}
 }

@@ -1,5 +1,6 @@
 ﻿namespace TurtleScript.Interpreter.Tokenize
 {
+	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	public class TokenPi : TokenNumericValue
 	{
 		public TokenPi(
