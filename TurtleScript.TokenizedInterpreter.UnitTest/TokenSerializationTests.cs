@@ -11,7 +11,6 @@ using TurtleScript.Interpreter.Tokenize;
 
 #endregion Namespaces
 
-
 namespace TurtleScript.TokenizedInterpreter.UnitTest
 {
 	internal class TokenSerializationTests
@@ -260,6 +259,55 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			TokenParameterDeclaration param1 = new TokenParameterDeclaration("paramName1", 2, 4);
 			TokenParameterDeclaration param2 = new TokenParameterDeclaration("paramName2", 2, 8);
 			TokenParameterDeclarationList token = new TokenParameterDeclarationList(new []{param1, param2}, 2, 4);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_Script()
+		{
+			// Arrange
+			TokenScript token = new TokenScript(1, 2);
+			TokenBlock block = new TokenBlock(1, 2);
+			token.AddChild(block);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_UnaryOperator()
+		{
+			// Arrange
+			TokenUnaryOperator token = new TokenUnaryOperator(TokenType.OpUnaryNegation, 1, 1);
+			token.AddChild(new TokenNumericValue(50));
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_VariableReference()
+		{
+			// Arrange
+			TokenAssignment token = new TokenAssignment("destVar1", 5, 10);
+			token.AddChild(new TokenVariableReference("sourceVar1", 20, 25));
 
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);

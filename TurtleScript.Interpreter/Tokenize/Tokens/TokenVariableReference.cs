@@ -122,7 +122,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Private Constants
 
-
 		#region Private Fields
 
 		private string m_VariableName;
