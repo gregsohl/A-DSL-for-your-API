@@ -38,8 +38,12 @@ namespace TurtleScript.Interpreter
 
 		#endregion Public Constructors
 
+		#region Public Constants
+
 		public static readonly TurtleScriptValue NULL = new TurtleScriptValue();
 		public static readonly TurtleScriptValue VOID = new TurtleScriptValue();
+
+		#endregion Public Constants
 
 		#region Public Properties
 

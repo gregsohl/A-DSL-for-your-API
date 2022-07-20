@@ -47,10 +47,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			switch (TokenType)
 			{
 				case TokenType.OpUnaryNegation:
-					result = new TurtleScriptValue(-1 * rightValue.NumericValue);
+					result = -rightValue;
 					break;
 				case TokenType.OpUnaryNot:
-					result = new TurtleScriptValue(!rightValue.BooleanValue);
+					result = !rightValue;
 					break;
 				default:
 					result = TurtleScriptValue.NULL;

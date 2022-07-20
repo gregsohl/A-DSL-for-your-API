@@ -369,6 +369,147 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
+		[Category("Success")]
+		public void SimpleModulus()
+		{
+			// Arrange
+			var script = "a = 11 % 2";
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = 1;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
+
+			// Assert
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+		}
+
+		[Test]
+		[Category("Success")]
+		public void ComplexModulus()
+		{
+			// Arrange
+			var script = "a = 98 % 9 % 3";
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = 2;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
+
+			// Assert
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+		}
+
+		[Test]
+		[Category("Success")]
+		public void AdditionFirstThenModulus()
+		{
+			// Arrange
+			var script = "a = 10 + 10 % 3";
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = 11;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
+
+			// Assert
+			Assert.GreaterOrEqual(1, context.GlobalVariableCount);
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+		}
+
+		[Test]
+		[Category("Success")]
+		public void Negation()
+		{
+			// Arrange
+			var script = "a = -10";
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = -10;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+		}
+
+		[Test]
+		[Category("Success")]
+		public void NegationParenthesis()
+		{
+			// Arrange
+			var script = "a = -(5 + 5)";
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = -10;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+			executor.Execute(rootToken, context);
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+		}
+
+
+		[Test]
 		[Category("Error")]
 		public void SimpleAdditionMismatchedOperandTypes()
 		{
@@ -395,6 +536,5 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			Console.WriteLine($"Execution Error: {executor.ErrorMessage}");
 		}
-
 	}
 }
