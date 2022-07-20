@@ -39,7 +39,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Public Constructors
 
-
 		#region Public Properties
 
 		public string VariableName
@@ -49,7 +48,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		#endregion Public Properties
-
 
 		#region Public Methods
 

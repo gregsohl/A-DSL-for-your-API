@@ -1,6 +1,7 @@
 ﻿#region Namespaces
 
 using System;
+using System.Collections.Generic;
 
 using NUnit.Framework;
 
@@ -25,12 +26,9 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
-			TokenNumericValue reconstitutedToken =
-				(TokenNumericValue)TokenSerializer.DeserializeFromArray(serializedData);
-
 			// Assert
 			VerifySerialization(token,
-				reconstitutedToken);
+				serializedData);
 		}
 
 		[Test]
@@ -43,12 +41,9 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
-			TokenBooleanValue reconstitutedToken =
-				(TokenBooleanValue)TokenSerializer.DeserializeFromArray(serializedData);
-
 			// Assert
 			VerifySerialization(token,
-				reconstitutedToken);
+				serializedData);
 		}
 
 		[Test]
@@ -61,12 +56,9 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
-			TokenPi reconstitutedToken =
-				(TokenPi)TokenSerializer.DeserializeFromArray(serializedData);
-
 			// Assert
 			VerifySerialization(token,
-				reconstitutedToken);
+				serializedData);
 		}
 
 		[Test]
@@ -80,12 +72,9 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
-			TokenAssignment reconstitutedToken =
-				(TokenAssignment)TokenSerializer.DeserializeFromArray(serializedData);
-
 			// Assert
 			VerifySerialization(token,
-				reconstitutedToken);
+				serializedData);
 		}
 
 		[Test]
@@ -100,12 +89,9 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
-			TokenBinaryOperator reconstitutedToken =
-				(TokenBinaryOperator)TokenSerializer.DeserializeFromArray(serializedData);
-
 			// Assert
 			VerifySerialization(token,
-				reconstitutedToken);
+				serializedData);
 		}
 
 		[Test]
@@ -135,12 +121,9 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
-			TokenBlock reconstitutedToken =
-				(TokenBlock)TokenSerializer.DeserializeFromArray(serializedData);
-
 			// Assert
 			VerifySerialization(token,
-				reconstitutedToken);
+				serializedData);
 		}
 
 		[Test]
@@ -152,7 +135,7 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			TokenNumericValue endValue = new TokenNumericValue(10, 200, 300);
 			TokenBlock block = new TokenBlock(1, 2);
 			TokenAssignment assignment = new TokenAssignment("varname", 5, 10);
-			assignment.AddChild(new TokenVariableReference("varname", 20, 25));
+			assignment.AddChild(new TokenVariableReference("loopvar", 20, 25));
 			block.AddChild(assignment);
 
 			TokenForStatement token = new TokenForStatement("loopVar", startValue, endValue, block, 1, 2);
@@ -160,20 +143,141 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			// Act
 			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
-			TokenForStatement reconstitutedToken =
-				(TokenForStatement)TokenSerializer.DeserializeFromArray(serializedData);
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_FunctionCall()
+		{
+			// Arrange
+			TokenNumericValue param1 = new TokenNumericValue(5, 100, 200);
+			TokenNumericValue param2 = new TokenNumericValue(10, 200, 300);
+			TokenFunctionCall token = new TokenFunctionCall(
+				"function1",
+				new TokenBase[2] { param1, param2 },
+				1,
+				2);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
 
 			// Assert
 			VerifySerialization(token,
-				reconstitutedToken);
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_FunctionDeclaration()
+		{
+			// Arrange
+			TokenFunctionDeclaration token = new TokenFunctionDeclaration(
+				"function1",
+				new string[2] { "a", "b" },
+				1,
+				2);
+			TokenBlock functionBody = new TokenBlock(2, 4);
+			token.SetFunctionBody(functionBody);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_IfStatement()
+		{
+			// Arrange
+			TokenBooleanValue conditionalExpression = new TokenBooleanValue(true, 1, 1);
+
+			// Make a body
+			TokenBlock bodyBlock = new TokenBlock(1, 2);
+			TokenAssignment assignment = new TokenAssignment("destVar1", 5, 10);
+			assignment.AddChild(new TokenVariableReference("sourceVar1", 20, 25));
+			bodyBlock.AddChild(assignment);
+
+			// Make an ElseIf statement
+			List<Tuple<TokenBase, TokenBase>> elseIfTokens = new List<Tuple<TokenBase, TokenBase>>();
+			TokenBase elseIfExpression = new TokenBooleanValue(true, 1, 1);;
+
+			// Make a ElseIf Body
+			TokenBlock elseIfBody = new TokenBlock(1, 2);
+			assignment = new TokenAssignment("destVar2", 5, 10);
+			assignment.AddChild(new TokenVariableReference("sourceVar2", 20, 25));
+			elseIfBody.AddChild(assignment);
+
+			elseIfTokens.Add(new Tuple<TokenBase, TokenBase>(elseIfExpression, elseIfBody));
+
+			// Make an Else body
+			TokenBlock elseBody = new TokenBlock(1, 2);
+			assignment = new TokenAssignment("destVar3", 5, 10);
+			assignment.AddChild(new TokenVariableReference("sourceVar3", 20, 25));
+			elseBody.AddChild(assignment);
+
+			TokenIf token = new TokenIf(
+				elseIfBody,
+				conditionalExpression,
+				elseIfTokens,
+				elseBody,
+				1,
+				2);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_ParameterDeclaration()
+		{
+			// Arrange
+			TokenParameterDeclaration token = new TokenParameterDeclaration("paramName1", 2, 4);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
+		public void SerializeDeserialize_ParameterDeclarationList()
+		{
+			// Arrange
+			TokenParameterDeclaration param1 = new TokenParameterDeclaration("paramName1", 2, 4);
+			TokenParameterDeclaration param2 = new TokenParameterDeclaration("paramName2", 2, 8);
+			TokenParameterDeclarationList token = new TokenParameterDeclarationList(new []{param1, param2}, 2, 4);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
 		}
 
 		#region Private Methods
 
 		private static void VerifySerialization(
 			TokenBase token,
-			TokenBase reconstitutedToken)
+			byte[] serializedData)
 		{
+			TokenBase reconstitutedToken =
+				(TokenBase)TokenSerializer.DeserializeFromArray(serializedData);
+
 			CompareLogic compareLogic = new CompareLogic();
 			ComparisonResult comparisonResult = compareLogic.Compare(
 				token,

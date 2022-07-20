@@ -6,12 +6,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-using CompactFormatter.Interfaces;
-
 using TurtleScript.Interpreter.Tokenize.Execute;
 
 #endregion Namespaces
-
 
 namespace TurtleScript.Interpreter.Tokenize
 {
@@ -20,6 +17,10 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 
 		#region Public Constructors
+
+		public TokenIf()
+		{
+		}
 
 		public TokenIf(
 			TokenBlock block,
@@ -39,7 +40,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		#endregion Public Constructors
-
 
 		#region Public Properties
 
@@ -68,7 +68,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		#endregion Public Properties
-
 
 		#region Public Methods
 
@@ -144,20 +143,19 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			StringBuilder turtleScript = new StringBuilder($"if ({conditionalExpressionTurtleScript}) Do\r\n");
 			Block.ToTurtleScript(turtleScript, indent);
-			// AppendBlockToStatementScript(block, turtleScript, indent);
+			turtleScript.AppendLine();
 
 			foreach (Tuple<TokenBase, TokenBase> elseIf in ElseIf)
 			{
 				indent++;
-				turtleScript.AppendLine($"{new string('\t', indent)}elseif ({conditionalExpressionTurtleScript}) Do");
-				//elseIf.Item2.ToTurtleScript(turtleScript, indent);
-				//AppendBlockToStatementScript(elseIf.Item2, turtleScript, indent);
+				turtleScript.AppendLine($"{new string('\t', indent)}elseif ({elseIf.Item1.ToTurtleScript()}) Do");
+				turtleScript.AppendLine(elseIf.Item2.ToTurtleScript());
 			}
 
 			if (ElseStatement != null)
 			{
 				turtleScript.AppendLine($"{new string('\t', indent)}else");
-				//AppendBlockToStatementScript(ElseStatement.ToTurtleScript(), turtleScript, indent);
+				turtleScript.AppendLine($"{new string('\t', indent)}{ElseStatement.ToTurtleScript()}");
 			}
 
 			turtleScript.AppendLine("end");

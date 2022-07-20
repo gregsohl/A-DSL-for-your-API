@@ -18,6 +18,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Public Constructors
 
+		public TokenParameterDeclaration()
+		{
+		}
+
 		public TokenParameterDeclaration(string parameterName,
 			int lineNumber,
 			int charPositionInLine)
@@ -30,7 +34,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Public Constructors
 
-
 		#region Public Properties
 
 		public string ParameterName
@@ -39,7 +42,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		#endregion Public Properties
-
 
 		#region Public Methods
 
@@ -53,6 +55,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			CompactFormatter.CompactFormatter parent,
 			Stream stream)
 		{
+			base.ReceiveObjectData(
+				parent,
+				stream);
+
 			int version = (int)parent.Deserialize(stream);
 
 			m_ParameterName = (string)parent.Deserialize(stream);
@@ -68,6 +74,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			CompactFormatter.CompactFormatter parent,
 			Stream stream)
 		{
+			base.SendObjectData(
+				parent,
+				stream);
+
 			parent.Serialize(stream, VERSION);
 
 			parent.Serialize(stream, m_ParameterName);
@@ -104,6 +114,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Public Constructors
 
+		public TokenParameterDeclarationList()
+		{
+		}
+
 		public TokenParameterDeclarationList(TokenParameterDeclaration[] parameters,
 			int lineNumber,
 			int charPositionInLine)
@@ -139,6 +153,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			CompactFormatter.CompactFormatter parent,
 			Stream stream)
 		{
+			base.ReceiveObjectData(
+				parent,
+				stream);
+
 			int version = (int)parent.Deserialize(stream);
 
 			m_Parameters = (TokenParameterDeclaration[])parent.Deserialize(stream);
@@ -154,6 +172,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			CompactFormatter.CompactFormatter parent,
 			Stream stream)
 		{
+			base.SendObjectData(
+				parent,
+				stream);
+
 			parent.Serialize(stream, VERSION);
 
 			parent.Serialize(stream, m_Parameters);

@@ -25,6 +25,10 @@ namespace TurtleScript.Interpreter.Tokenize
 				Array.Empty<TokenBase>());
 		}
 
+		public TokenFunctionCall()
+		{
+		}
+
 		public TokenFunctionCall(
 			string functionName,
 			TokenBase[] parameters)
