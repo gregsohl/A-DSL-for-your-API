@@ -17,18 +17,24 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		#region Public Constructors
 
 		public TurtleScriptTokenizer(
-			string script, 
-			List<ITurtleScriptRuntime> runtimeLibraries = null)
+			string script)
+			: this(
+				script,
+				new TurtleScriptParserContext())
+		{
+		}
+
+		public TurtleScriptTokenizer(
+			string script,
+			TurtleScriptParserContext parserContext)
 		{
 			m_Script = script;
 
-			m_RuntimeLibraries = runtimeLibraries ?? new List<ITurtleScriptRuntime>();
-
 			m_TurtleScriptErrorListener = new TurtleScriptErrorListener();
-			// m_VariablesDeclared = new Dictionary<string, TokenBase>();
-			m_TurtleScriptParserContext = new TurtleScriptParserContext();
+			m_TurtleScriptParserContext = parserContext ?? new TurtleScriptParserContext();
 			m_ScriptFunctions = new TurtleScriptFunctions<TurtleScriptParserFunction>();
 		}
+
 
 		#endregion Public Constructors
 
@@ -669,7 +675,6 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		private TurtleScriptFunctions<TurtleScriptParserFunction> m_ScriptFunctions;
 		private TurtleScriptErrorListener m_TurtleScriptErrorListener;
 		private TurtleScriptParserContext m_TurtleScriptParserContext;
-		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 
 		#endregion Private Fields
 

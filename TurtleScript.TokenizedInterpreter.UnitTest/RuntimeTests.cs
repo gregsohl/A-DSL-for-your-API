@@ -26,12 +26,18 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			const string VARIABLE_NAME = "a";
 			const double EXPECTED_VALUE = 4;
 
-			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder
-				.ToString(),
-				new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+			// Create the Parser
+			TurtleScriptParserContext parserContext =
+				new TurtleScriptParserContext(
+					new List<ITurtleScriptRuntime> { new SampleRuntime() });
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(
+				scriptBuilder.ToString(),
+				parserContext);
+
+			// Create the Executor
 			TurtleScriptExecutionContext context =
 				new TurtleScriptExecutionContext(
-					new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+					new List<ITurtleScriptRuntime> { new SampleRuntime() });
 			TurtleScriptExecutor executor = new TurtleScriptExecutor();
 
 
@@ -65,12 +71,17 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			const string VARIABLE_NAME = "a";
 			const double EXPECTED_VALUE = 12;
 
-			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder
-					.ToString(),
-				new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+			// Create the Parser
+			TurtleScriptParserContext parserContext =
+				new TurtleScriptParserContext(
+					new List<ITurtleScriptRuntime> { new SampleRuntime() });
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(
+				scriptBuilder.ToString(),
+				parserContext);
+
 			TurtleScriptExecutionContext context =
 				new TurtleScriptExecutionContext(
-					new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+					new List<ITurtleScriptRuntime> { new SampleRuntime() });
 			TurtleScriptExecutor executor = new TurtleScriptExecutor();
 
 

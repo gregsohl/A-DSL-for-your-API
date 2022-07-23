@@ -10,6 +10,10 @@ using TurtleScript.Interpreter;
 
 using ScriptedTurtle.Runtime;
 
+using TurtleScript.Interpreter.Tokenize;
+using TurtleScript.Interpreter.Tokenize.Execute;
+using TurtleScript.Interpreter.Tokenize.Parse;
+
 #endregion Namespaces
 
 namespace ScriptedTurtle
@@ -207,7 +211,10 @@ namespace ScriptedTurtle
 			var runtimeFunctions = new ScriptedTurtleFunctions();
 			var mathRuntimeFunctions = new TurtleMath();
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(txtScript.Text, new List<ITurtleScriptRuntime> {runtimeFunctions, mathRuntimeFunctions});
+			TurtleScriptInterpreter interpreter =
+				new TurtleScriptInterpreter(
+					txtScript.Text,
+					new List<ITurtleScriptRuntime> { runtimeFunctions, mathRuntimeFunctions });
 
 			buttonExecute.Enabled = false;
 
@@ -230,6 +237,51 @@ namespace ScriptedTurtle
 					interpreter.ErrorMessage,
 					"Error");
 			}
+
+			UpdateStatusBar();
+		}
+
+		private void buttonRunTokenized_Click(object sender, EventArgs e)
+		{
+			var runtimeFunctions = new ScriptedTurtleFunctions();
+			var mathRuntimeFunctions = new TurtleMath();
+
+			TurtleScriptParserContext parserContext =
+				new TurtleScriptParserContext(
+					new List<ITurtleScriptRuntime> { runtimeFunctions, mathRuntimeFunctions });
+			TurtleScriptTokenizer parser = new TurtleScriptTokenizer(
+				txtScriptTokenized.Text,
+				parserContext);
+
+			TurtleScriptExecutionContext executionContext = new TurtleScriptExecutionContext(
+				new List<ITurtleScriptRuntime> { runtimeFunctions, mathRuntimeFunctions });
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+
+
+			buttonExecute.Enabled = false;
+
+			bool result;
+			Cursor = Cursors.WaitCursor;
+
+			try
+			{
+				bool parserResult = parser.Parse(out TokenBase scriptToken);
+
+				if (!parserResult)
+				{
+					MessageBox.Show(this,
+						parser.ErrorMessage,
+						"Error");
+				}
+
+				executor.Execute(scriptToken, executionContext);
+			}
+			finally
+			{
+				buttonExecute.Enabled = true;
+				Cursor = Cursors.Default;
+			}
+
 
 			UpdateStatusBar();
 		}

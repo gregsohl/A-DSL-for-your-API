@@ -12,10 +12,10 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		#region Public Constructors
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public TurtleScriptParserContext()
+		public TurtleScriptParserContext(
+			List<ITurtleScriptRuntime> runtimeLibraries = null)
 		{
-			m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
-			m_ScriptFunctions = new Dictionary<string, TurtleScriptParserFunction>();
+			m_RuntimeLibraries = runtimeLibraries ?? new List<ITurtleScriptRuntime>();
 			m_GlobalScope = new TurtleScriptParserScope(0, "Global");
 			m_ScopeStack = new Stack<TurtleScriptParserScope>();
 
@@ -153,6 +153,21 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			return false;
 		}
 
+		public bool TryGetRuntimeFunction(
+			ITurtleScriptRuntime runtime,
+			string functionName,
+			int parameterCount,
+			out TurtleScriptRuntimeFunction function)
+		{
+			var functionIdentifier = TurtleScriptFunctionBase.CreateFunctionIdentifier(
+				functionName,
+				parameterCount);
+
+			return runtime.Functions.TryGetValue(functionIdentifier, out function);
+		}
+
+
+
 		#endregion Public Methods
 
 
@@ -162,7 +177,6 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private readonly Stack<TurtleScriptParserScope> m_ScopeStack;
 		private TurtleScriptParserScope m_CurrentScope;
-		private Dictionary<string, TurtleScriptParserFunction> m_ScriptFunctions;
 
 		#endregion Private Fields
 	}
