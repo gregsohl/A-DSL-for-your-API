@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace TurtleScript.Interpreter.UnitTest
+using TurtleScript.Interpreter;
+
+namespace TurtleScript.TokenizedInterpreter.UnitTest
 {
 	public class SampleRuntime : ITurtleScriptRuntime
 	{

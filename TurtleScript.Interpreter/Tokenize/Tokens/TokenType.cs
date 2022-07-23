@@ -32,5 +32,6 @@
 		ParameterList,
 		Parameter,
 		FunctionDecl,
+		FunctionCall,
 	}
 }

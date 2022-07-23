@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 
+using System;
 using System.Collections.Generic;
 
 #endregion Namespaces
@@ -133,6 +134,23 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 			m_CurrentScope = new TurtleScriptParserScope(level, name);
 			m_ScopeStack.Push(m_CurrentScope);
+		}
+
+		public bool TryGetRuntimeLibrary(
+			string runtimeName,
+			out ITurtleScriptRuntime foundRuntime)
+		{
+			foreach (ITurtleScriptRuntime turtleScriptRuntime in m_RuntimeLibraries)
+			{
+				if (turtleScriptRuntime.Namespace == runtimeName)
+				{
+					foundRuntime = turtleScriptRuntime;
+					return true;
+				}
+			}
+
+			foundRuntime = null;
+			return false;
 		}
 
 		#endregion Public Methods

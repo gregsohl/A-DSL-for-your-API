@@ -2,13 +2,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
+using TurtleScript.Interpreter;
+using TurtleScript.Interpreter.Tokenize;
+using TurtleScript.Interpreter.Tokenize.Execute;
+using TurtleScript.Interpreter.Tokenize.Parse;
+
 #endregion Namespaces
 
-namespace TurtleScript.Interpreter.UnitTest
+namespace TurtleScript.TokenizedInterpreter.UnitTest
 {
 	public class RuntimeTests
 	{
@@ -19,18 +23,36 @@ namespace TurtleScript.Interpreter.UnitTest
 			StringBuilder scriptBuilder = new StringBuilder();
 			scriptBuilder.AppendLine("a = test.square(2)");
 
-            TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(
-                scriptBuilder.ToString(),
-                new List<ITurtleScriptRuntime>() {new SampleRuntime()});
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = 4;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder
+				.ToString(),
+				new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+			TurtleScriptExecutionContext context =
+				new TurtleScriptExecutionContext(
+					new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+
 
 			// Act
-			bool success = interpreter.Execute();
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			executor.Execute(rootToken, context);
 
 			// Assert
+			// Parser Success
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["a"];
-			Assert.AreEqual(4, variableValue.NumericValue);
+			// Executor Success
+			Assert.IsFalse(executor.IsError, interpreter.ErrorMessage);
+
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 
 		[Test]
@@ -40,16 +62,36 @@ namespace TurtleScript.Interpreter.UnitTest
 			StringBuilder scriptBuilder = new StringBuilder();
 			scriptBuilder.AppendLine("a = test.sum(2, 4, 6)");
 
-			TurtleScriptInterpreter interpreter = new TurtleScriptInterpreter(scriptBuilder.ToString(), new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+			const string VARIABLE_NAME = "a";
+			const double EXPECTED_VALUE = 12;
+
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder
+					.ToString(),
+				new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+			TurtleScriptExecutionContext context =
+				new TurtleScriptExecutionContext(
+					new List<ITurtleScriptRuntime>() { new SampleRuntime() });
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+
 
 			// Act
-			bool success = interpreter.Execute();
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			executor.Execute(rootToken, context);
 
 			// Assert
+			// Parser Success
 			Assert.IsTrue(success, interpreter.ErrorMessage);
 
-			TurtleScriptValue variableValue = interpreter.Variables["a"];
-			Assert.AreEqual(12, variableValue.NumericValue);
+			// Executor Success
+			Assert.IsFalse(executor.IsError, interpreter.ErrorMessage);
+
+			var variableValue = context.GetVariableValue(VARIABLE_NAME);
+			Assert.IsTrue(variableValue.IsNumeric);
+			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -12,13 +13,14 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 		#region Public Constructors
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public TurtleScriptExecutionContext()
+		public TurtleScriptExecutionContext(
+			List<ITurtleScriptRuntime> runtimeLibraries = null)
 		{
 			m_GlobalScope = new TurtleScriptExecutionScope(0, "Global");
 			m_ScopeStack = new Stack<TurtleScriptExecutionScope>();
 			m_CurrentScope = null;
 
-			m_RuntimeLibraries = new List<ITurtleScriptRuntime>();
+			m_RuntimeLibraries = runtimeLibraries ?? new List<ITurtleScriptRuntime>();
 			m_Functions = new TurtleScriptFunctions<TurtleScriptExecutionFunction>();
 		}
 
@@ -277,6 +279,36 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 			}
 
 			return false;
+		}
+
+		public bool TryGetRuntimeLibrary(
+			string runtimeName,
+			out ITurtleScriptRuntime runtime)
+		{
+			runtime = null;
+			foreach (ITurtleScriptRuntime turtleScriptRuntime in m_RuntimeLibraries)
+			{
+				if (turtleScriptRuntime.Namespace == runtimeName)
+				{
+					runtime = turtleScriptRuntime;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool TryGetRuntimeFunction(
+			ITurtleScriptRuntime runtime,
+			string functionName,
+			int parameterCount,
+			out TurtleScriptRuntimeFunction function)
+		{
+			var functionIdentifier = TurtleScriptFunctionBase.CreateFunctionIdentifier(
+				functionName,
+				parameterCount);
+
+			return runtime.Functions.TryGetValue(functionIdentifier, out function);
 		}
 
 		#endregion Public Methods

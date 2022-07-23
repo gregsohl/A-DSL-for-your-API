@@ -605,7 +605,7 @@ namespace TurtleScript.Interpreter
 			throw new InvalidOperationException(string.Format("Invalid function name in runtime. Line {0}, Column {1}", context.Start.Line, context.Start.Column));
 		}
 
-		private ITurtleScriptRuntime GetRuntimeLibrary(
+		public ITurtleScriptRuntime GetRuntimeLibrary(
 			TurtleScriptParser.FunctionCallContext context,
 			string runtimeName)
 		{

@@ -1,6 +1,7 @@
 ﻿#region Namespaces
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -12,6 +13,12 @@ using TurtleScript.Interpreter.Tokenize.Execute;
 
 namespace TurtleScript.Interpreter.Tokenize
 {
+	public enum FunctionType
+	{
+		Runtime,
+		UserDefined,
+	}
+
 	[CompactFormatter.Attributes.Serializable(Custom = true)]
 	internal class TokenFunctionCall : TokenBase
 	{
@@ -22,24 +29,13 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			m_Default = new TokenFunctionCall(
 				string.Empty,
-				Array.Empty<TokenBase>());
+				Array.Empty<TokenBase>(),
+				0,
+				0);
 		}
 
 		public TokenFunctionCall()
 		{
-		}
-
-		public TokenFunctionCall(
-			string functionName,
-			TokenBase[] parameters)
-			: this(
-				functionName,
-				parameters,
-				0,
-				0)
-		{
-			m_FunctionName = functionName;
-			m_Parameters = parameters;
 		}
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
@@ -48,12 +44,29 @@ namespace TurtleScript.Interpreter.Tokenize
 			TokenBase[] parameters,
 			int lineNumber,
 			int charPositionInLine)
-			: base(TokenType.FunctionDecl,
+			: this(
+				functionName,
+				parameters,
+				FunctionType.UserDefined,
+				lineNumber,
+				charPositionInLine)
+		{
+		}
+
+		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+		public TokenFunctionCall(
+			string functionName,
+			TokenBase[] parameters,
+			FunctionType functionType,
+			int lineNumber,
+			int charPositionInLine)
+			: base(TokenType.FunctionCall,
 				lineNumber,
 				charPositionInLine)
 		{
 			m_FunctionName = functionName;
 			m_Parameters = parameters;
+			m_FunctionType = functionType;
 		}
 
 		#endregion Public Constructors
@@ -78,7 +91,6 @@ namespace TurtleScript.Interpreter.Tokenize
 		}
 
 		#endregion Public Properties
-
 
 		#region Public Methods
 
@@ -146,31 +158,73 @@ namespace TurtleScript.Interpreter.Tokenize
 		{
 			TurtleScriptValue result = TurtleScriptValue.NULL;
 
-			// Find the function, if it exists.
-			if (context.TryGetFunction(
-					m_FunctionName,
-					m_Parameters.Length,
-					out TokenFunctionDeclaration function))
+			if (m_FunctionType == FunctionType.UserDefined)
 			{
-				context.PushScope(m_FunctionName);
-
-				for (var parameterIndex = 0; parameterIndex < m_Parameters.Length; parameterIndex++)
+				// Find the function, if it exists.
+				if (context.TryGetFunction(
+						m_FunctionName,
+						m_Parameters.Length,
+						out TokenFunctionDeclaration function))
 				{
-					TokenBase parameter = m_Parameters[parameterIndex];
-					string parameterName = function.ParameterNames[parameterIndex];
-					TurtleScriptValue parameterValue = parameter.Visit(context);
-					context.SetVariableValue(parameterName, VariableType.Parameter, null, parameterValue);
+					context.PushScope(m_FunctionName);
+
+					for (var parameterIndex = 0; parameterIndex < m_Parameters.Length; parameterIndex++)
+					{
+						TokenBase parameter = m_Parameters[parameterIndex];
+						string parameterName = function.ParameterNames[parameterIndex];
+						TurtleScriptValue parameterValue = parameter.Visit(context);
+						context.SetVariableValue(parameterName, VariableType.Parameter, null, parameterValue);
+					}
+
+					result = function.FunctionBody.Visit(context);
+
+					context.PopScope();
 				}
-
-				result = function.FunctionBody.Visit(context);
-
-				context.PopScope();
 			}
 
-			// Push scope onto the context
-			// Register parameter values in the context
-			// Call the function body
-			//context.G
+			if (m_FunctionType == FunctionType.Runtime)
+			{
+				string[] identifierParts = m_FunctionName.Split('.');
+
+				string runtimeName = identifierParts[0];
+				string functionName = identifierParts[1];
+
+
+				if (context.TryGetRuntimeLibrary(
+						runtimeName,
+						out ITurtleScriptRuntime runtime))
+				{
+					TurtleScriptRuntimeFunction function;
+					if (context.TryGetRuntimeFunction(
+							runtime,
+							functionName,
+							m_Parameters.Length,
+							out function))
+					{
+
+						List<TurtleScriptValue> functionParameters = new List<TurtleScriptValue>();
+
+						for (var parameterIndex = 0; parameterIndex < m_Parameters.Length; parameterIndex++)
+						{
+							TokenBase parameter = m_Parameters[parameterIndex];
+							TurtleScriptValue parameterValue = parameter.Visit(context);
+							functionParameters.Add(parameterValue);
+						}
+
+						result = function.Function(functionParameters);
+					}
+					else
+					{
+						throw new TurtleScriptExecutionException(
+							$"Invalid runtime function name '{m_FunctionName}' specified on function call. Line {LineNumber}, Column {CharPositionInLine}");
+					}
+				}
+				else
+				{
+					throw new TurtleScriptExecutionException(
+						$"Invalid runtime library name '{runtimeName}' specified on function call. Line {LineNumber}, Column {CharPositionInLine}");
+				}
+			}
 
 			return result;
 		}
@@ -190,6 +244,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		private string m_FunctionName;
 		private TokenBase[] m_Parameters;
+		private readonly FunctionType m_FunctionType;
 
 		#endregion Private Fields
 	}

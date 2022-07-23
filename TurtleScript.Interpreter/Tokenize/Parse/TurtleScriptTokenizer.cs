@@ -282,18 +282,27 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 
 		public override TokenBase VisitFunctionCall(TurtleScriptParser.FunctionCallContext context)
 		{
+			TurtleScriptParser.ExpressionContext[] parameterExpressions =
+				Array.Empty<TurtleScriptParser.ExpressionContext>();
+
+			if (context.expressionList() != null)
+			{
+				parameterExpressions = context.expressionList().expression();
+			}
+
+			List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
+			List<TokenBase> parameterTokens = new List<TokenBase>(parameterContexts.Count);
+
+			for (int parameterIndex = 0; parameterIndex < parameterContexts.Count; parameterIndex++)
+			{
+				TokenBase parameterToken = Visit(parameterContexts[parameterIndex]);
+				parameterTokens.Add(parameterToken);
+			}
+
 			if (context.Identifier() != null)
 			{
 				// User Defined Function
 				string functionCallName = context.Identifier().GetText();
-
-				TurtleScriptParser.ExpressionContext[] parameterExpressions =
-					Array.Empty<TurtleScriptParser.ExpressionContext>();
-
-				if (context.expressionList() != null)
-				{
-					parameterExpressions = context.expressionList().expression();
-				}
 
 				if (m_ScriptFunctions.TryGetFunction(
 						functionCallName,
@@ -314,15 +323,6 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 						return TokenBase.Default;
 					}
 
-					List<TurtleScriptParser.ExpressionContext> parameterContexts = parameterExpressions.ToList();
-					List<TokenBase> parameterTokens = new List<TokenBase>(parameterContexts.Count);
-
-					for (int parameterIndex = 0; parameterIndex < parameterContexts.Count; parameterIndex++)
-					{
-						TokenBase parameterToken = Visit(parameterContexts[parameterIndex]);
-						parameterTokens.Add(parameterToken);
-					}
-
 					TokenFunctionCall result = new TokenFunctionCall(
 						functionCallName,
 						parameterTokens.ToArray(),
@@ -333,19 +333,26 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 				}
 			}
 
-			//if (context.QualifiedIdentifier() != null)
-			//{
-			//	string fullIdentifier = context.QualifiedIdentifier().GetText();
-			//	string[] identifierParts = fullIdentifier.Split('.');
+			if (context.QualifiedIdentifier() != null)
+			{
+				string fullIdentifier = context.QualifiedIdentifier().GetText();
+				string[] identifierParts = fullIdentifier.Split('.');
 
-			//	string runtimeName = identifierParts[0];
-			//	string functionName = identifierParts[1];
+				string runtimeName = identifierParts[0];
+				string functionName = identifierParts[1];
 
-			//	ITurtleScriptRuntime runtime = GetRuntimeLibrary(context, runtimeName);
-			//	TurtleScriptValue returnValue = CallRuntimeFunction(context, runtime, functionName);
+				bool runtimeFound = m_TurtleScriptParserContext.TryGetRuntimeLibrary(
+					runtimeName, out ITurtleScriptRuntime runtime);
 
-			//	return returnValue;
-			//}
+				TokenFunctionCall result = new TokenFunctionCall(
+					fullIdentifier,
+					parameterTokens.ToArray(),
+					FunctionType.Runtime,
+					context.Start.Line,
+					context.Start.Column);
+
+				return result;
+			}
 
 			m_TurtleScriptErrorListener.SyntaxError(
 				m_Parser,
@@ -682,35 +689,6 @@ namespace TurtleScript.Interpreter.Tokenize.Parse
 			}
 		}
 
-		/*
-		private bool TryGetFunction(
-			TurtleScriptParser.FunctionCallContext context,
-			out TurtleScriptParserFunction function)
-		{
-			function = null;
-			var functionCallName = context.Identifier().GetText();
-
-			int parameterCount = 0;
-			if (context.expressionList() != null)
-			{
-				parameterCount = context.expressionList().expression().Length;
-			}
-
-			functionCallName += "_" + parameterCount;
-
-			foreach (var functionToTest in m_ScriptFunctions)
-			{
-				if ((functionToTest.Key == functionCallName) &&
-					(functionToTest.Value.Parameters.Count == parameterCount))
-				{
-					function = functionToTest.Value;
-					return true;
-				}
-			}
-
-			return false;
-		}
-		*/
 
 		#endregion Private Methods
 
