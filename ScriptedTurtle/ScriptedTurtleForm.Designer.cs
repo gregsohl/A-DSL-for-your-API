@@ -46,21 +46,37 @@
 			this.PenColor = new System.Windows.Forms.ToolStripStatusLabel();
 			this.PenSize = new System.Windows.Forms.ToolStripStatusLabel();
 			this.serviceController1 = new System.ServiceProcess.ServiceController();
+			this.panelSurface = new System.Windows.Forms.Panel();
+			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.buttonExecute = new System.Windows.Forms.Button();
 			this.txtScript = new System.Windows.Forms.TextBox();
-			this.panelSurface = new System.Windows.Forms.Panel();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.buttonRunTokenized = new System.Windows.Forms.Button();
+			this.buttonLoadTokenized = new System.Windows.Forms.Button();
+			this.buttonSaveTokenized = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.statusBar.SuspendLayout();
+			this.tabControl1.SuspendLayout();
+			this.tabPage1.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			this.panel2.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// buttonDraw
 			// 
-			this.buttonDraw.Location = new System.Drawing.Point(15, 11);
-			this.buttonDraw.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonDraw.Location = new System.Drawing.Point(11, 9);
 			this.buttonDraw.Name = "buttonDraw";
-			this.buttonDraw.Size = new System.Drawing.Size(104, 43);
+			this.buttonDraw.Size = new System.Drawing.Size(78, 35);
 			this.buttonDraw.TabIndex = 0;
 			this.buttonDraw.Text = "Draw";
 			this.buttonDraw.UseVisualStyleBackColor = true;
@@ -68,10 +84,9 @@
 			// 
 			// buttonDrawSpiral
 			// 
-			this.buttonDrawSpiral.Location = new System.Drawing.Point(15, 62);
-			this.buttonDrawSpiral.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonDrawSpiral.Location = new System.Drawing.Point(11, 50);
 			this.buttonDrawSpiral.Name = "buttonDrawSpiral";
-			this.buttonDrawSpiral.Size = new System.Drawing.Size(104, 43);
+			this.buttonDrawSpiral.Size = new System.Drawing.Size(78, 35);
 			this.buttonDrawSpiral.TabIndex = 0;
 			this.buttonDrawSpiral.Text = "Spiral";
 			this.buttonDrawSpiral.UseVisualStyleBackColor = true;
@@ -79,10 +94,9 @@
 			// 
 			// buttonReset
 			// 
-			this.buttonReset.Location = new System.Drawing.Point(15, 112);
-			this.buttonReset.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonReset.Location = new System.Drawing.Point(11, 91);
 			this.buttonReset.Name = "buttonReset";
-			this.buttonReset.Size = new System.Drawing.Size(104, 43);
+			this.buttonReset.Size = new System.Drawing.Size(78, 35);
 			this.buttonReset.TabIndex = 1;
 			this.buttonReset.Text = "Reset";
 			this.buttonReset.UseVisualStyleBackColor = true;
@@ -90,10 +104,9 @@
 			// 
 			// buttonShowHideTurtle
 			// 
-			this.buttonShowHideTurtle.Location = new System.Drawing.Point(15, 162);
-			this.buttonShowHideTurtle.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonShowHideTurtle.Location = new System.Drawing.Point(11, 132);
 			this.buttonShowHideTurtle.Name = "buttonShowHideTurtle";
-			this.buttonShowHideTurtle.Size = new System.Drawing.Size(104, 42);
+			this.buttonShowHideTurtle.Size = new System.Drawing.Size(78, 34);
 			this.buttonShowHideTurtle.TabIndex = 2;
 			this.buttonShowHideTurtle.Text = "Hide &Turtle";
 			this.buttonShowHideTurtle.UseVisualStyleBackColor = true;
@@ -113,17 +126,15 @@
 			this.panel1.Controls.Add(this.buttonDrawSpiral);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
-			this.panel1.Margin = new System.Windows.Forms.Padding(4);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(135, 885);
+			this.panel1.Size = new System.Drawing.Size(101, 716);
 			this.panel1.TabIndex = 4;
 			// 
 			// buttonBackward
 			// 
-			this.buttonBackward.Location = new System.Drawing.Point(15, 463);
-			this.buttonBackward.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonBackward.Location = new System.Drawing.Point(11, 376);
 			this.buttonBackward.Name = "buttonBackward";
-			this.buttonBackward.Size = new System.Drawing.Size(104, 43);
+			this.buttonBackward.Size = new System.Drawing.Size(78, 35);
 			this.buttonBackward.TabIndex = 8;
 			this.buttonBackward.Text = "&Backward";
 			this.buttonBackward.UseVisualStyleBackColor = true;
@@ -131,10 +142,9 @@
 			// 
 			// buttonForward
 			// 
-			this.buttonForward.Location = new System.Drawing.Point(15, 412);
-			this.buttonForward.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonForward.Location = new System.Drawing.Point(11, 335);
 			this.buttonForward.Name = "buttonForward";
-			this.buttonForward.Size = new System.Drawing.Size(104, 43);
+			this.buttonForward.Size = new System.Drawing.Size(78, 35);
 			this.buttonForward.TabIndex = 7;
 			this.buttonForward.Text = "&Forward";
 			this.buttonForward.UseVisualStyleBackColor = true;
@@ -142,10 +152,9 @@
 			// 
 			// buttonPenSize
 			// 
-			this.buttonPenSize.Location = new System.Drawing.Point(15, 362);
-			this.buttonPenSize.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonPenSize.Location = new System.Drawing.Point(11, 294);
 			this.buttonPenSize.Name = "buttonPenSize";
-			this.buttonPenSize.Size = new System.Drawing.Size(104, 43);
+			this.buttonPenSize.Size = new System.Drawing.Size(78, 35);
 			this.buttonPenSize.TabIndex = 6;
 			this.buttonPenSize.Text = "Pen &Size";
 			this.buttonPenSize.UseVisualStyleBackColor = true;
@@ -153,10 +162,9 @@
 			// 
 			// buttonColor
 			// 
-			this.buttonColor.Location = new System.Drawing.Point(15, 311);
-			this.buttonColor.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonColor.Location = new System.Drawing.Point(11, 253);
 			this.buttonColor.Name = "buttonColor";
-			this.buttonColor.Size = new System.Drawing.Size(104, 43);
+			this.buttonColor.Size = new System.Drawing.Size(78, 35);
 			this.buttonColor.TabIndex = 5;
 			this.buttonColor.Text = "Pen &Color";
 			this.buttonColor.UseVisualStyleBackColor = true;
@@ -164,10 +172,9 @@
 			// 
 			// buttonPenStatus
 			// 
-			this.buttonPenStatus.Location = new System.Drawing.Point(15, 262);
-			this.buttonPenStatus.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonPenStatus.Location = new System.Drawing.Point(11, 213);
 			this.buttonPenStatus.Name = "buttonPenStatus";
-			this.buttonPenStatus.Size = new System.Drawing.Size(104, 42);
+			this.buttonPenStatus.Size = new System.Drawing.Size(78, 34);
 			this.buttonPenStatus.TabIndex = 4;
 			this.buttonPenStatus.Text = "Pen &Up";
 			this.buttonPenStatus.UseVisualStyleBackColor = true;
@@ -175,10 +182,9 @@
 			// 
 			// buttonSetAngle
 			// 
-			this.buttonSetAngle.Location = new System.Drawing.Point(15, 212);
-			this.buttonSetAngle.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonSetAngle.Location = new System.Drawing.Point(11, 172);
 			this.buttonSetAngle.Name = "buttonSetAngle";
-			this.buttonSetAngle.Size = new System.Drawing.Size(104, 43);
+			this.buttonSetAngle.Size = new System.Drawing.Size(78, 35);
 			this.buttonSetAngle.TabIndex = 3;
 			this.buttonSetAngle.Text = "&Angle";
 			this.buttonSetAngle.UseVisualStyleBackColor = true;
@@ -193,98 +199,239 @@
             this.PenStatus,
             this.PenColor,
             this.PenSize});
-			this.statusBar.Location = new System.Drawing.Point(135, 860);
+			this.statusBar.Location = new System.Drawing.Point(101, 694);
 			this.statusBar.Name = "statusBar";
-			this.statusBar.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-			this.statusBar.Size = new System.Drawing.Size(1218, 25);
+			this.statusBar.Size = new System.Drawing.Size(914, 22);
 			this.statusBar.TabIndex = 6;
 			this.statusBar.Text = "statusStrip1";
 			// 
 			// Coordinates
 			// 
 			this.Coordinates.Name = "Coordinates";
-			this.Coordinates.Size = new System.Drawing.Size(89, 20);
+			this.Coordinates.Size = new System.Drawing.Size(71, 17);
 			this.Coordinates.Text = "Coordinates";
 			// 
 			// Angle
 			// 
 			this.Angle.Name = "Angle";
-			this.Angle.Size = new System.Drawing.Size(48, 20);
+			this.Angle.Size = new System.Drawing.Size(38, 17);
 			this.Angle.Text = "Angle";
 			// 
 			// PenStatus
 			// 
 			this.PenStatus.Name = "PenStatus";
-			this.PenStatus.Size = new System.Drawing.Size(73, 20);
+			this.PenStatus.Size = new System.Drawing.Size(59, 17);
 			this.PenStatus.Text = "PenStatus";
 			// 
 			// PenColor
 			// 
 			this.PenColor.Name = "PenColor";
-			this.PenColor.Size = new System.Drawing.Size(69, 20);
+			this.PenColor.Size = new System.Drawing.Size(56, 17);
 			this.PenColor.Text = "PenColor";
 			// 
 			// PenSize
 			// 
 			this.PenSize.Name = "PenSize";
-			this.PenSize.Size = new System.Drawing.Size(60, 20);
+			this.PenSize.Size = new System.Drawing.Size(47, 17);
 			this.PenSize.Text = "PenSize";
+			// 
+			// panelSurface
+			// 
+			this.panelSurface.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panelSurface.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelSurface.Location = new System.Drawing.Point(101, 0);
+			this.panelSurface.Name = "panelSurface";
+			this.panelSurface.Size = new System.Drawing.Size(914, 499);
+			this.panelSurface.TabIndex = 9;
+			// 
+			// tabControl1
+			// 
+			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.tabControl1.Location = new System.Drawing.Point(101, 499);
+			this.tabControl1.Name = "tabControl1";
+			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.Size = new System.Drawing.Size(914, 195);
+			this.tabControl1.TabIndex = 10;
+			// 
+			// tabPage1
+			// 
+			this.tabPage1.Controls.Add(this.panel2);
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage1.Size = new System.Drawing.Size(906, 169);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "Direct Interpretation";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.tableLayoutPanel1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(906, 169);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Tokenized Interpretation";
+			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
 			// panel2
 			// 
 			this.panel2.Controls.Add(this.buttonExecute);
 			this.panel2.Controls.Add(this.txtScript);
-			this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel2.Location = new System.Drawing.Point(135, 571);
-			this.panel2.Margin = new System.Windows.Forms.Padding(4);
+			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel2.Location = new System.Drawing.Point(3, 3);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(1218, 289);
-			this.panel2.TabIndex = 8;
+			this.panel2.Size = new System.Drawing.Size(900, 163);
+			this.panel2.TabIndex = 9;
 			// 
 			// buttonExecute
 			// 
 			this.buttonExecute.Dock = System.Windows.Forms.DockStyle.Right;
-			this.buttonExecute.Location = new System.Drawing.Point(1118, 0);
-			this.buttonExecute.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonExecute.Location = new System.Drawing.Point(825, 0);
 			this.buttonExecute.Name = "buttonExecute";
-			this.buttonExecute.Size = new System.Drawing.Size(100, 289);
+			this.buttonExecute.Size = new System.Drawing.Size(75, 163);
 			this.buttonExecute.TabIndex = 1;
-			this.buttonExecute.Text = "&Execute";
+			this.buttonExecute.Text = "&Run";
 			this.buttonExecute.UseVisualStyleBackColor = true;
-			this.buttonExecute.Click += new System.EventHandler(this.buttonExecute_Click);
 			// 
 			// txtScript
 			// 
 			this.txtScript.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.txtScript.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.txtScript.Location = new System.Drawing.Point(0, 0);
-			this.txtScript.Margin = new System.Windows.Forms.Padding(4);
 			this.txtScript.Multiline = true;
 			this.txtScript.Name = "txtScript";
 			this.txtScript.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtScript.Size = new System.Drawing.Size(1218, 289);
+			this.txtScript.Size = new System.Drawing.Size(900, 163);
 			this.txtScript.TabIndex = 0;
 			// 
-			// panelSurface
+			// tableLayoutPanel1
 			// 
-			this.panelSurface.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.panelSurface.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelSurface.Location = new System.Drawing.Point(135, 0);
-			this.panelSurface.Margin = new System.Windows.Forms.Padding(4);
-			this.panelSurface.Name = "panelSurface";
-			this.panelSurface.Size = new System.Drawing.Size(1218, 571);
-			this.panelSurface.TabIndex = 9;
+			this.tableLayoutPanel1.ColumnCount = 3;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+			this.tableLayoutPanel1.Controls.Add(this.textBox2, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.textBox1, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.label2, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 2, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(900, 163);
+			this.tableLayoutPanel1.TabIndex = 0;
+			// 
+			// textBox1
+			// 
+			this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox1.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textBox1.Location = new System.Drawing.Point(415, 31);
+			this.textBox1.Multiline = true;
+			this.textBox1.Name = "textBox1";
+			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBox1.Size = new System.Drawing.Size(406, 129);
+			this.textBox1.TabIndex = 1;
+			// 
+			// textBox2
+			// 
+			this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox2.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textBox2.Location = new System.Drawing.Point(3, 31);
+			this.textBox2.Multiline = true;
+			this.textBox2.Name = "textBox2";
+			this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBox2.Size = new System.Drawing.Size(406, 129);
+			this.textBox2.TabIndex = 2;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(3, 0);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(406, 28);
+			this.label1.TabIndex = 3;
+			this.label1.Text = "User Entered Script";
+			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(415, 0);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(406, 28);
+			this.label2.TabIndex = 4;
+			this.label2.Text = "Decompiled Script";
+			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.ColumnCount = 1;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.Controls.Add(this.buttonSaveTokenized, 0, 2);
+			this.tableLayoutPanel2.Controls.Add(this.buttonLoadTokenized, 0, 1);
+			this.tableLayoutPanel2.Controls.Add(this.buttonRunTokenized, 0, 0);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(827, 3);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 3;
+			this.tableLayoutPanel1.SetRowSpan(this.tableLayoutPanel2, 2);
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(70, 157);
+			this.tableLayoutPanel2.TabIndex = 5;
+			// 
+			// buttonRunTokenized
+			// 
+			this.buttonRunTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonRunTokenized.Location = new System.Drawing.Point(3, 3);
+			this.buttonRunTokenized.Name = "buttonRunTokenized";
+			this.buttonRunTokenized.Size = new System.Drawing.Size(64, 46);
+			this.buttonRunTokenized.TabIndex = 2;
+			this.buttonRunTokenized.Text = "&Run";
+			this.buttonRunTokenized.UseVisualStyleBackColor = true;
+			// 
+			// buttonLoadTokenized
+			// 
+			this.buttonLoadTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonLoadTokenized.Location = new System.Drawing.Point(3, 55);
+			this.buttonLoadTokenized.Name = "buttonLoadTokenized";
+			this.buttonLoadTokenized.Size = new System.Drawing.Size(64, 46);
+			this.buttonLoadTokenized.TabIndex = 3;
+			this.buttonLoadTokenized.Text = "&Load";
+			this.buttonLoadTokenized.UseVisualStyleBackColor = true;
+			// 
+			// buttonSaveTokenized
+			// 
+			this.buttonSaveTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonSaveTokenized.Location = new System.Drawing.Point(3, 107);
+			this.buttonSaveTokenized.Name = "buttonSaveTokenized";
+			this.buttonSaveTokenized.Size = new System.Drawing.Size(64, 47);
+			this.buttonSaveTokenized.TabIndex = 4;
+			this.buttonSaveTokenized.Text = "&Save";
+			this.buttonSaveTokenized.UseVisualStyleBackColor = true;
 			// 
 			// ScriptedTurtleForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1353, 885);
+			this.ClientSize = new System.Drawing.Size(1015, 716);
 			this.Controls.Add(this.panelSurface);
-			this.Controls.Add(this.panel2);
+			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.statusBar);
 			this.Controls.Add(this.panel1);
-			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "ScriptedTurtleForm";
 			this.Text = "Nakov.TurtleGraphics - Demo";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -292,8 +439,14 @@
 			this.panel1.ResumeLayout(false);
 			this.statusBar.ResumeLayout(false);
 			this.statusBar.PerformLayout();
+			this.tabControl1.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
+			this.tabPage2.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -319,9 +472,21 @@
 		private System.Windows.Forms.ToolStripStatusLabel PenSize;
 		private System.Windows.Forms.Button buttonForward;
 		private System.Windows.Forms.Button buttonBackward;
+		private System.Windows.Forms.Panel panelSurface;
+		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.Button buttonExecute;
 		private System.Windows.Forms.TextBox txtScript;
-		private System.Windows.Forms.Panel panelSurface;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		private System.Windows.Forms.Button buttonSaveTokenized;
+		private System.Windows.Forms.Button buttonLoadTokenized;
+		private System.Windows.Forms.Button buttonRunTokenized;
 	}
 }
