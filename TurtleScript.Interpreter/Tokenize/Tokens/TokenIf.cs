@@ -137,30 +137,37 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			return ToTurtleScript(builder);
+		}
+
+		public override string ToTurtleScript(TurtleScriptBuilder builder)
+		{
 			string conditionalExpressionTurtleScript = ConditionalExpression.ToTurtleScript();
 			string block = Block.ToTurtleScript();
 			int indent = 0;
 
-			StringBuilder turtleScript = new StringBuilder($"if ({conditionalExpressionTurtleScript}) Do\r\n");
-			Block.ToTurtleScript(turtleScript, indent);
-			turtleScript.AppendLine();
+			builder.AppendLine($"if ({conditionalExpressionTurtleScript}) Do");
+			// TODO: Fix 
+			//Block.ToTurtleScript(turtleScript, indent);
+			builder.AppendLine();
 
 			foreach (Tuple<TokenBase, TokenBase> elseIf in ElseIf)
 			{
 				indent++;
-				turtleScript.AppendLine($"{new string('\t', indent)}elseif ({elseIf.Item1.ToTurtleScript()}) Do");
-				turtleScript.AppendLine(elseIf.Item2.ToTurtleScript());
+				builder.AppendLine($"elseif ({elseIf.Item1.ToTurtleScript()}) Do");
+				builder.AppendLine(elseIf.Item2.ToTurtleScript());
 			}
 
 			if (ElseStatement != null)
 			{
-				turtleScript.AppendLine($"{new string('\t', indent)}else");
-				turtleScript.AppendLine($"{new string('\t', indent)}{ElseStatement.ToTurtleScript()}");
+				builder.AppendLine($"else");
+				builder.AppendLine($"{ElseStatement.ToTurtleScript()}");
 			}
 
-			turtleScript.AppendLine("end");
+			builder.AppendLine("end");
 
-			return turtleScript.ToString();
+			return builder.ToString();
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

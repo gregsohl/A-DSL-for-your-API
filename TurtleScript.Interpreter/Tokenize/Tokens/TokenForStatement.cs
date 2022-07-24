@@ -111,15 +111,20 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
-			StringBuilder turtleScript = new StringBuilder();
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			return ToTurtleScript(builder);
+		}
 
-			turtleScript
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder
 				.AppendLine($"for {LoopVariableName} = {StartValue.ToTurtleScript()} to {EndValue.ToTurtleScript()} do");
 
-			turtleScript.AppendLine(Block.ToTurtleScript());
-			turtleScript.AppendLine("end");
+			builder.AppendLine(Block.ToTurtleScript());
+			builder.AppendLine("end");
 
-			return turtleScript.ToString();
+			return builder.ToString();
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

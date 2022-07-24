@@ -21,5 +21,13 @@
 		{
 			return "pi";
 		}
+
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.Append(ToTurtleScript());
+			return builder.Text;
+		}
+
 	}
 }

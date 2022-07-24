@@ -31,10 +31,18 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
-			string left = Children[0].ToTurtleScript();
-			string right = Children[1].ToTurtleScript();
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			return ToTurtleScript(builder);
+		}
 
-			return $"{left} {AdditiveOperator(TokenType)} {right}";
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			Children[0].ToTurtleScript(builder);
+			builder.Append($" {AdditiveOperator(TokenType)} ");
+			Children[1].ToTurtleScript(builder);
+
+			return builder.Text;
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

@@ -137,21 +137,26 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
-			StringBuilder result = new StringBuilder(FunctionName + "(");
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			return ToTurtleScript(builder);
+		}
 
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
 			for (var index = 0; index < Parameters.Length; index++)
 			{
 				var parameter = Parameters[index];
-				result.Append(parameter.ToTurtleScript());
+				builder.Append(parameter.ToTurtleScript());
 				if (index < Parameters.Length - 1)
 				{
-					result.Append(',');
+					builder.Append(',');
 				}
 			}
 
-			result.Append(')');
+			builder.Append(')');
 
-			return result.ToString();
+			return builder.Text;
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

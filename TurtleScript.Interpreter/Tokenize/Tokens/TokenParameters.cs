@@ -88,6 +88,13 @@ namespace TurtleScript.Interpreter.Tokenize
 			return ParameterName;
 		}
 
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.Append(ToTurtleScript());
+			return builder.Text;
+		}
+
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
 			return TurtleScriptValue.NULL;
@@ -196,6 +203,13 @@ namespace TurtleScript.Interpreter.Tokenize
 			}
 
 			return parameterList.ToString();
+		}
+
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.Append(ToTurtleScript());
+			return builder.Text;
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

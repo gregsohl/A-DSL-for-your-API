@@ -109,6 +109,13 @@ namespace TurtleScript.Interpreter.Tokenize
 			return Value.ToString(CultureInfo.InvariantCulture);
 		}
 
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.Append(ToTurtleScript());
+			return builder.Text;
+		}
+
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
 			return new TurtleScriptValue(Value);

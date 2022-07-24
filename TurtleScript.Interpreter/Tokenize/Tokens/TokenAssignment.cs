@@ -89,7 +89,17 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
-			return $"{VariableName} = {Children[0].ToTurtleScript()}";
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			return ToTurtleScript(builder);
+		}
+
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.AppendWithIndent($"{VariableName} = ");
+			Children[0].ToTurtleScript(builder);
+			builder.AppendLine();
+			return builder.Text;
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

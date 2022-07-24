@@ -41,6 +41,13 @@ namespace TurtleScript.Interpreter.Tokenize
 			return $"({ChildExpression.ToTurtleScript()})";
 		}
 
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.Append(ToTurtleScript());
+			return builder.Text;
+		}
+
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
 			return ChildExpression.Visit(context);

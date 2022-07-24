@@ -39,6 +39,13 @@ namespace TurtleScript.Interpreter.Tokenize
 			return $"{UnaryOperator(TokenType)}{right}";
 		}
 
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.Append(ToTurtleScript());
+			return builder.Text;
+		}
+
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
 			TurtleScriptValue rightValue = Children[0].Visit(context);

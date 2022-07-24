@@ -144,16 +144,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			return string.Empty;
 		}
 
-		public virtual string ToTurtleScript(int indentLevel)
+		public virtual string ToTurtleScript(
+			TurtleScriptBuilder builder)
 		{
 			return string.Empty;
-		}
-
-		public virtual StringBuilder ToTurtleScript(
-			StringBuilder result,
-			int indentLevel)
-		{
-			return result;
 		}
 
 		public virtual TurtleScriptValue Visit(

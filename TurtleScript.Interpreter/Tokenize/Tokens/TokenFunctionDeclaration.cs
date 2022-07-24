@@ -131,9 +131,15 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			return ToTurtleScript(builder);
+		}
+
+		public override string ToTurtleScript(TurtleScriptBuilder builder)
+		{
 			string parameters = String.Join(", ", ParameterNames);
 
-			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript(1)}\r\nend";
+			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript(builder)}\r\nend";
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

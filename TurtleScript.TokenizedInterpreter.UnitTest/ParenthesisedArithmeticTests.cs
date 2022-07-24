@@ -13,34 +13,21 @@ using TurtleScript.Interpreter.Tokenize.Parse;
 
 namespace TurtleScript.Interpreter.UnitTest
 {
-	public class ParenthesisedArithmeticTests
+	public class ParenthesisedArithmeticTests : TestBase
 	{
 		[Test]
 		public void AdditionAndMultiplication()
 		{
 			// Arrange
 			const string SCRIPT = "a = (1 + 2) * 3";
-
-			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(SCRIPT);
-
-			// Act
-			bool success = interpreter.Parse(out TokenBase rootToken);
-			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			TurtleScriptExecutor executor = new TurtleScriptExecutor();
-			executor.Execute(rootToken, context);
-
-			// Assert
-			Assert.IsTrue(success, interpreter.ErrorMessage);
-			Assert.AreEqual(SCRIPT, rootToken.ToTurtleScript());
-
 			const string VARIABLE_NAME = "a";
-			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME);
-			Assert.AreEqual(9, variableValue.NumericValue);
+			const int EXPECTED_VALUE = 9;
 
-			Console.WriteLine("Regenerated Script via ToTurtleScript");
-			Console.WriteLine(rootToken.ToTurtleScript());
-			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+			RunTest(SCRIPT,
+				VARIABLE_NAME,
+				EXPECTED_VALUE);
 		}
+
 
 		[Test]
 		public void MultipleLevels()

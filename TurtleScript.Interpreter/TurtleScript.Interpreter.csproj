@@ -71,6 +71,7 @@
     <Compile Include="Tokenize\Execute\TurtleScriptExecutionException.cs" />
     <Compile Include="Tokenize\Execute\TurtleScriptExecutor.cs" />
     <Compile Include="Tokenize\TokenSerializer.cs" />
+    <Compile Include="Tokenize\TurtleScriptBuilder.cs" />
     <Compile Include="TurtleScriptFunctionBase.cs" />
     <Compile Include="ITurtleScriptRuntime.cs" />
     <Compile Include="Tokenize\Execute\TurtleScriptExecutionFunction.cs" />

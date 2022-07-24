@@ -104,6 +104,12 @@ namespace TurtleScript.Interpreter.Tokenize
 			return VariableName;
 		}
 
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			builder.Append(ToTurtleScript());
+			return builder.Text;
+		}
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)
 		{
 			var variableValue = context.GetVariableValue(VariableName);

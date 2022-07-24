@@ -100,40 +100,29 @@ namespace TurtleScript.Interpreter.Tokenize
 			}
 		}
 
-		public override StringBuilder ToTurtleScript(StringBuilder result, int indentLevel)
+		public override string ToTurtleScript()
+		{
+			return ToTurtleScript(new TurtleScriptBuilder());
+		}
+
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
 		{
 			if (Children != null)
 			{
-				foreach (var child in Children)
+				for (var childIndex = 0; childIndex < (Children.Count - 1); childIndex++)
 				{
-					result.AppendLine(Indent(indentLevel) + child.ToTurtleScript());
+					TokenBase child = Children[childIndex];
+					child.ToTurtleScript(builder);
+				}
+
+				if (Children.Count >= 1)
+				{
+					Children[Children.Count - 1].ToTurtleScript(builder);
 				}
 			}
 
-			if (result.Length >= 2)
-			{
-				if ((result[result.Length - 2] == '\r') &&
-					(result[result.Length - 1] == '\n'))
-				{
-					result.Length -= 2;
-				}
-			}
-
-			return result;
-		}
-
-		public override string ToTurtleScript()
-		{
-			return ToTurtleScript(0);
-		}
-
-		public override string ToTurtleScript(int indentLevel)
-		{
-			StringBuilder result = new StringBuilder();
-
-			ToTurtleScript(result, indentLevel);
-
-			return result.ToString();
+			return builder.Text;
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

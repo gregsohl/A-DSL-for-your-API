@@ -20,7 +20,17 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public override string ToTurtleScript()
 		{
-			return Children[0].ToTurtleScript();
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			ToTurtleScript(builder);
+			builder.Trim();
+			return builder.Text;
+		}
+
+		public override string ToTurtleScript(
+			TurtleScriptBuilder builder)
+		{
+			Children[0].ToTurtleScript(builder);
+			return builder.Text;
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

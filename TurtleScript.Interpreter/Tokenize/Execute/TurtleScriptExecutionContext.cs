@@ -22,6 +22,7 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 
 			m_RuntimeLibraries = runtimeLibraries ?? new List<ITurtleScriptRuntime>();
 			m_Functions = new TurtleScriptFunctions<TurtleScriptExecutionFunction>();
+
 		}
 
 		#endregion Public Constructors
@@ -73,6 +74,7 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 
 
 		#region Public Methods
+
 
 		public TurtleScriptValue GetVariableValue(string variableName)
 		{
@@ -316,11 +318,12 @@ namespace TurtleScript.Interpreter.Tokenize.Execute
 
 		#region Private Fields
 
+		private TurtleScriptExecutionScope m_CurrentScope;
+		private readonly TurtleScriptFunctions<TurtleScriptExecutionFunction> m_Functions;
 		private readonly TurtleScriptExecutionScope m_GlobalScope;
 		private readonly List<ITurtleScriptRuntime> m_RuntimeLibraries;
 		private readonly Stack<TurtleScriptExecutionScope> m_ScopeStack;
-		private TurtleScriptExecutionScope m_CurrentScope;
-		private readonly TurtleScriptFunctions<TurtleScriptExecutionFunction> m_Functions;
+
 
 		#endregion Private Fields
 	}
