@@ -19,7 +19,22 @@ namespace TurtleScript.Interpreter.UnitTest
 				script,
 				variableName,
 				expectedValue,
-				script);
+				script,
+				TurtleScriptValueType.Numeric);
+		}
+
+		protected void RunTest(
+			string script,
+			string variableName,
+			object expectedValue,
+			TurtleScriptValueType valueType)
+		{
+			RunTest(
+				script,
+				variableName,
+				expectedValue,
+				script,
+				valueType);
 		}
 
 		protected void RunTest(
@@ -27,6 +42,21 @@ namespace TurtleScript.Interpreter.UnitTest
 			string variableName,
 			object expectedValue,
 			string expectedRegeneratedScript)
+		{
+			RunTest(
+				script,
+				variableName,
+				expectedValue,
+				expectedRegeneratedScript,
+				TurtleScriptValueType.Numeric);
+		}
+
+		protected void RunTest(
+			string script,
+			string variableName,
+			object expectedValue,
+			string expectedRegeneratedScript,
+			TurtleScriptValueType valueType)
 		{
 			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
 			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
@@ -54,8 +84,22 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			TurtleScriptValue variableValue = context.GetVariableValue(variableName);
 			Assert.AreEqual(
-				expectedValue,
-				variableValue.NumericValue);
+				valueType, 
+				variableValue.ValueType);
+
+			if (valueType == TurtleScriptValueType.Numeric)
+			{
+				Assert.AreEqual(
+					expectedValue,
+					variableValue.NumericValue);
+			}
+
+			if (valueType == TurtleScriptValueType.Boolean)
+			{
+				Assert.AreEqual(
+					expectedValue,
+					variableValue.BooleanValue);
+			}
 
 			Console.WriteLine("Source Script");
 			Console.WriteLine(script);
