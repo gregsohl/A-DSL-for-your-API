@@ -104,15 +104,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_Value);
 		}
 
-		public override string ToTurtleScript()
-		{
-			return Value.ToString(CultureInfo.InvariantCulture);
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			builder.Append(Value.ToString(CultureInfo.InvariantCulture));
 			return builder.Text;
 		}
 

@@ -99,15 +99,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_VariableName);
 		}
 
-		public override string ToTurtleScript()
-		{
-			return VariableName;
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			builder.Append(VariableName);
 			return builder.Text;
 		}
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

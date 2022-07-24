@@ -29,12 +29,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Public Methods
 
-		public override string ToTurtleScript()
-		{
-			TurtleScriptBuilder builder = new TurtleScriptBuilder();
-			return ToTurtleScript(builder);
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{

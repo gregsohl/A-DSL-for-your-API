@@ -87,12 +87,6 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_VariableName);
 		}
 
-		public override string ToTurtleScript()
-		{
-			TurtleScriptBuilder builder = new TurtleScriptBuilder();
-			return ToTurtleScript(builder);
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{

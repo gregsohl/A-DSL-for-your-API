@@ -141,7 +141,8 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		public virtual string ToTurtleScript()
 		{
-			return string.Empty;
+			TurtleScriptBuilder builder = new TurtleScriptBuilder();
+			return ToTurtleScript(builder);
 		}
 
 		public virtual string ToTurtleScript(

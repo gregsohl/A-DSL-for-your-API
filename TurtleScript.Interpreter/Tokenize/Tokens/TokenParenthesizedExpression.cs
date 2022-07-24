@@ -36,15 +36,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Public Methods
 
-		public override string ToTurtleScript()
-		{
-			return $"({ChildExpression.ToTurtleScript()})";
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			builder.Append($"({ChildExpression.ToTurtleScript()})");
 			return builder.Text;
 		}
 

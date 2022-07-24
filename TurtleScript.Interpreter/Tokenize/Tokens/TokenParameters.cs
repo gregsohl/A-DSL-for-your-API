@@ -83,15 +83,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_ParameterName);
 		}
 
-		public override string ToTurtleScript()
-		{
-			return ParameterName;
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			builder.Append(ParameterName);
 			return builder.Text;
 		}
 
@@ -188,27 +183,20 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_Parameters);
 		}
 
-		public override string ToTurtleScript()
-		{
-			StringBuilder parameterList = new StringBuilder();
-
-			for (var index = 0; index < Parameters.Length; index++)
-			{
-				TokenParameterDeclaration parameterDeclaration = Parameters[index];
-				parameterList.Append(parameterDeclaration.ToTurtleScript());
-				if (index < Parameters.Length - 1)
-				{
-					parameterList.Append(", ");
-				}
-			}
-
-			return parameterList.ToString();
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			for (var index = 0; index < Parameters.Length; index++)
+			{
+				TokenParameterDeclaration parameterDeclaration = Parameters[index];
+				parameterDeclaration.ToTurtleScript(builder);
+
+				if (index < Parameters.Length - 1)
+				{
+					builder.Append(", ");
+				}
+			}
+
 			return builder.Text;
 		}
 

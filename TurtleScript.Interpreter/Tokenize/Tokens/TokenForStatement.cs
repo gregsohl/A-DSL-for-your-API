@@ -109,12 +109,6 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		}
 
-		public override string ToTurtleScript()
-		{
-			TurtleScriptBuilder builder = new TurtleScriptBuilder();
-			return ToTurtleScript(builder);
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{

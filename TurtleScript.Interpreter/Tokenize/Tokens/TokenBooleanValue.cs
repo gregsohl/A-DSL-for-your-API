@@ -103,15 +103,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_Value);
 		}
 
-		public override string ToTurtleScript()
-		{
-			return Value ? "true" : "false";
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			builder.Append(Value ? "true" : "false");
 			return builder.Text;
 		}
 

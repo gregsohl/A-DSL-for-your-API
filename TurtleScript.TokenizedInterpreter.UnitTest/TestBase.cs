@@ -1,4 +1,7 @@
-﻿using System;
+﻿#region Namespaces
+
+using System;
+using System.Diagnostics;
 
 using NUnit.Framework;
 
@@ -6,16 +9,18 @@ using TurtleScript.Interpreter.Tokenize;
 using TurtleScript.Interpreter.Tokenize.Execute;
 using TurtleScript.Interpreter.Tokenize.Parse;
 
+#endregion Namespaces
+
 namespace TurtleScript.Interpreter.UnitTest
 {
 	public class TestBase
 	{
-		protected void RunTest(
+		protected TestContext RunTest(
 			string script,
 			string variableName,
 			object expectedValue)
 		{
-			RunTest(
+			return RunTest(
 				script,
 				variableName,
 				expectedValue,
@@ -23,13 +28,13 @@ namespace TurtleScript.Interpreter.UnitTest
 				TurtleScriptValueType.Numeric);
 		}
 
-		protected void RunTest(
+		protected TestContext RunTest(
 			string script,
 			string variableName,
 			object expectedValue,
 			TurtleScriptValueType valueType)
 		{
-			RunTest(
+			return RunTest(
 				script,
 				variableName,
 				expectedValue,
@@ -37,13 +42,13 @@ namespace TurtleScript.Interpreter.UnitTest
 				valueType);
 		}
 
-		protected void RunTest(
+		protected TestContext RunTest(
 			string script,
 			string variableName,
 			object expectedValue,
 			string expectedRegeneratedScript)
 		{
-			RunTest(
+			return RunTest(
 				script,
 				variableName,
 				expectedValue,
@@ -51,7 +56,7 @@ namespace TurtleScript.Interpreter.UnitTest
 				TurtleScriptValueType.Numeric);
 		}
 
-		protected void RunTest(
+		protected TestContext RunTest(
 			string script,
 			string variableName,
 			object expectedValue,
@@ -108,9 +113,14 @@ namespace TurtleScript.Interpreter.UnitTest
 			Console.WriteLine(regeneratedTurtleScript);
 			Console.WriteLine();
 			Console.WriteLine($"Result: variable {variableName} = {variableValue.NumericValue}");
+
+			return new TestContext(
+				interpreter,
+				context,
+				executor);
 		}
 
-		public void RunTestWithExecutionError(
+		public TestContext RunTestWithExecutionError(
 			string script)
 		{
 			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
@@ -133,6 +143,48 @@ namespace TurtleScript.Interpreter.UnitTest
 
 			Console.WriteLine($"Execution Error: {executor.ErrorMessage}");
 
+			return new TestContext(
+				interpreter,
+				context,
+				executor);
+
 		}
+	}
+
+	public class TestContext
+	{
+		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+		public TestContext(
+			TurtleScriptTokenizer interpreter,
+			TurtleScriptExecutionContext executionContext,
+			TurtleScriptExecutor executor)
+		{
+			m_Interpreter = interpreter;
+			m_ExecutionContext = executionContext;
+			m_Executor = executor;
+		}
+
+		public TurtleScriptTokenizer Interpreter
+		{
+			[DebuggerStepThrough]
+			get { return m_Interpreter; }
+		}
+
+		public TurtleScriptExecutionContext ExecutionContext
+		{
+			[DebuggerStepThrough]
+			get { return m_ExecutionContext; }
+		}
+
+		public TurtleScriptExecutor Executor
+		{
+			[DebuggerStepThrough]
+			get { return m_Executor; }
+		}
+
+		readonly TurtleScriptTokenizer m_Interpreter;
+		readonly TurtleScriptExecutionContext m_ExecutionContext;
+		readonly TurtleScriptExecutor m_Executor;
+
 	}
 }

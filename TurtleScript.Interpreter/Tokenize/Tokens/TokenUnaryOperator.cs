@@ -32,17 +32,11 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#region Public Methods
 
-		public override string ToTurtleScript()
-		{
-			string right = Children[0].ToTurtleScript();
-
-			return $"{UnaryOperator(TokenType)}{right}";
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			builder.Append($"{UnaryOperator(TokenType)}");
+			Children[0].ToTurtleScript(builder);
 			return builder.Text;
 		}
 

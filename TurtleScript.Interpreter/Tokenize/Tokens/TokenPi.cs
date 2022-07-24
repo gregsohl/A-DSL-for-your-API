@@ -17,15 +17,10 @@
 		{
 		}
 
-		public override string ToTurtleScript()
-		{
-			return "pi";
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append(ToTurtleScript());
+			builder.Append("pi");
 			return builder.Text;
 		}
 
