@@ -114,9 +114,10 @@ namespace TurtleScript.Interpreter.Tokenize
 			StringBuilder turtleScript = new StringBuilder();
 
 			turtleScript
-				.AppendLine($"for {LoopVariableName} = {StartValue.ToTurtleScript()} to {EndValue.ToTurtleScript()} Do");
+				.AppendLine($"for {LoopVariableName} = {StartValue.ToTurtleScript()} to {EndValue.ToTurtleScript()} do");
 
 			turtleScript.AppendLine(Block.ToTurtleScript());
+			turtleScript.AppendLine("end");
 
 			return turtleScript.ToString();
 		}
