@@ -426,6 +426,7 @@
 			this.buttonSaveTokenized.TabIndex = 4;
 			this.buttonSaveTokenized.Text = "&Save";
 			this.buttonSaveTokenized.UseVisualStyleBackColor = true;
+			this.buttonSaveTokenized.Click += new System.EventHandler(this.buttonSaveTokenized_Click);
 			// 
 			// buttonShowTokens
 			// 

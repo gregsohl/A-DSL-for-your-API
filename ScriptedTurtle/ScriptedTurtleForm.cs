@@ -260,7 +260,6 @@ namespace ScriptedTurtle
 
 			buttonExecute.Enabled = false;
 
-			bool result;
 			Cursor = Cursors.WaitCursor;
 
 			try
@@ -274,7 +273,18 @@ namespace ScriptedTurtle
 						"Error");
 				}
 
+				txtScriptTokenizedDecompiled.Text = scriptToken.ToTurtleScript();
+				Application.DoEvents();
+
 				executor.Execute(scriptToken, executionContext);
+
+				if (executor.IsError)
+				{
+					MessageBox.Show(this,
+						executor.ErrorMessage,
+						"Error");
+				}
+
 			}
 			finally
 			{
@@ -284,6 +294,11 @@ namespace ScriptedTurtle
 
 
 			UpdateStatusBar();
+		}
+
+		private void buttonSaveTokenized_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

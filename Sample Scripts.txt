@@ -14,7 +14,7 @@ end
 =================================
 t.color(1) 
 t.size(2) 
-for i = 1 to 50 do 
+for i = 1 to 40 do 
     t.forward(200) 
     t.rotate(-123) 
 end 
