@@ -121,7 +121,8 @@ namespace TurtleScript.Interpreter.Tokenize
 			builder
 				.AppendLine($"for {LoopVariableName} = {StartValue.ToTurtleScript()} to {EndValue.ToTurtleScript()} do");
 
-			builder.AppendLine(Block.ToTurtleScript());
+			Block.ToTurtleScript(builder);
+
 			builder.AppendLine("end");
 
 			return builder.ToString();

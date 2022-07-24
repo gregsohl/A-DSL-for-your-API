@@ -3,6 +3,8 @@
 using System.Diagnostics;
 using System.Text;
 
+using TurtleScript.Interpreter.Utility;
+
 #endregion Namespaces
 
 
@@ -95,13 +97,20 @@ namespace TurtleScript.Interpreter.Tokenize
 			return ++m_NestingLevel;
 		}
 
+		/// <summary>
+		/// Trim trailing line break if the script is single line
+		/// </summary>
 		public void Trim()
 		{
-			if ((m_Builder.Length >= 2) &&
-				(m_Builder[m_Builder.Length - 2] == '\r') &&
-				(m_Builder[m_Builder.Length - 1] == '\n'))
-				m_Builder.Length -= 2;
-
+			int indexOf = m_Builder.IndexOf("\r\n");
+			if ((indexOf >=0) &&
+				(indexOf == m_Builder.Length - 2))
+			{
+				if ((m_Builder.Length >= 2) &&
+					(m_Builder[m_Builder.Length - 2] == '\r') &&
+					(m_Builder[m_Builder.Length - 1] == '\n'))
+					m_Builder.Length -= 2;
+			}
 		}
 
 		private readonly StringBuilder m_Builder;

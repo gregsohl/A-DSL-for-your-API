@@ -112,6 +112,7 @@
     <Compile Include="TurtleScriptRuntimeFunction.cs" />
     <Compile Include="TurtleScriptValue.cs" />
     <Compile Include="TurtleScriptValueType.cs" />
+    <Compile Include="Utility\StringBuilderExt.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -122,6 +123,7 @@
       <Name>CompactFormatter</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

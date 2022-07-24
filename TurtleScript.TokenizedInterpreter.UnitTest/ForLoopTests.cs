@@ -13,7 +13,7 @@ using TurtleScript.Interpreter.Tokenize.Parse;
 
 namespace TurtleScript.Interpreter.UnitTest
 {
-	public class ForLoopTests
+	public class ForLoopTests : TestBase
 	{
 		[Test]
 		public void Simple()
@@ -28,24 +28,10 @@ namespace TurtleScript.Interpreter.UnitTest
 			const string VARIABLE_NAME = "b";
 			const double EXPECTED_VALUE = 15;
 
-			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
-
-			// Act
-			bool success = interpreter.Parse(out TokenBase rootToken);
-			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			TurtleScriptExecutor executor = new TurtleScriptExecutor();
-			executor.Execute(rootToken, context);
-
-			// Assert
-			Assert.IsTrue(success, interpreter.ErrorMessage);
-
-			TurtleScriptValue variableValue = context.GetVariableValue("b");
-			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
-
-			Console.WriteLine("Regenerated Script via ToTurtleScript");
-			Console.WriteLine(rootToken.ToTurtleScript());
-			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
-
+			RunTest(
+				scriptBuilder.ToString(),
+				VARIABLE_NAME,
+				EXPECTED_VALUE);
 		}
 
 
@@ -62,26 +48,10 @@ namespace TurtleScript.Interpreter.UnitTest
 			const string VARIABLE_NAME = "b";
 			const double EXPECTED_VALUE = 15;
 
-			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(scriptBuilder.ToString());
-
-			// Act
-			bool success = interpreter.Parse(out TokenBase rootToken);
-			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			TurtleScriptExecutor executor = new TurtleScriptExecutor();
-			executor.Execute(rootToken, context);
-
-			// Assert
-			Assert.IsTrue(success, interpreter.ErrorMessage);
-
-			TurtleScriptValue variableValue = context.GetVariableValue("b");
-			Assert.AreEqual(EXPECTED_VALUE, variableValue.NumericValue);
-
-			Console.WriteLine("Regenerated Script via ToTurtleScript");
-			Console.WriteLine(rootToken.ToTurtleScript());
-			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
-
+			RunTest(
+				scriptBuilder.ToString(),
+				VARIABLE_NAME,
+				EXPECTED_VALUE);
 		}
-
-
 	}
 }
