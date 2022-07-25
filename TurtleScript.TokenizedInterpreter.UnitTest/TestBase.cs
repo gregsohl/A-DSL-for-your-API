@@ -1,7 +1,6 @@
 ﻿#region Namespaces
 
 using System;
-using System.Diagnostics;
 
 using NUnit.Framework;
 
@@ -15,8 +14,73 @@ namespace TurtleScript.Interpreter.UnitTest
 {
 	public class TestBase
 	{
+
+		#region Public Methods
+
+		public TestContext RunTestWithExecutionError(
+			string script)
+		{
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
+			TurtleScriptExecutor executor = new TurtleScriptExecutor();
+
+			executor.Execute(
+				rootToken,
+				context);
+
+			// Assert
+			Assert.IsTrue(success, interpreter.ErrorMessage);
+			Assert.IsTrue(executor.IsError, executor.ErrorMessage);
+
+			Console.WriteLine("Regenerated Script via ToTurtleScript");
+			Console.WriteLine(rootToken.ToTurtleScript());
+
+			Console.WriteLine($"Execution Error: {executor.ErrorMessage}");
+
+			return new TestContext(
+				interpreter,
+				context,
+				executor);
+
+		}
+
+		public TestContext RunTestWithParserError(
+			string script)
+		{
+			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
+
+			// Act
+			bool success = interpreter.Parse(out TokenBase rootToken);
+
+			// Assert - expect failure
+			Assert.IsFalse(success, interpreter.ErrorMessage);
+
+			Console.WriteLine("Source Script:");
+			Console.WriteLine(script);
+			Console.WriteLine();
+
+			Console.WriteLine($"Parser Errors:");
+
+			foreach (string message in interpreter.ErrorMessages)
+			{
+				Console.WriteLine(message);
+			}
+
+			return new TestContext(
+				interpreter);
+
+		}
+
+		#endregion Public Methods
+
+
+		#region Protected Methods
+
 		protected TestContext RunTest(
-			string script,
+							string script,
 			string variableName,
 			object expectedValue)
 		{
@@ -120,71 +184,6 @@ namespace TurtleScript.Interpreter.UnitTest
 				executor);
 		}
 
-		public TestContext RunTestWithExecutionError(
-			string script)
-		{
-			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
-
-			// Act
-			bool success = interpreter.Parse(out TokenBase rootToken);
-			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			TurtleScriptExecutor executor = new TurtleScriptExecutor();
-
-			executor.Execute(
-				rootToken,
-				context);
-
-			// Assert
-			Assert.IsTrue(success, interpreter.ErrorMessage);
-			Assert.IsTrue(executor.IsError, executor.ErrorMessage);
-
-			Console.WriteLine("Regenerated Script via ToTurtleScript");
-			Console.WriteLine(rootToken.ToTurtleScript());
-
-			Console.WriteLine($"Execution Error: {executor.ErrorMessage}");
-
-			return new TestContext(
-				interpreter,
-				context,
-				executor);
-
-		}
-	}
-
-	public class TestContext
-	{
-		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public TestContext(
-			TurtleScriptTokenizer interpreter,
-			TurtleScriptExecutionContext executionContext,
-			TurtleScriptExecutor executor)
-		{
-			m_Interpreter = interpreter;
-			m_ExecutionContext = executionContext;
-			m_Executor = executor;
-		}
-
-		public TurtleScriptTokenizer Interpreter
-		{
-			[DebuggerStepThrough]
-			get { return m_Interpreter; }
-		}
-
-		public TurtleScriptExecutionContext ExecutionContext
-		{
-			[DebuggerStepThrough]
-			get { return m_ExecutionContext; }
-		}
-
-		public TurtleScriptExecutor Executor
-		{
-			[DebuggerStepThrough]
-			get { return m_Executor; }
-		}
-
-		readonly TurtleScriptTokenizer m_Interpreter;
-		readonly TurtleScriptExecutionContext m_ExecutionContext;
-		readonly TurtleScriptExecutor m_Executor;
-
+		#endregion Protected Methods
 	}
 }

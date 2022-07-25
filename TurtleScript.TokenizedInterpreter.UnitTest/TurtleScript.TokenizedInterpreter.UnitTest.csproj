@@ -59,6 +59,7 @@
     <Compile Include="RuntimeTests.cs" />
     <Compile Include="SampleRuntime.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="TestContext.cs" />
     <Compile Include="TokenSerializationTests.cs" />
     <Compile Include="TurtleScriptParserContextTests.cs" />
     <Compile Include="UnaryOperatorTests.cs" />
