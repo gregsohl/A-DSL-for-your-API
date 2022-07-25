@@ -129,17 +129,21 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_FunctionBody);
 		}
 
-		public override string ToTurtleScript()
-		{
-			TurtleScriptBuilder builder = new TurtleScriptBuilder();
-			return ToTurtleScript(builder);
-		}
-
 		public override string ToTurtleScript(TurtleScriptBuilder builder)
 		{
 			string parameters = String.Join(", ", ParameterNames);
 
-			return $"{FunctionName}({parameters})\r\n{FunctionBody.ToTurtleScript(builder)}\r\nend";
+			builder.AppendLine($"def {FunctionName}({parameters})");
+
+			builder.IncrementNestingLevel();
+
+			m_FunctionBody.ToTurtleScript(builder);
+
+			builder.DerementNestingLevel();
+
+			builder.AppendLine("end");
+
+			return builder.Text;
 		}
 
 		public override TurtleScriptValue Visit(TurtleScriptExecutionContext context)

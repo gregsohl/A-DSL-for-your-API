@@ -135,26 +135,22 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		}
 
-		public override string ToTurtleScript()
-		{
-			TurtleScriptBuilder builder = new TurtleScriptBuilder();
-			return ToTurtleScript(builder);
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
+			builder.Append($"{m_FunctionName}(");
+
 			for (var index = 0; index < Parameters.Length; index++)
 			{
 				var parameter = Parameters[index];
-				builder.Append(parameter.ToTurtleScript());
+				parameter.ToTurtleScript(builder);
 				if (index < Parameters.Length - 1)
 				{
-					builder.Append(',');
+					builder.Append(", ");
 				}
 			}
 
-			builder.Append(')');
+			builder.AppendLine(")");
 
 			return builder.Text;
 		}

@@ -185,22 +185,12 @@ namespace TurtleScript.Interpreter.Tokenize
 		#endregion Protected Constructors
 
 
-		#region Protected Methods
-
-		protected string Indent(int indentLevel)
-		{
-			string indentPadding = new string('\t', indentLevel);
-			return indentPadding;
-		}
-
-		#endregion Protected Methods
-
-
 		#region Private Constants
 
 		private const int VERSION = 1;
 
 		#endregion Private Constants
+
 
 		#region Private Fields
 

@@ -100,11 +100,6 @@ namespace TurtleScript.Interpreter.Tokenize
 			}
 		}
 
-		public override string ToTurtleScript()
-		{
-			return ToTurtleScript(new TurtleScriptBuilder());
-		}
-
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
