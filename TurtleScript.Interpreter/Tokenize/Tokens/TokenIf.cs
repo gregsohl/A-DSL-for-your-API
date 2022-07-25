@@ -135,34 +135,42 @@ namespace TurtleScript.Interpreter.Tokenize
 			parent.Serialize(stream, m_ElseStatement);
 		}
 
-		public override string ToTurtleScript()
-		{
-			TurtleScriptBuilder builder = new TurtleScriptBuilder();
-			return ToTurtleScript(builder);
-		}
-
 		public override string ToTurtleScript(TurtleScriptBuilder builder)
 		{
 			string conditionalExpressionTurtleScript = ConditionalExpression.ToTurtleScript();
-			string block = Block.ToTurtleScript();
-			int indent = 0;
 
-			builder.AppendLine($"if ({conditionalExpressionTurtleScript}) Do");
-			// TODO: Fix 
-			//Block.ToTurtleScript(turtleScript, indent);
-			builder.AppendLine();
+			builder.Append("if ");
+			ConditionalExpression.ToTurtleScript(builder);
+			builder.AppendLine(" do");
+
+			builder.IncrementNestingLevel();
+			
+			Block.ToTurtleScript(builder);
+
+			builder.DerementNestingLevel();
 
 			foreach (Tuple<TokenBase, TokenBase> elseIf in ElseIf)
 			{
-				indent++;
-				builder.AppendLine($"elseif ({elseIf.Item1.ToTurtleScript()}) Do");
-				builder.AppendLine(elseIf.Item2.ToTurtleScript());
+				builder.Append($"else if ");
+				elseIf.Item1.ToTurtleScript(builder);
+				builder.AppendLine(" do");
+
+				builder.IncrementNestingLevel();
+
+				// Else Body
+				elseIf.Item2.ToTurtleScript(builder);
+
+				builder.DerementNestingLevel();
 			}
 
 			if (ElseStatement != null)
 			{
-				builder.AppendLine($"else");
-				builder.AppendLine($"{ElseStatement.ToTurtleScript()}");
+				builder.AppendLine($"else do");
+				builder.IncrementNestingLevel();
+
+				ElseStatement.ToTurtleScript(builder);
+
+				builder.DerementNestingLevel();
 			}
 
 			builder.AppendLine("end");

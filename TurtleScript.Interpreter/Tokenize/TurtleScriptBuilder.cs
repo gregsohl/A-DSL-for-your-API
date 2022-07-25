@@ -14,10 +14,25 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public TurtleScriptBuilder(int initialNestingLevel = 0)
+			: this(
+				initialNestingLevel,
+				"  ",
+				"\r\n")
+		{
+		}
+
+		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+		public TurtleScriptBuilder(
+			int initialNestingLevel,
+			string indentWith,
+			string lineEnding)
 		{
 			m_NestingLevel = initialNestingLevel;
+			m_IndentWith = indentWith;
+			m_LineEnding = lineEnding;
 			m_Builder = new StringBuilder();
 		}
+
 
 		public string Text
 		{
@@ -115,10 +130,17 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		private readonly StringBuilder m_Builder;
 		private int m_NestingLevel;
+		private string m_IndentWith;
+		private string m_LineEnding;
 
 		private string Indent()
 		{
-			string indentPadding = new string('\t', m_NestingLevel);
+			string indentPadding = string.Empty;
+
+			for (int indent = 0; indent < m_NestingLevel; indent++)
+			{
+				indentPadding += m_IndentWith;
+			}
 			return indentPadding;
 		}
 
