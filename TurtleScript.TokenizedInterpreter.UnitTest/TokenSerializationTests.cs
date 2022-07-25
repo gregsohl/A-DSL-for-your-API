@@ -270,6 +270,27 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 
 		[Test]
 		[Category("Success")]
+		public void SerializeDeserialize_Parenthesised()
+		{
+			// Arrange
+			TokenParenthesizedExpression token = new TokenParenthesizedExpression(
+				new TokenVariableReference(
+					"sourceVar1",
+					20,
+					25),
+				5,
+				10);
+
+			// Act
+			byte[] serializedData = TokenSerializer.SerializeToArray(token);
+
+			// Assert
+			VerifySerialization(token,
+				serializedData);
+		}
+
+		[Test]
+		[Category("Success")]
 		public void SerializeDeserialize_Script()
 		{
 			// Arrange
