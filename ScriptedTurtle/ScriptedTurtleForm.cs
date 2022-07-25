@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 using Nakov.TurtleGraphics;
@@ -20,10 +21,13 @@ namespace ScriptedTurtle
 {
 	public partial class ScriptedTurtleForm : Form
 	{
+
 		public ScriptedTurtleForm()
 		{
 			InitializeComponent();
 		}
+
+		private TokenBase m_ScriptToken;
 
 		private void buttonDraw_Click(object sender, EventArgs e)
 		{
@@ -258,6 +262,8 @@ namespace ScriptedTurtle
 			TurtleScriptExecutor executor = new TurtleScriptExecutor();
 
 
+			m_ScriptToken = null;
+
 			buttonExecute.Enabled = false;
 
 			Cursor = Cursors.WaitCursor;
@@ -271,6 +277,10 @@ namespace ScriptedTurtle
 					MessageBox.Show(this,
 						parser.ErrorMessage,
 						"Error");
+				}
+				else
+				{
+					m_ScriptToken = scriptToken;
 				}
 
 				txtScriptTokenizedDecompiled.Text = scriptToken.ToTurtleScript();
@@ -296,9 +306,38 @@ namespace ScriptedTurtle
 			UpdateStatusBar();
 		}
 
+
 		private void buttonSaveTokenized_Click(object sender, EventArgs e)
 		{
+			using (SaveFileDialog dialog = new SaveFileDialog())
+			{
+				dialog.Filter = "Turtlescript (*.tsscript)|*.tsscript|All Files (*.*)|*.*";
+				dialog.DefaultExt = "tsscript";
 
+				if (dialog.ShowDialog(this) == DialogResult.OK)
+				{
+					File.WriteAllBytes(
+						dialog.FileName,
+						TokenSerializer.SerializeToArray(m_ScriptToken));
+				}
+			}
+		}
+
+		private void buttonLoadTokenized_Click(object sender, EventArgs e)
+		{
+			using (OpenFileDialog dialog = new OpenFileDialog())
+			{
+				dialog.Filter = "Turtlescript (*.tsscript)|*.tsscript|All Files (*.*)|*.*";
+				dialog.DefaultExt = "tsscript";
+
+				if (dialog.ShowDialog(this) == DialogResult.OK)
+				{
+					byte[] fileContent = File.ReadAllBytes(dialog.FileName);
+					m_ScriptToken = TokenSerializer.DeserializeFromArray(fileContent);
+
+					txtScriptTokenizedDecompiled.Text = m_ScriptToken.ToTurtleScript();
+				}
+			}
 		}
 	}
 }

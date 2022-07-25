@@ -8,6 +8,10 @@ namespace TurtleScript.Interpreter.Tokenize
 	{
 		#region Public Constructors
 
+		public TokenParenthesizedExpression()
+		{
+		}
+
 		public TokenParenthesizedExpression(
 			TokenBase childExpression,
 			int lineNumber,
@@ -50,11 +54,5 @@ namespace TurtleScript.Interpreter.Tokenize
 
 		#endregion Public Methods
 
-
-		#region Private Fields
-
-		// private readonly TokenBase m_ChildExpression;
-
-		#endregion Private Fields
 	}
 }

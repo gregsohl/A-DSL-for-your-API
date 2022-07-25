@@ -12,7 +12,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		/// </summary>
 		/// <param name="serializedArray">The serialized array.</param>
 		/// <returns>Deserialized <see cref="Object" />.</returns>
-		public static object DeserializeFromArray(byte[] serializedArray)
+		public static TokenBase DeserializeFromArray(byte[] serializedArray)
 		{
 			CompactFormatter.CompactFormatter compactFormatter = new CompactFormatter.CompactFormatter(CFormatterMode.SURROGATE | CFormatterMode.EXACTASSEMBLY);
 
@@ -22,15 +22,15 @@ namespace TurtleScript.Interpreter.Tokenize
 				deserializedObject = compactFormatter.Deserialize(memoryStream);
 			}
 
-			return deserializedObject;
+			return (TokenBase)deserializedObject;
 		}
 
 		/// <summary>
 		/// Serializes the specified object with the CompactFormatter
 		/// </summary>
-		/// <param name="obj"><see cref="Object"/> - The object to be serialized.</param>
+		/// <param name="token"><see cref="Object"/> - The object to be serialized.</param>
 		/// <returns>Object's data serialized with the CompactFormatter and converted to a Base64 <see cref="String"/></returns>
-		public static byte[] SerializeToArray(object obj)
+		public static byte[] SerializeToArray(TokenBase token)
 		{
 			CompactFormatter.CompactFormatter compactFormatter = new CompactFormatter.CompactFormatter(CFormatterMode.SURROGATE | CFormatterMode.EXACTASSEMBLY);
 
@@ -39,7 +39,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			using (MemoryStream memoryStream = new MemoryStream())
 			{
 				// Serialize the object to the memory stream
-				compactFormatter.Serialize(memoryStream, obj);
+				compactFormatter.Serialize(memoryStream, token);
 				memoryStream.Flush();
 
 				// Convert the memory stream to a byte array

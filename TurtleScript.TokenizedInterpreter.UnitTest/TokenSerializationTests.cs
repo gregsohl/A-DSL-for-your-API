@@ -324,7 +324,7 @@ namespace TurtleScript.TokenizedInterpreter.UnitTest
 			byte[] serializedData)
 		{
 			TokenBase reconstitutedToken =
-				(TokenBase)TokenSerializer.DeserializeFromArray(serializedData);
+				TokenSerializer.DeserializeFromArray(serializedData);
 
 			CompareLogic compareLogic = new CompareLogic();
 			ComparisonResult comparisonResult = compareLogic.Compare(

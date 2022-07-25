@@ -49,26 +49,26 @@
 			this.panelSurface = new System.Windows.Forms.Panel();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.buttonExecute = new System.Windows.Forms.Button();
 			this.txtScript = new System.Windows.Forms.TextBox();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.txtScriptTokenizedDecompiled = new System.Windows.Forms.TextBox();
 			this.txtScriptTokenized = new System.Windows.Forms.TextBox();
+			this.txtScriptTokenizedDecompiled = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-			this.buttonRunTokenized = new System.Windows.Forms.Button();
-			this.buttonLoadTokenized = new System.Windows.Forms.Button();
-			this.buttonSaveTokenized = new System.Windows.Forms.Button();
 			this.buttonShowTokens = new System.Windows.Forms.Button();
+			this.buttonSaveTokenized = new System.Windows.Forms.Button();
+			this.buttonLoadTokenized = new System.Windows.Forms.Button();
+			this.buttonRunTokenized = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.statusBar.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
-			this.tabPage2.SuspendLayout();
 			this.panel2.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
@@ -267,17 +267,6 @@
 			this.tabPage1.Text = "Direct Interpretation";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
-			// tabPage2
-			// 
-			this.tabPage2.Controls.Add(this.tableLayoutPanel1);
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(906, 169);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Tokenized Interpretation";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
 			// panel2
 			// 
 			this.panel2.Controls.Add(this.buttonExecute);
@@ -310,12 +299,23 @@
 			this.txtScript.Size = new System.Drawing.Size(900, 163);
 			this.txtScript.TabIndex = 0;
 			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.tableLayoutPanel1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(906, 169);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Tokenized Interpretation";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
 			// tableLayoutPanel1
 			// 
 			this.tableLayoutPanel1.ColumnCount = 3;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 76F));
 			this.tableLayoutPanel1.Controls.Add(this.txtScriptTokenized, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.txtScriptTokenizedDecompiled, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
@@ -330,17 +330,6 @@
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(900, 163);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
-			// txtScriptTokenizedDecompiled
-			// 
-			this.txtScriptTokenizedDecompiled.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtScriptTokenizedDecompiled.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtScriptTokenizedDecompiled.Location = new System.Drawing.Point(415, 31);
-			this.txtScriptTokenizedDecompiled.Multiline = true;
-			this.txtScriptTokenizedDecompiled.Name = "txtScriptTokenizedDecompiled";
-			this.txtScriptTokenizedDecompiled.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtScriptTokenizedDecompiled.Size = new System.Drawing.Size(406, 129);
-			this.txtScriptTokenizedDecompiled.TabIndex = 1;
-			// 
 			// txtScriptTokenized
 			// 
 			this.txtScriptTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -351,6 +340,17 @@
 			this.txtScriptTokenized.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txtScriptTokenized.Size = new System.Drawing.Size(406, 129);
 			this.txtScriptTokenized.TabIndex = 2;
+			// 
+			// txtScriptTokenizedDecompiled
+			// 
+			this.txtScriptTokenizedDecompiled.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtScriptTokenizedDecompiled.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtScriptTokenizedDecompiled.Location = new System.Drawing.Point(415, 31);
+			this.txtScriptTokenizedDecompiled.Multiline = true;
+			this.txtScriptTokenizedDecompiled.Name = "txtScriptTokenizedDecompiled";
+			this.txtScriptTokenizedDecompiled.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtScriptTokenizedDecompiled.Size = new System.Drawing.Size(406, 129);
+			this.txtScriptTokenizedDecompiled.TabIndex = 1;
 			// 
 			// label1
 			// 
@@ -396,26 +396,15 @@
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(70, 157);
 			this.tableLayoutPanel2.TabIndex = 5;
 			// 
-			// buttonRunTokenized
+			// buttonShowTokens
 			// 
-			this.buttonRunTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buttonRunTokenized.Location = new System.Drawing.Point(3, 3);
-			this.buttonRunTokenized.Name = "buttonRunTokenized";
-			this.buttonRunTokenized.Size = new System.Drawing.Size(64, 33);
-			this.buttonRunTokenized.TabIndex = 2;
-			this.buttonRunTokenized.Text = "&Run";
-			this.buttonRunTokenized.UseVisualStyleBackColor = true;
-			this.buttonRunTokenized.Click += new System.EventHandler(this.buttonRunTokenized_Click);
-			// 
-			// buttonLoadTokenized
-			// 
-			this.buttonLoadTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buttonLoadTokenized.Location = new System.Drawing.Point(3, 42);
-			this.buttonLoadTokenized.Name = "buttonLoadTokenized";
-			this.buttonLoadTokenized.Size = new System.Drawing.Size(64, 33);
-			this.buttonLoadTokenized.TabIndex = 3;
-			this.buttonLoadTokenized.Text = "&Load";
-			this.buttonLoadTokenized.UseVisualStyleBackColor = true;
+			this.buttonShowTokens.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonShowTokens.Location = new System.Drawing.Point(3, 120);
+			this.buttonShowTokens.Name = "buttonShowTokens";
+			this.buttonShowTokens.Size = new System.Drawing.Size(64, 34);
+			this.buttonShowTokens.TabIndex = 5;
+			this.buttonShowTokens.Text = "&Tokens";
+			this.buttonShowTokens.UseVisualStyleBackColor = true;
 			// 
 			// buttonSaveTokenized
 			// 
@@ -428,15 +417,27 @@
 			this.buttonSaveTokenized.UseVisualStyleBackColor = true;
 			this.buttonSaveTokenized.Click += new System.EventHandler(this.buttonSaveTokenized_Click);
 			// 
-			// buttonShowTokens
+			// buttonLoadTokenized
 			// 
-			this.buttonShowTokens.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buttonShowTokens.Location = new System.Drawing.Point(3, 120);
-			this.buttonShowTokens.Name = "buttonShowTokens";
-			this.buttonShowTokens.Size = new System.Drawing.Size(64, 34);
-			this.buttonShowTokens.TabIndex = 5;
-			this.buttonShowTokens.Text = "&Tokens";
-			this.buttonShowTokens.UseVisualStyleBackColor = true;
+			this.buttonLoadTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonLoadTokenized.Location = new System.Drawing.Point(3, 42);
+			this.buttonLoadTokenized.Name = "buttonLoadTokenized";
+			this.buttonLoadTokenized.Size = new System.Drawing.Size(64, 33);
+			this.buttonLoadTokenized.TabIndex = 3;
+			this.buttonLoadTokenized.Text = "&Load";
+			this.buttonLoadTokenized.UseVisualStyleBackColor = true;
+			this.buttonLoadTokenized.Click += new System.EventHandler(this.buttonLoadTokenized_Click);
+			// 
+			// buttonRunTokenized
+			// 
+			this.buttonRunTokenized.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonRunTokenized.Location = new System.Drawing.Point(3, 3);
+			this.buttonRunTokenized.Name = "buttonRunTokenized";
+			this.buttonRunTokenized.Size = new System.Drawing.Size(64, 33);
+			this.buttonRunTokenized.TabIndex = 2;
+			this.buttonRunTokenized.Text = "&Run";
+			this.buttonRunTokenized.UseVisualStyleBackColor = true;
+			this.buttonRunTokenized.Click += new System.EventHandler(this.buttonRunTokenized_Click);
 			// 
 			// ScriptedTurtleForm
 			// 
@@ -456,9 +457,9 @@
 			this.statusBar.PerformLayout();
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
-			this.tabPage2.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
+			this.tabPage2.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
