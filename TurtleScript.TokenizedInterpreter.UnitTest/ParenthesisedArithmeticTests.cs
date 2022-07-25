@@ -33,27 +33,13 @@ namespace TurtleScript.Interpreter.UnitTest
 		public void MultipleLevels()
 		{
 			// Arrange
-			var script = "a = (((1 + 2) * (3 + 4) + 5) * 2)";
-
-			TurtleScriptTokenizer interpreter = new TurtleScriptTokenizer(script);
-
-			// Act
-			bool success = interpreter.Parse(out TokenBase rootToken);
-			TurtleScriptExecutionContext context = new TurtleScriptExecutionContext();
-			TurtleScriptExecutor executor = new TurtleScriptExecutor();
-			executor.Execute(rootToken, context);
-
-			// Assert
-			Assert.IsTrue(success, interpreter.ErrorMessage);
-			Assert.AreEqual(script, rootToken.ToTurtleScript());
-
+			const string SCRIPT = "a = (((1 + 2) * (3 + 4) + 5) * 2)";
 			const string VARIABLE_NAME = "a";
-			TurtleScriptValue variableValue = context.GetVariableValue(VARIABLE_NAME);
-			Assert.AreEqual(52, variableValue.NumericValue);
+			const int EXPECTED_VALUE = 52;
 
-			Console.WriteLine("Regenerated Script via ToTurtleScript");
-			Console.WriteLine(rootToken.ToTurtleScript());
-			Console.WriteLine($"Result: variable {VARIABLE_NAME} = {variableValue.NumericValue}");
+			RunTest(SCRIPT,
+				VARIABLE_NAME,
+				EXPECTED_VALUE);
 		}
 
 	}
