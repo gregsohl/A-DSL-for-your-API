@@ -1,13 +1,8 @@
 ﻿#region Namespaces
 
-using System;
-using System.Linq;
 using System.Text;
-using NUnit.Framework;
 
-using TurtleScript.Interpreter.Tokenize;
-using TurtleScript.Interpreter.Tokenize.Execute;
-using TurtleScript.Interpreter.Tokenize.Parse;
+using NUnit.Framework;
 
 #endregion Namespaces
 
@@ -61,6 +56,8 @@ namespace TurtleScript.Interpreter.UnitTest
 				scriptBuilder.ToString(),
 				VARIABLE_NAME1,
 				EXPECTED_VALUE1);
+
+			Assert.AreEqual(EXPECTED_VARIABLE_COUNT, testContext.ExecutionContext.GlobalVariableCount);
 		}
 
 		[Test]
