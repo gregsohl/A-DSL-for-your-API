@@ -211,7 +211,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Assert
 			OutputResults(script, interpreter);
 			Assert.IsFalse(success);
-			Assert.AreEqual("no viable alternative at input 'abcd'. Line 1, Col 4", interpreter.ErrorMessage);
+			Assert.AreEqual("mismatched input '123' expecting <EOF>. Line 1, Col 0", interpreter.ErrorMessage);
 		}
 
 		[Test]
