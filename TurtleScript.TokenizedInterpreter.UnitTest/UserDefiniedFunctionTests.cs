@@ -22,6 +22,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("def MyFunc()");
 			scriptBuilder.AppendLine("  b = 15");
 			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine();
 			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("MyFunc()");
 
@@ -43,6 +44,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("  myparameter = b * 2");
 			scriptBuilder.AppendLine("  b = myparameter + 1");
 			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine();
 			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("MyFunc(10)");
 
@@ -62,6 +64,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("def MyFunc(value1, value2, value3)");
 			scriptBuilder.AppendLine("  b = value1 + value2 - value3");
 			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine();
 			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("MyFunc(100, 200, 50)");
 
@@ -88,6 +91,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			expectedScript.AppendLine("def MyFunc()");
 			expectedScript.AppendLine("  b = 15");
 			expectedScript.AppendLine("end");
+			expectedScript.AppendLine();
 			expectedScript.AppendLine("b = 10");
 			expectedScript.AppendLine("MyFunc()");
 
@@ -109,6 +113,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			scriptBuilder.AppendLine("def MyFunc(value1, value2, value3)");
 			scriptBuilder.AppendLine("  b = value1 + value2 - value3");
 			scriptBuilder.AppendLine("end");
+			scriptBuilder.AppendLine();
 			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("MyFunc((1 + 2), (4 + 5) * 2, 20)");
 

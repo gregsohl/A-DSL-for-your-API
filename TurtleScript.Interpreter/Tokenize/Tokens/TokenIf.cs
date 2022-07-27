@@ -147,7 +147,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			
 			Block.ToTurtleScript(builder);
 
-			builder.DerementNestingLevel();
+			builder.DecrementNestingLevel();
 
 			foreach (Tuple<TokenBase, TokenBase> elseIf in ElseIf)
 			{
@@ -160,7 +160,7 @@ namespace TurtleScript.Interpreter.Tokenize
 				// Else Body
 				elseIf.Item2.ToTurtleScript(builder);
 
-				builder.DerementNestingLevel();
+				builder.DecrementNestingLevel();
 			}
 
 			if (ElseStatement != null)
@@ -170,7 +170,7 @@ namespace TurtleScript.Interpreter.Tokenize
 
 				ElseStatement.ToTurtleScript(builder);
 
-				builder.DerementNestingLevel();
+				builder.DecrementNestingLevel();
 			}
 
 			builder.AppendLine("end");

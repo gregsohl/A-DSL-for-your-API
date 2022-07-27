@@ -138,7 +138,7 @@ namespace TurtleScript.Interpreter.Tokenize
 		public override string ToTurtleScript(
 			TurtleScriptBuilder builder)
 		{
-			builder.Append($"{m_FunctionName}(");
+			builder.AppendWithIndent($"{m_FunctionName}(");
 
 			for (var index = 0; index < Parameters.Length; index++)
 			{

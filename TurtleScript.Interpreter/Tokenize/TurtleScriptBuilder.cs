@@ -101,7 +101,7 @@ namespace TurtleScript.Interpreter.Tokenize
 			m_Builder.AppendLine();
 		}
 
-		public int DerementNestingLevel()
+		public int DecrementNestingLevel()
 		{
 			--m_NestingLevel;
 			return m_NestingLevel;

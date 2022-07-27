@@ -22,7 +22,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			StringBuilder scriptBuilder = new StringBuilder();
 			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("for a = 1 to 5 do");
-			scriptBuilder.AppendLine("b = b + a");
+			scriptBuilder.AppendLine("  b = b + a");
 			scriptBuilder.AppendLine("end");
 
 			const string VARIABLE_NAME = "b";
@@ -42,7 +42,7 @@ namespace TurtleScript.Interpreter.UnitTest
 			StringBuilder scriptBuilder = new StringBuilder();
 			scriptBuilder.AppendLine("b = 0");
 			scriptBuilder.AppendLine("for a = 5 to 1 do");
-			scriptBuilder.AppendLine("b = b + a");
+			scriptBuilder.AppendLine("  b = b + a");
 			scriptBuilder.AppendLine("end");
 
 			const string VARIABLE_NAME = "b";

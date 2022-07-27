@@ -139,9 +139,10 @@ namespace TurtleScript.Interpreter.Tokenize
 
 			m_FunctionBody.ToTurtleScript(builder);
 
-			builder.DerementNestingLevel();
+			builder.DecrementNestingLevel();
 
 			builder.AppendLine("end");
+			builder.AppendLine();
 
 			return builder.Text;
 		}
