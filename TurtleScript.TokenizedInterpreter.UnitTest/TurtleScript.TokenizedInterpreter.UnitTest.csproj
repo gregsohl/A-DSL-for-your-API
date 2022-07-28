@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NumericConstantTests.cs" />
     <Compile Include="ArithmeticTests.cs" />
     <Compile Include="ConditionalOperatorTests.cs" />
     <Compile Include="ForLoopTests.cs" />

@@ -55,12 +55,12 @@ namespace TurtleScript.Interpreter.UnitTest
 			// Act
 			bool success = interpreter.Parse(out TokenBase rootToken);
 
-			// Assert - expect failure
-			Assert.IsFalse(success, interpreter.ErrorMessage);
-
 			Console.WriteLine("Source Script:");
 			Console.WriteLine(script);
 			Console.WriteLine();
+
+			// Assert - expect failure
+			Assert.IsFalse(success, interpreter.ErrorMessage);
 
 			Console.WriteLine($"Parser Errors:");
 
