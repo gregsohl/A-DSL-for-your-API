@@ -16,7 +16,7 @@ namespace TurtleScript.Interpreter.UnitTest
 	public class NumericConstantTests : TestBase
 	{
 		[Test]
-		[Category("Success")]
+		[Category("Error")]
 		public void IntTooBig()
 		{
 			// Arrange
@@ -28,7 +28,7 @@ namespace TurtleScript.Interpreter.UnitTest
 		}
 
 		[Test]
-		[Category("Success")]
+		[Category("Error")]
 		public void NumericTooBig()
 		{
 			// Arrange
@@ -41,7 +41,7 @@ namespace TurtleScript.Interpreter.UnitTest
 
 
 		[Test]
-		[Category("Success")]
+		[Category("Error")]
 		public void NumericMultipleDecimalPoints()
 		{
 			// Arrange
